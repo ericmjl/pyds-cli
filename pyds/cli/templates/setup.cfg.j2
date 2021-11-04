@@ -1,0 +1,11 @@
+[metadata]
+name = {{ project_name }}
+version = 0.0.1
+
+[options]
+packages = find:
+include_package_data = True
+
+[options.entry_points]
+console_scripts =
+    pyds = {{ project_name }}.cli:app
