@@ -2,10 +2,10 @@ from os import write
 import typer
 from pathlib import Path
 from jinja2 import Template
-from ..utils import read_template, write_file
+from pyds.utils import read_template, write_file
 from functools import partial
 
-THIS_PATH = Path(__file__)
+THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
 
 app = typer.Typer()
@@ -48,15 +48,15 @@ def new(
     for directory in [docs_dir, tests_dir, source_dir]:
         directory.mkdir(parents=True)
 
-    write_file = partial(write_file, information=information)
-
     write_file(
-        template_file=THIS_PATH / "templates/mkdocs.yaml.j2",
+        template_file=TEMPLATE_DIR / "mkdocs.yaml.j2",
+        information=information,
         destination_file=project_dir / "mkdocs.yml",
     )
 
     write_file(
-        template_file=THIS_PATH / "templates/setup.py.j2",
+        template_file=TEMPLATE_DIR / "setup.py.j2",
+        information=information,
         destination_file=project_dir / "setup.py",
     )
 
