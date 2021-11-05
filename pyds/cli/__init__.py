@@ -2,10 +2,14 @@ import typer
 import yaml
 from pathlib import Path
 from .project import app as project_app
-from ..utils import read_config
+from .conda import app as conda_app
+from .env import app as env_app
+from ..utils import run
 
 app = typer.Typer()
 app.add_typer(project_app, name="project")
+app.add_typer(conda_app, name="conda")
+app.add_typer(env_app, name="env")
 
 
 @app.command()

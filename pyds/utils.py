@@ -1,6 +1,13 @@
 from pathlib import Path
 from jinja2 import Template
 import yaml
+from loguru import logger
+import subprocess
+import os
+
+
+# CONDA_EXE = os.getenv("CONDA_EXE")
+CONDA_EXE = "conda"
 
 
 def read_template(path: Path) -> Template:
@@ -23,3 +30,8 @@ def read_config():
     config_path = Path.home() / ".pyds.yaml"
     with config_path.open("r+") as f:
         return yaml.safe_load(f.read())
+
+
+def run(cmd: str, cwd=None, shell=False):
+    logger.info(f"+ {cmd}")
+    subprocess.run(cmd.split(), cwd=cwd, shell=shell)

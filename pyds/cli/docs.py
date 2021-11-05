@@ -1,5 +1,6 @@
 from typer import Typer
 import subprocess
+from ..utils import run
 
 
 app = Typer()
@@ -8,13 +9,13 @@ app = Typer()
 @app.command()
 def build():
     """Build docs for the project."""
-    subprocess.run("mkdocs build".split(" "))
+    run("mkdocs build")
 
 
 @app.command()
 def serve():
     """Serve docs for the project."""
-    subprocess.run("mkdocs serve".split(" "))
+    run("mkdocs serve")
 
 
 if __name__ == "__main__":

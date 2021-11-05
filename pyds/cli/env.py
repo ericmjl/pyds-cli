@@ -2,14 +2,9 @@ from typer import Typer
 import subprocess
 import yaml
 import os
+from ..utils import run, CONDA_EXE
 
 app = Typer()
-
-
-@app.command()
-def update():
-    """Update the conda associated with the project."""
-    subprocess.run("conda deactivate && mamba env update -f environment.yml".split())
 
 
 @app.command()
@@ -18,9 +13,9 @@ def rebuild():
     with open("environment.yml", "r+") as f:
         env_config = yaml.load(f)
         project_name = env_config["name"]
-    subprocess.run(f"conda env remove -n {project_name}".split())
-    subprocess.run(f"mamba env update -f environment.yml".split())
-    subprocess.run(f"python -m pip install -e .".split())
+    run(f"{CONDA_EXE} env remove -n {project_name}")
+    run(f"{CONDA_EXE} env update -f environment.yml")
+    run(f"python -m pip install -e .")
 
 
 if __name__ == "__main__":

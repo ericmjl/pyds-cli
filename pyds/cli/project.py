@@ -1,12 +1,7 @@
-from os import write
 import typer
 from pathlib import Path
-from jinja2 import Template
-from pyds.utils import read_template, write_file
-from functools import partial
-from glob import glob
-from ..utils import read_config
-import subprocess
+from pyds.utils import write_file
+from ..utils import read_config, run, CONDA_EXE
 
 THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
@@ -47,7 +42,7 @@ def init(
     source_dir = project_dir / project_name
 
     for directory in [docs_dir, tests_dir, source_dir]:
-        directory.mkdir(parents=True)
+        directory.mkdir(parents=True, exist_ok=True)
 
     templates = TEMPLATE_DIR.glob("**/*.j2")
 
@@ -62,13 +57,23 @@ def init(
         )
 
     if auto_create_env:
-        subprocess.run("conda env update -f environment.yml".split(), cwd=project_dir)
+        run(f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir)
 
     if auto_jupyter_kernel:
-        subprocess.run(
-            f"bash -c 'conda activate {project_name} && python -m ipykernel install --user --name {project_name}'".split(),
+
+        cmd = f"eval '$(conda shell.bash hook)' && conda activate {project_name} && python -m ipykernel install --user --name {project_name}"
+        run(
+            cmd,
             cwd=project_dir,
+            shell="/bin/bash",
         )
+
+
+@app.command()
+def update():
+    """Update the conda associated with the project."""
+    run(f"{CONDA_EXE} clean --all")
+    run(f"{CONDA_EXE} env update -f environment.yml")
 
 
 @app.command()

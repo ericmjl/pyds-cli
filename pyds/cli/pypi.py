@@ -1,5 +1,5 @@
 import typer
-import subprocess
+from ..utils import run
 
 app = typer.Typer()
 
@@ -13,8 +13,8 @@ def publish(
     )
 ):
     """Publish the custom package to a pip-compatible server."""
-    subprocess.run("python -m build .".split(" "))
-    subprocess.run(f"twine upload -r {pypi_server} dist/".split(" "))
+    run("python -m build .")
+    run(f"twine upload -r {pypi_server} dist/")
 
 
 if __name__ == "__main__":
