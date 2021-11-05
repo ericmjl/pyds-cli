@@ -1,5 +1,6 @@
 from pathlib import Path
 from jinja2 import Template
+import yaml
 
 
 def read_template(path: Path) -> Template:
@@ -8,9 +9,17 @@ def read_template(path: Path) -> Template:
         return Template(f.read())
 
 
-def write_file(template_file, information, destination_file):
+def write_file(template_file: Path, information: dict, destination_file: Path):
     """Write a template file to disk."""
     template = read_template(template_file)
     text = template.render(**information)
-    with open(destination_file, "w+") as f:
+    destination_file.touch()
+    with destination_file.open(mode="w+") as f:
         f.write(text)
+
+
+def read_config():
+    """Read configuration file."""
+    config_path = Path.home() / ".pyds.yaml"
+    with config_path.open("r+") as f:
+        return yaml.safe_load(f.read())
