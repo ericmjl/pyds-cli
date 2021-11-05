@@ -12,6 +12,7 @@ dependencies:
 - ipykernel
 - mamba
 - jinja2
+- loguru
 # Standard PyData stack
 - pandas
 - matplotlib
