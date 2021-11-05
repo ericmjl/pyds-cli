@@ -32,6 +32,6 @@ def read_config():
         return yaml.safe_load(f.read())
 
 
-def run(cmd: str, cwd=None, shell=False):
+def run(cmd: str, cwd=None, shell: bool = True):
     logger.info(f"+ {cmd}")
-    subprocess.run(cmd.split(), cwd=cwd, shell=shell)
+    subprocess.run(cmd, cwd=cwd, shell=shell)

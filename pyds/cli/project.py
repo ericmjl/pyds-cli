@@ -60,13 +60,8 @@ def init(
         run(f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir)
 
     if auto_jupyter_kernel:
-
-        cmd = f"eval '$(conda shell.bash hook)' && conda activate {project_name} && python -m ipykernel install --user --name {project_name}"
-        run(
-            cmd,
-            cwd=project_dir,
-            shell="/bin/bash",
-        )
+        cmd = f"zsh -c 'conda activate {project_name} && python -m ipykernel install --user --name {project_name}'"
+        run(cmd, cwd=project_dir)
 
 
 @app.command()

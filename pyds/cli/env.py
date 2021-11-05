@@ -15,7 +15,7 @@ def rebuild():
         project_name = env_config["name"]
     run(f"{CONDA_EXE} env remove -n {project_name}")
     run(f"{CONDA_EXE} env update -f environment.yml")
-    run(f"python -m pip install -e .")
+    run(f"bash -c 'conda activate {project_name}' && python -m pip install -e .")
 
 
 if __name__ == "__main__":
