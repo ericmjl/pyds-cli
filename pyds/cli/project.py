@@ -1,7 +1,8 @@
 import typer
 from pathlib import Path
 from pyds.utils import write_file
-from ..utils import read_config, run, CONDA_EXE
+
+from ..utils import read_config, run, CONDA_EXE, ANACONDA
 
 THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
@@ -17,12 +18,16 @@ def init(
     project_description: str = typer.Option(
         ..., help="A one-line description of your project.", prompt=True
     ),
+    git_remote_url: str = typer.Option("", help="Git remote URL", prompt=True),
     license: str = typer.Option("MIT", help="Your project's license.", prompt=True),
     auto_create_env: bool = typer.Option(
         True, help="Automatically create environment", prompt=True
     ),
     auto_jupyter_kernel: bool = typer.Option(
         True, help="Automatically expose environment kernel to Jupyter", prompt=True
+    ),
+    auto_pre_commit: bool = typer.Option(
+        True, help="Automatically install pre-commit", prompt=True
     ),
 ):
     """Initialize a new Python data science project."""
@@ -59,9 +64,25 @@ def init(
     if auto_create_env:
         run(f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir)
 
+    ENV_BIN_DIR = f"{ANACONDA}/envs/{project_name}/bin"
     if auto_jupyter_kernel:
-        cmd = f"zsh -c 'conda activate {project_name} && python -m ipykernel install --user --name {project_name}'"
-        run(cmd, cwd=project_dir)
+        run(
+            f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
+            cwd=project_dir,
+        )
+
+    run("git init", cwd=project_dir)
+    run("git branch -m main", cwd=project_dir)
+    run("git add .", cwd=project_dir)
+    run("git commit -m 'Initial commit.'", cwd=project_dir)
+    run("git add .", cwd=project_dir)
+    run("git commit -m 'Initial commit.'", cwd=project_dir)
+
+    if git_remote_url:
+        run(f"git remote add origin {git_remote_url}", cwd=project_dir)
+
+    if auto_pre_commit:
+        run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir)
 
 
 @app.command()

@@ -6,8 +6,9 @@ import subprocess
 import os
 
 
-# CONDA_EXE = os.getenv("CONDA_EXE")
-CONDA_EXE = "conda"
+CONDA_EXE = os.getenv("CONDA_EXE")
+ANACONDA = os.getenv("anaconda")
+# CONDA_EXE = "conda"
 
 
 def read_template(path: Path) -> Template:

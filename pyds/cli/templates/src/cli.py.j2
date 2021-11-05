@@ -17,12 +17,14 @@ app = typer.Typer()
 
 @app.command()
 def hello():
-    typer.echo(f"This project's name is {{ project_name }}")
+    """Echo the project's name."""
+    typer.echo("This project's name is {{ project_name }}")
 
 
 @app.command()
 def describe():
-    typer.echo(f"This project's description is {{ project_description }}")
+    """Describe the project."""
+    typer.echo("This project's description is {{ project_description }}")
 
 
 if __name__ == "__main__":
