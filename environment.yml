@@ -13,6 +13,7 @@ dependencies:
 - mamba
 - jinja2
 - loguru
+- pyprojroot
 # Standard PyData stack
 - pandas
 - matplotlib
