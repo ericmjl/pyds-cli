@@ -1,15 +1,8 @@
-import typer
 from pathlib import Path
-from pyds.utils import write_file
 
-from ..utils import (
-    get_conda_env_name,
-    get_env_bin_dir,
-    read_config,
-    run,
-    CONDA_EXE,
-    ANACONDA,
-)
+import typer
+
+from ..utils import CONDA_EXE, get_env_bin_dir, read_config, run, write_file
 
 THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
@@ -71,7 +64,7 @@ def init(
     if auto_create_env:
         run(f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir)
 
-    ENV_BIN_DIR = get_env_bin_dir()
+    ENV_BIN_DIR = get_env_bin_dir(cwd=project_dir)
     if auto_jupyter_kernel:
         run(
             f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
@@ -100,9 +93,11 @@ def update():
 
 
 @app.command()
-def reinstall():
+def reinstall(
+    env_file: str = typer.Option("environment.yml", help="Environment file name.")
+):
     """Reinstall the custom package into the conda environment."""
-    ENV_BIN_DIR = get_env_bin_dir()
+    ENV_BIN_DIR = get_env_bin_dir(env_file)
     run(f"{ENV_BIN_DIR}/python -m pip install -e .")
 
 

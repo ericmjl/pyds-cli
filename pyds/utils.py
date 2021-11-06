@@ -4,6 +4,7 @@ import yaml
 from loguru import logger
 import subprocess
 import os
+from pyprojroot import here
 
 
 CONDA_EXE = os.getenv("CONDA_EXE")
@@ -39,20 +40,26 @@ def run(cmd: str, cwd=None, shell: bool = True):
     subprocess.run(cmd, cwd=cwd, shell=shell)
 
 
-def get_conda_env_name(env_file="environment.yml"):
-    """Get conda environment name from the environment specification file."""
+def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
+    """Get conda environment name from the environment specification file.
+
+    This function can be executed from anywhere _within_ a project directory.
+
+    We search for `environment.yml` by default.
+    """
     try:
-        with open(env_file, "r+") as f:
+        with open(here(cwd) / env_file, "r+") as f:
             env = yaml.safe_load(f.read())
         return env["name"]
     except FileNotFoundError:
         raise FileNotFoundError(
             f"Could not find the environment file {env_file}! "
-            "Please `cd` into the directory that contains the appropriate file."
+            "Please `cd` into a project's directory."
         )
 
 
-def get_env_bin_dir():
-    env_name = get_conda_env_name()
+def get_env_bin_dir(env_file="environment.yml", cwd: Path = Path(".")):
+    """Get the environment bin directory."""
+    env_name = get_conda_env_name(env_file=env_file, cwd=cwd)
     ENV_BIN_DIR = f"{ANACONDA}/envs/{env_name}/bin"
     return ENV_BIN_DIR
