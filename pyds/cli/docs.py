@@ -1,5 +1,4 @@
 from typer import Typer
-import subprocess
 from ..utils import run
 
 

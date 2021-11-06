@@ -1,7 +1,5 @@
 from typer import Typer
-import subprocess
 import yaml
-import os
 from ..utils import run, CONDA_EXE
 
 app = Typer()

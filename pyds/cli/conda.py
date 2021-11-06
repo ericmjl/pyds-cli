@@ -1,6 +1,5 @@
 """Conda surrogate commands."""
 from typer import Typer
-import subprocess
 from ..utils import run, CONDA_EXE
 
 app = Typer()

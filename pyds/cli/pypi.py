@@ -6,15 +6,15 @@ app = typer.Typer()
 
 @app.command()
 def publish(
-    pypi_server: typer.Option(
+    pip_server: typer.Option(
         "",
-        help="The server name on which to publish the package. (Optional)",
+        help="The server name on which to publish the package. Should be configured in your .pypirc",
         prompt=True,
     )
 ):
     """Publish the custom package to a pip-compatible server."""
     run("python -m build .")
-    run(f"twine upload -r {pypi_server} dist/")
+    run(f"twine upload -r {pip_server} dist/")
 
 
 if __name__ == "__main__":
