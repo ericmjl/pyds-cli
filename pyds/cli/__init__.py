@@ -1,5 +1,4 @@
-"""Global commands for
-"""
+"""Global commands for pyds."""
 import typer
 import yaml
 from pathlib import Path
@@ -8,7 +7,6 @@ from .conda import app as conda_app
 from .env import app as env_app
 from .system import app as system_app
 from .docs import app as docs_app
-from ..utils import run
 
 app = typer.Typer()
 app.add_typer(project_app, name="project")
@@ -28,7 +26,14 @@ def configure(
         "", help="Your LinkedIn username", prompt=True
     ),
 ):
-    """Initial configuration."""
+    """Initial configuration.
+
+    :param name: Your name.
+    :param email: Your email address.
+    :param github_username: Your GitHub username.
+    :param twitter_username: Your Twitter username.
+    :param linkedin_username: Your LinkedIn username.
+    """
     info = dict(
         name=name,
         email=email,
@@ -43,6 +48,7 @@ def configure(
 
 @app.command()
 def hello():
+    """Say hello!"""
     print("Hello there!")
 
 
