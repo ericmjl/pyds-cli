@@ -71,6 +71,8 @@ def init(
             cwd=project_dir,
         )
 
+    run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
+
     run("git init", cwd=project_dir)
     run("git branch -m main", cwd=project_dir)
     run("git add .", cwd=project_dir)
@@ -83,13 +85,6 @@ def init(
 
     if auto_pre_commit:
         run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir)
-
-
-@app.command()
-def update():
-    """Update the conda environment associated with the project."""
-    run(f"{CONDA_EXE} clean --all")
-    run(f"{CONDA_EXE} env update -f environment.yml")
 
 
 @app.command()
