@@ -1,7 +1,6 @@
 """Commands to help manage environment variables."""
 
 from typer import Typer
-import yaml
 from ..utils import run
 from dotenv import dotenv_values
 from pyprojroot import here
