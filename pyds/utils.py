@@ -5,6 +5,7 @@ from loguru import logger
 import subprocess
 import os
 from pyprojroot import here
+from rich import print
 
 
 CONDA_EXE = os.getenv("CONDA_EXE")
@@ -34,10 +35,34 @@ def read_config():
         return yaml.safe_load(f.read())
 
 
-def run(cmd: str, cwd=None, shell: bool = True):
+def run(
+    cmd: str,
+    cwd=Path("."),
+    shell: bool = True,
+    capture_output: bool = True,
+    log: bool = True,
+    show_out: bool = False,
+):
     """Convenience function to run a shell command while also logging the command."""
-    logger.info(f"+ {cmd}")
-    subprocess.run(cmd, cwd=cwd, shell=shell)
+    if log:
+        logger.info(f"+ {cmd}")
+
+    if show_out:
+        print("Running command while showing output!")
+        out = subprocess.run(
+            cmd,
+            cwd=cwd,
+            shell=shell,
+            stdout=subprocess.PIPE,
+        )
+    else:
+        out = subprocess.run(
+            cmd,
+            cwd=cwd,
+            shell=shell,
+            capture_output=capture_output,
+        )
+    return out
 
 
 def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
