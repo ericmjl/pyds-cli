@@ -1,7 +1,7 @@
 """Commands to help manage environment variables."""
 
+from typing import Dict
 from typer import Typer
-from ..utils import run
 from dotenv import dotenv_values
 from pyprojroot import here
 from rich import print
@@ -11,7 +11,11 @@ app = Typer()
 
 @app.command()
 def set(key: str, value: str):
-    """Set a key-value pair in the `.env` file."""
+    """Set a key-value pair in the `.env` file.
+
+    :param key: The name of the environment variable.
+    :param value: The value to set the environment variable to.
+    """
     env_vars = read_env_vars()
     env_vars[key] = value
     write(env_vars)
@@ -20,7 +24,10 @@ def set(key: str, value: str):
 
 @app.command()
 def remove(key: str):
-    """Remove an environment variable from the `.env` file."""
+    """Remove an environment variable from the `.env` file.
+
+    :param key: The name of the environment variable.
+    """
     env_vars = read_env_vars()
     env_vars.pop(key, None)
     write(env_vars)
@@ -28,7 +35,11 @@ def remove(key: str):
 
 @app.command()
 def show(keys: bool = True, values: bool = False):
-    """Show all environment variables."""
+    """Show all environment variables.
+
+    :param keys: Whether to show the keys or not.
+    :param values: Whether to show the values or not.
+    """
     env_vars = read_env_vars()
     if keys and values:
         print("ℹ️ Here are your environment variables and their values.")
@@ -46,13 +57,20 @@ def show(keys: bool = True, values: bool = False):
         print("❌ You probably want to set either keys or values to True!")
 
 
-def read_env_vars():
+def read_env_vars() -> Dict:
+    """Read environment variables.
+
+    :returns: A dictionary of environment variables.
+    """
     ENV_PATH = here() / ".env"
     return dotenv_values(ENV_PATH)
 
 
-def write(env_vars):
-    """Write environment variables to disk."""
+def write(env_vars: Dict):
+    """Write environment variables to disk.
+
+    :param env_vars: A dictionary of environment variables.
+    """
     ENV_PATH = here() / ".env"
     with ENV_PATH.open("w+") as f:
         for k, v in sorted(env_vars.items()):

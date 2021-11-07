@@ -1,5 +1,4 @@
 """Wrapper commands for the important mkdocs commands."""
-from pathlib import Path
 import subprocess
 from typer import Typer
 from ..utils import get_env_bin_dir, run

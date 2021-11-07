@@ -1,3 +1,5 @@
+"""Project initialization and state management tools."""
+
 from pathlib import Path
 
 import typer
@@ -30,7 +32,22 @@ def init(
         True, help="Automatically install pre-commit", prompt=True
     ),
 ):
-    """Initialize a new Python data science project."""
+    """Initialize a new Python data science project.
+
+    :param project_name: Name of the new project to create.
+    :param project_description: A one-line description of the project.
+    :param git_remote_url: An https or ssh address for the remote project URL.
+    :param license: The license to use for your new project. Defaults to "MIT".
+    :param auto_create_env: Whether or not to automatically create
+        a new conda environment for the project.
+        Defaults to True.
+    :param auto_jupyter_kernel: Whether or not to automatically expose
+        the new Python environment to Jupyter as a Jupyter kernel.
+        Defaults to True.
+    :param auto_pre_commit: Whether or not to automatically install
+        the pre-commit hooks.
+        Defaults to True.
+    """
 
     information = dict(
         project_name=project_name,
@@ -91,7 +108,11 @@ def init(
 def reinstall(
     env_file: str = typer.Option("environment.yml", help="Environment file name.")
 ):
-    """Reinstall the custom package into the conda environment."""
+    """Reinstall the custom package into the conda environment.
+
+    :param env_file: The filename of the conda environment file.
+        Defaults to `environment.yml`.
+    """
     ENV_BIN_DIR = get_env_bin_dir(env_file)
     run(f"{ENV_BIN_DIR}/python -m pip install -e .")
 

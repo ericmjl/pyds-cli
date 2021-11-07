@@ -1,3 +1,4 @@
-import setuptools
+"""Setup script for the project."""
+from setuptools import setup
 
-setuptools.setup()
+setup()

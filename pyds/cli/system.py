@@ -68,15 +68,17 @@ def init():
 
 
 def install_conda():
+    """Install conda onto a user's system."""
     pass
 
 
 def install_homebrew():
+    """Install homebrew onto a user's system."""
     pass
 
 
 def install_pypirc():
-    """Install a .pypirc file."""
+    """Create the .pypirc file."""
     if not PYPIRC_PATH.exists():
         PYPIRC_PATH.touch()
 
