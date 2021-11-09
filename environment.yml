@@ -14,6 +14,7 @@ dependencies:
 - jinja2
 - loguru
 - pyprojroot
+- ruamel.yaml # allows preserving of EOL comments.
 # Standard PyData stack
 - pandas
 - matplotlib
