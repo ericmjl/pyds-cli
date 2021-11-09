@@ -13,7 +13,7 @@ app = typer.Typer()
 
 
 @app.command()
-def init(
+def project(
     project_name: str = typer.Option(
         ..., help="The project name. Will be snake-cased.", prompt=True
     ),
@@ -66,6 +66,9 @@ def init(
     for directory in [docs_dir, tests_dir, source_dir]:
         directory.mkdir(parents=True, exist_ok=True)
 
+    run("git init", cwd=project_dir, show_out=True)
+    run("ls -lah", cwd=project_dir, show_out=True)
+
     templates = TEMPLATE_DIR.glob("**/*.j2")
 
     for template in templates:
@@ -79,42 +82,32 @@ def init(
         )
 
     if auto_create_env:
-        run(f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir)
+        run(
+            f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir, show_out=True
+        )
 
     ENV_BIN_DIR = get_env_bin_dir(cwd=project_dir)
     if auto_jupyter_kernel:
         run(
             f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
             cwd=project_dir,
+            show_out=True,
         )
 
     run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
 
-    run("git init", cwd=project_dir)
-    run("git branch -m main", cwd=project_dir)
-    run("git add .", cwd=project_dir)
-    run("git commit -m 'Initial commit.'", cwd=project_dir)
-    run("git add .", cwd=project_dir)
-    run("git commit -m 'Initial commit.'", cwd=project_dir)
-
     if git_remote_url:
-        run(f"git remote add origin {git_remote_url}", cwd=project_dir)
+        run(f"git remote add origin {git_remote_url}", cwd=project_dir, show_out=True)
 
     if auto_pre_commit:
-        run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir)
+        run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir, show_out=True)
+        run(f"{ENV_BIN_DIR}/pre-commit run --all-files", cwd=project_dir, show_out=True)
 
-
-@app.command()
-def reinstall(
-    env_file: str = typer.Option("environment.yml", help="Environment file name.")
-):
-    """Reinstall the custom package into the conda environment.
-
-    :param env_file: The filename of the conda environment file.
-        Defaults to `environment.yml`.
-    """
-    ENV_BIN_DIR = get_env_bin_dir(env_file)
-    run(f"{ENV_BIN_DIR}/python -m pip install -e .")
+    run("git branch -m main", cwd=project_dir, show_out=True)
+    run("git add .", cwd=project_dir, show_out=True)
+    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
+    run("git add .", cwd=project_dir, show_out=True)
+    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
 
 
 if __name__ == "__main__":

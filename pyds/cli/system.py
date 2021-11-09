@@ -108,6 +108,7 @@ password = <PyPI token>
             )
             PYPIRC_PATH.chmod(600)
             print("✅ ~/.pypirc created! 🎉")
+            print("ℹ️ Don't forget to edit the file with your own credentials!")
 
 
 if __name__ == "__main__":

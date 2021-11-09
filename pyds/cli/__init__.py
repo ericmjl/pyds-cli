@@ -2,20 +2,20 @@
 import typer
 import yaml
 from pathlib import Path
-from .project import app as project_app
+from .initialize import app as initialize_app
 from .conda import app as conda_app
 from .env import app as env_app
 from .system import app as system_app
 from .docs import app as docs_app
-from .pypi import app as pypi_app
+from .reinstall import app as reinstall_app
 
 app = typer.Typer()
-app.add_typer(project_app, name="project")
 app.add_typer(conda_app, name="conda")
-app.add_typer(env_app, name="env")
-app.add_typer(system_app, name="system")
 app.add_typer(docs_app, name="docs")
-app.add_typer(pypi_app, name="pypi")
+app.add_typer(env_app, name="env")
+app.add_typer(initialize_app, name="project")
+app.add_typer(reinstall_app, name="reinstall")
+app.add_typer(system_app, name="system")
 
 
 @app.command()
@@ -49,8 +49,8 @@ def configure(
 
 
 @app.command()
-def hello():
-    """Say hello!"""
+def test():
+    """Run all tests in the project."""
     print("Hello there!")
 
 

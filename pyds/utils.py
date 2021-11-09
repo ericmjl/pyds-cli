@@ -5,11 +5,10 @@ import yaml
 from loguru import logger
 import subprocess
 import os
-from pyprojroot import here
 
 
 CONDA_EXE = os.getenv("CONDA_EXE")
-ANACONDA = os.getenv("anaconda")
+ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
 
 
 def read_template(path: Path) -> Template:
@@ -100,7 +99,7 @@ def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
     :raises FileNotFoundError: when the `environment.yml` file cannot be found.
     """
     try:
-        with open(here(cwd) / env_file, "r+") as f:
+        with open(cwd / env_file, "r+") as f:
             env = yaml.safe_load(f.read())
         return env["name"]
     except FileNotFoundError:
