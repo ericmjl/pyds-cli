@@ -1,11 +1,13 @@
 """Utility functions for pyds."""
-from pathlib import Path
-from jinja2 import Template
-import yaml
-from loguru import logger
-import subprocess
 import os
+import subprocess
+from pathlib import Path
+from typing import Dict
 
+import ruamel.yaml
+from jinja2 import Template
+from loguru import logger
+from pyprojroot import here
 
 CONDA_EXE = os.getenv("CONDA_EXE")
 ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
@@ -44,8 +46,10 @@ def read_config():
     :returns: A dictionary of PyDS configurations.
     """
     config_path = Path.home() / ".pyds.yaml"
+    yaml = ruamel.yaml.YAML()  # defaults to round-trip
+
     with config_path.open("r+") as f:
-        return yaml.safe_load(f.read())
+        return yaml.load(f.read())
 
 
 def run(
@@ -86,6 +90,54 @@ def run(
     return out
 
 
+def read_conda_env(env_file="environment.yml", cwd: Path = Path(".")) -> Dict:
+    """Load `environment.yml` as a dictionary.
+
+    We try loading from the specified working directory first.
+    Otherwise, we use pyprojroot to find the `environment.yml` file.
+    If both fail, we raise a loud error.
+
+    :param env_file: The name of the environment file to use.
+    :param cwd: The directory in which to look for the environment file.
+    :raises NameError: If we are unable to find the environment.yml file.
+    :returns: Dictionary containing the conda configuration.
+    """
+    yaml = ruamel.yaml.YAML()  # defaults to round-trip
+
+    try:
+        with open(cwd / env_file, "r+") as f:
+            return yaml.load(f.read())
+    except FileNotFoundError:
+        pass
+
+    try:
+        with open(here() / env_file, "r+") as f:
+            return yaml.load(f.read())
+    except RecursionError:
+        pass
+
+    raise NameError(
+        "❗️Unable to find environment.yml. Are you inside a project directory?"
+    )
+
+
+# def write_conda_env(env_dict: dict, env_file="environment.yml", cwd: Path = Path(".")):
+#     """Write conda environment to disk.
+
+#     This function will always guarantee that we write the `environment.yml` file
+#     In the order of:
+#     - name
+#     - channels
+#     - dependencies
+
+#     The function also comes with auxiliary functionality.
+#     It will:
+
+#     - ensure that Python is listed at the top of the `dependencies` list.
+#     - ensure that the pip section is listed at the bottom of the `dependencies` list.
+#     """
+
+
 def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
     """Get conda environment name from the environment specification file.
 
@@ -96,17 +148,9 @@ def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
     :param env_file: Name of the environment file.
     :param cwd: Where to begin recursive search of the project root directory.
     :returns: The environment name.
-    :raises FileNotFoundError: when the `environment.yml` file cannot be found.
     """
-    try:
-        with open(cwd / env_file, "r+") as f:
-            env = yaml.safe_load(f.read())
-        return env["name"]
-    except FileNotFoundError:
-        raise FileNotFoundError(
-            f"Could not find the environment file {env_file}! "
-            "Please `cd` into a project's directory."
-        )
+    env = read_conda_env(env_file=env_file, cwd=cwd)
+    return env["name"]
 
 
 def get_env_bin_dir(env_file="environment.yml", cwd: Path = Path(".")):

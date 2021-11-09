@@ -1,4 +1,10 @@
-"""Commands to help manage environment variables."""
+"""Commands to help manage your project's development environment.
+
+Scope:
+
+- Environment variables (set in the `.env` file)
+- Conda environments (set in the `environment.yml` file).
+"""
 
 from typing import Dict
 from typer import Typer
@@ -6,11 +12,13 @@ from dotenv import dotenv_values
 from pyprojroot import here
 from rich import print
 
+# from ..utils import read_conda_env
+
 app = Typer()
 
 
 @app.command()
-def set(key: str, value: str):
+def set_env_var(key: str, value: str):
     """Set a key-value pair in the `.env` file.
 
     :param key: The name of the environment variable.
@@ -23,7 +31,7 @@ def set(key: str, value: str):
 
 
 @app.command()
-def remove(key: str):
+def delet_env_var(key: str):
     """Remove an environment variable from the `.env` file.
 
     :param key: The name of the environment variable.
@@ -34,7 +42,7 @@ def remove(key: str):
 
 
 @app.command()
-def show(keys: bool = True, values: bool = False):
+def show_env_vars(keys: bool = True, values: bool = False):
     """Show all environment variables.
 
     :param keys: Whether to show the keys or not.
@@ -75,6 +83,24 @@ def write(env_vars: Dict):
     with ENV_PATH.open("w+") as f:
         for k, v in sorted(env_vars.items()):
             f.write(f"{k}={v}\n")
+
+
+# TODO
+# @app.command()
+# def add_dependency(name: str, conda: bool = True, channel: str = "conda-forge"):
+#     pass
+#     """Add a dependency to the environment.
+
+#     This command adds a package as a dependency to the `environment.yml` file,
+#     and then updates the conda environment
+#     based on the newly written `environment.yml` file.
+
+#     Until we have the capability to automatically search for a package via `conda`
+#     and know where to add it from,
+#     we will
+#     """
+#     conda_env = read_conda_env()
+#     conda_env = add_dependency_package(name)
 
 
 if __name__ == "__main__":

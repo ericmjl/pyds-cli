@@ -13,7 +13,7 @@ app = typer.Typer()
 
 
 @app.command()
-def project(
+def initialize(
     project_name: str = typer.Option(
         ..., help="The project name. Will be snake-cased.", prompt=True
     ),

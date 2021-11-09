@@ -1,6 +1,6 @@
 """Tools to handle package publishing."""
 import typer
-from ..utils import run
+from ..utils import get_env_bin_dir, run
 from pyprojroot import here
 from enum import Enum
 
@@ -16,7 +16,7 @@ class BumpPart(str, Enum):
 
 
 @app.command()
-def package(
+def publish(
     bump: BumpPart = typer.Option(
         ..., help="Is this a 'major', 'minor', or 'patch' release?", prompt=True
     ),
@@ -42,19 +42,17 @@ def package(
         run(f"twine upload -r {to} dist/")
 
 
-def streamlit():
-    """Placeholder for possible streamlit publish command."""
-    pass
+@app.command()
+def reinstall(
+    env_file: str = typer.Option("environment.yml", help="Environment file name.")
+):
+    """Reinstall the custom package into the conda environment.
 
-
-def heroku():
-    """Placeholder for possible heroku publish command."""
-    pass
-
-
-def fly():
-    """Placeholder for possible future fly publish command."""
-    pass
+    :param env_file: The filename of the conda environment file.
+        Defaults to `environment.yml`.
+    """
+    ENV_BIN_DIR = get_env_bin_dir(env_file)
+    run(f"{ENV_BIN_DIR}/python -m pip install -e .")
 
 
 if __name__ == "__main__":

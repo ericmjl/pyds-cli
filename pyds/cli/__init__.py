@@ -1,20 +1,22 @@
 """Global commands for pyds."""
+from pathlib import Path
+
 import typer
 import yaml
-from pathlib import Path
-from .initialize import app as initialize_app
+
 from .conda import app as conda_app
-from .env import app as env_app
-from .system import app as system_app
 from .docs import app as docs_app
-from .reinstall import app as reinstall_app
+from .environment import app as env_app
+from .package import app as package_app
+from .project import app as project_app
+from .system import app as system_app
 
 app = typer.Typer()
 app.add_typer(conda_app, name="conda")
 app.add_typer(docs_app, name="docs")
 app.add_typer(env_app, name="env")
-app.add_typer(initialize_app, name="project")
-app.add_typer(reinstall_app, name="reinstall")
+app.add_typer(package_app, name="package")
+app.add_typer(project_app, name="project")
 app.add_typer(system_app, name="system")
 
 

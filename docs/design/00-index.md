@@ -19,11 +19,21 @@ Doing so makes expressing what we want to do much more natural.
 Example commands look like:
 
 ```bash
-pyds initialize project
-pyds publish package
-pyds publish heroku # not yet implemented
-pyds preview docs
+pyds project initialize
+pyds package publish
+pyds docs preview
 ```
+
+And more generically:
+
+```bash
+pyds <thing> <verb>
+```
+
+Here, `<thing>` refers to artifacts of some kind.
+Documentation (`docs`) are an artifact of the project that we make.
+The Python package (`package`) is another artifact.
+The project as a whole (`project`) is yet another.
 
 We try to avoid anti-patterns in the implementation.
 There is no lock-in with pyds.

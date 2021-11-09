@@ -8,7 +8,7 @@ To publish your package to your pre-configured `internal` pip server,
 you can execute the following interactive command:
 
 ```bash
-pyds publish package --to internal --bump patch
+pyds package publish --to internal --bump patch
 ```
 
 Underneath the hood, you'd have to remember at least the following commands
