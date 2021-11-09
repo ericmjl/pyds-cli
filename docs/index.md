@@ -11,22 +11,23 @@ in order to set up my projects and perform common tasks
 In the spirit of automation, this project was thus born.
 With it, my aim here is to bring _sanity_ to project initialization.
 
+## Quickstart
+
+```bash
+pip install pyds
+```
+
 ## Design philosophy
 
 PyDS wraps _workflows_.
 Workflows are _verbs_ that, underneath the hood,
 are implemented by a chain of shell commands.
-To read more, see the [Design Philosophy](design/) page
+To read more, see the [Design Philosophy](design/00-index) page
 for more details.
 
+## Contributing
 
-
-## Contributing New Commands
-
-### Private Package
-
-You can use PyDS as a base for building your own idiosyncratic workflows!
-More to come later.
+To learn how to contribute, head over to the [Contributing](contributing/00-index) page.
 
 ## Inspirations
 
