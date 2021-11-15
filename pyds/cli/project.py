@@ -57,11 +57,17 @@ def initialize(
     here = Path.cwd()
 
     project_dir = here / project_name
-    docs_dir = project_dir / "docs"
-    tests_dir = project_dir / "tests"
-    source_dir = project_dir / project_name
 
-    for directory in [docs_dir, tests_dir, source_dir]:
+    wanted_dirs = [
+        project_dir / "docs",
+        project_dir / "tests",
+        project_dir / project_name,
+        project_dir / ".github",
+        project_dir / ".github" / "workflows",
+        project_dir / ".devcontainer",
+    ]
+
+    for directory in wanted_dirs:
         directory.mkdir(parents=True, exist_ok=True)
 
     run("git init", cwd=project_dir, show_out=True)
