@@ -30,6 +30,7 @@ jobs:
           source activate pyds
           python -m ipykernel install --user --name pyds
           pip install -e .
+          typer pyds.cli utils docs --name pyds --output docs/cli.md
           mkdocs build
 
       - name: Deploy website
