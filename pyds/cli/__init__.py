@@ -30,7 +30,7 @@ def configure(
         "", help="Your LinkedIn username", prompt=True
     ),
 ):
-    """Initial configuration.
+    """Initial configuration for pyds.
 
     :param name: Your name.
     :param email: Your email address.
