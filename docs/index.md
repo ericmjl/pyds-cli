@@ -8,14 +8,27 @@ and repetitively recall a particular folder structure from memory
 in order to set up my projects and perform common tasks
 (such as Python package publishing).
 
+PyDS follows the philosophy that in order for data scientists to be efficient,
+they must have tooling at hand that automates the mundane,
+reduces the number of commands that they need to remember,
+and makes the sane things easy to do
+(that's riff off security folks' mantra, "making the right things easy to do").
+
 In the spirit of automation, this project was thus born.
 With it, my aim here is to bring _sanity_ to project initialization.
 
 ## Quickstart
 
+Ensure that you have the Anaconda distribution of Python installed,
+and that `conda` can be found using your `PATH` environment variable.
+
+Then, install from PyPI:
+
 ```bash
 pip install pyds
 ```
+
+At this point, look at the docs to see what comman
 
 ## Design philosophy
 
