@@ -4,7 +4,14 @@ from pathlib import Path
 
 import typer
 
-from ..utils import CONDA_EXE, get_env_bin_dir, read_config, run, write_file
+from ..utils import (
+    CONDA_EXE,
+    get_env_bin_dir,
+    read_config,
+    run,
+    to_snake_case,
+    write_file,
+)
 
 THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
@@ -46,6 +53,8 @@ def initialize(
         the pre-commit hooks.
         Defaults to True.
     """
+
+    project_name = to_snake_case(project_name)
 
     information = dict(
         project_name=project_name,
