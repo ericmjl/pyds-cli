@@ -1,43 +1,44 @@
 name: pyds
 channels:
-- conda-forge
+  - conda-forge
 dependencies:
-# Core stack
-- python=3.9
-- pip
-- build
-- twine
-- jupyter
-- jupyterlab
-- ipykernel
-- mamba
-- jinja2
-- loguru
-- pyprojroot
-- ruamel.yaml # allows preserving of EOL comments.
-# Standard PyData stack
-- pandas
-- matplotlib
-- numpy
-- scipy
-- seaborn
-- pymc3
-- scikit-learn
-# CLI development
-- typer
-# Software testing
-- pytest
-- hypothesis
-# Code Style Tools
-- pre-commit
-- black
-- darglint
-- interrogate
-- flake8
-# Documentation
-- mkdocs
-- mkdocs-material
-- mkdocstrings
-# pip dependencies
-- pip:
-  - mknotebooks
+  # Core stack
+  - python=3.9
+  - pip
+  - build
+  - twine
+  - jupyter
+  - jupyterlab
+  - ipykernel
+  - mamba
+  - jinja2
+  - loguru
+  - pyprojroot
+  - ruamel.yaml # allows preserving of EOL comments.
+  # Standard PyData stack
+  - pandas
+  - matplotlib
+  - numpy
+  - scipy
+  - seaborn
+  - pymc3
+  - scikit-learn
+  # CLI development
+  - typer
+  # Software testing
+  - pytest
+  - hypothesis
+  # Code Style Tools
+  - pre-commit
+  - black
+  - darglint
+  - interrogate
+  - flake8
+  # Documentation
+  - mkdocs
+  - mkdocs-material
+  - mkdocstrings
+  # pip dependencies
+  - pip:
+      - mknotebooks
+      - typer-cli
