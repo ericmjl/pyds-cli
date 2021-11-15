@@ -31,14 +31,14 @@ jobs:
           python -m ipykernel install --user --name pyds
           pip install -e .
           typer pyds.cli utils docs --name pyds --output docs/cli.md
-          mkdocs build
+          mkdocs build --site-dir /tmp/docs
 
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3
         with:
           # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: /tmp/docs
           publish_branch: gh-pages
           # destination_dir: manuscript
           allow_empty_commit: false
