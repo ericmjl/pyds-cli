@@ -148,3 +148,6 @@ cython_debug/
 oryx-build-commands.txt
 .DS_Store
 testdrive.ipynb
+
+# Ignored b/c this is auto-generated.
+docs/cli.md
