@@ -1,0 +1,48 @@
+name: Build documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-environment:
+    runs-on: ubuntu-18.04
+    name: Build environment
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      # See: https://github.com/marketplace/actions/setup-conda
+      - name: Setup anaconda
+        uses: s-weigand/setup-conda@v1
+        with:
+          conda-channels: "conda-forge"
+
+      - name: Build environment
+        run: |
+          conda install -c conda-forge mamba
+          conda env update -f environment.yml
+
+
+      - name: Build docs
+        run: |
+          source activate pyds
+          python -m ipykernel install --user --name pyds
+          pip install -e .
+          mkdocs build
+
+      - name: Deploy website
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
+          personal_token: ${{ secrets.GHPAGES_TOKEN }}
+          publish_dir: ./site/
+          publish_branch: gh-pages
+          # destination_dir: manuscript
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false
+          disable_nojekyll: false
