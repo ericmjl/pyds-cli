@@ -8,7 +8,7 @@ app = Typer()
 
 @app.command()
 def clean():
-    """Build docs for the project."""
+    """Clean out your conda environment."""
     run(f"{CONDA_EXE} clean --all")
 
 
