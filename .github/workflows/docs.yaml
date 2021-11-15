@@ -23,8 +23,7 @@ jobs:
       - name: Build environment
         run: |
           conda install -c conda-forge mamba
-          conda env update -f environment.yml
-
+          mamba env update -f environment.yml
 
       - name: Build docs
         run: |
