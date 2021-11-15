@@ -20,7 +20,6 @@ def initialize(
     project_description: str = typer.Option(
         ..., help="A one-line description of your project.", prompt=True
     ),
-    git_ssh_url: str = typer.Option("", help="Git remote URL", prompt=True),
     license: str = typer.Option("MIT", help="Your project's license.", prompt=True),
     auto_create_env: bool = typer.Option(
         True, help="Automatically create environment", prompt=True
@@ -36,7 +35,6 @@ def initialize(
 
     :param project_name: Name of the new project to create.
     :param project_description: A one-line description of the project.
-    :param git_ssh_url: An ssh address for the remote project.
     :param license: The license to use for your new project. Defaults to "MIT".
     :param auto_create_env: Whether or not to automatically create
         a new conda environment for the project.
@@ -96,8 +94,9 @@ def initialize(
 
     run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
 
-    if git_ssh_url:
-        run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
+    repo_name = f"{information['github_username']}/{project_name}"
+    git_ssh_url = f"git@github.com:{repo_name}"
+    run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
 
     if auto_pre_commit:
         run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir, show_out=True)
@@ -108,6 +107,11 @@ def initialize(
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
     run("git add .", cwd=project_dir, show_out=True)
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
+
+    print(
+        f"🎉Your project {project_name} is created!\n"
+        f"⚠️Make sure that you own a repository named {repo_name} on GitHub."
+    )
 
 
 if __name__ == "__main__":
