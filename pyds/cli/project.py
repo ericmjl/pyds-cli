@@ -3,13 +3,13 @@
 from pathlib import Path
 
 import typer
+from caseconverter import snakecase
 
 from ..utils import (
     CONDA_EXE,
     get_env_bin_dir,
     read_config,
     run,
-    to_snake_case,
     write_file,
 )
 
@@ -53,8 +53,7 @@ def initialize(
         the pre-commit hooks.
         Defaults to True.
     """
-
-    project_name = to_snake_case(project_name)
+    project_name = snakecase(project_name)
 
     information = dict(
         project_name=project_name,

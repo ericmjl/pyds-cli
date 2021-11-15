@@ -1,6 +1,5 @@
 """Utility functions for pyds."""
 import os
-import re
 import subprocess
 from pathlib import Path
 from typing import Dict
@@ -171,13 +170,3 @@ def get_env_bin_dir(env_file="environment.yml", cwd: Path = Path(".")):
     env_name = get_conda_env_name(env_file=env_file, cwd=cwd)
     ENV_BIN_DIR = f"{ANACONDA}/envs/{env_name}/bin"
     return ENV_BIN_DIR
-
-
-def to_snake_case(s: str):
-    """Change case of a string into snake_case.
-
-    :param s: The string to turn into snake case.
-    :returns: Snake-cased string.
-    """
-    s1 = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", s)
-    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", s1).lower()
