@@ -28,6 +28,7 @@ dependencies:
   # Software testing
   - pytest
   - hypothesis
+  - pytest-cov
   # Code Style Tools
   - pre-commit
   - black

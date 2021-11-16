@@ -4,6 +4,8 @@ from pathlib import Path
 import typer
 import yaml
 
+from pyds.utils import run
+
 from .conda import app as conda_app
 from .docs import app as docs_app
 from .environment import app as env_app
@@ -53,7 +55,7 @@ def configure(
 @app.command()
 def test():
     """Run all tests in the project."""
-    print("Hello there!")
+    run("pytest .")
 
 
 if __name__ == "__main__":

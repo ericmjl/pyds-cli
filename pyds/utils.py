@@ -9,7 +9,6 @@ from jinja2 import Template
 from loguru import logger
 from pyprojroot import here
 
-CONDA_EXE = os.getenv("CONDA_EXE")
 ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
 
 
@@ -170,3 +169,40 @@ def get_env_bin_dir(env_file="environment.yml", cwd: Path = Path(".")):
     env_name = get_conda_env_name(env_file=env_file, cwd=cwd)
     ENV_BIN_DIR = f"{ANACONDA}/envs/{env_name}/bin"
     return ENV_BIN_DIR
+
+
+def discover_conda_executable() -> Path:
+    """Discover the conda executable.
+
+    I intend to expand this function
+    with other ways of getting the `conda_exe` programmatically.
+
+    :raises Exception: If we cannot find a path to a conda executable.
+    :returns: Path to the conda executable.
+    """
+    conda_exe = os.getenv("CONDA_EXE")
+    if conda_exe is None:
+        raise Exception(
+            "Could not find conda executable! Do you have `conda` installed?"
+        )
+    return Path(conda_exe)
+
+
+def discover_anaconda_installation() -> Path:
+    """Return path to the user's anaconda installation.
+
+    :raises Exception: If we cannot find the path to anaconda installation.
+    :returns: Path to anaconda installation directory.
+    """
+    conda_base_path = os.getenv("CONDA_PREFIX_1")
+    if conda_base_path is None:
+        conda_base_path = os.getenv("CONDA_PREFIX")
+    if conda_base_path is None:
+        raise Exception(
+            "Could not find path to your anaconda installation! "
+            "Do you have `conda` installed?"
+        )
+    return Path(conda_base_path)
+
+
+CONDA_EXE = discover_conda_executable()
