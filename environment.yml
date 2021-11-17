@@ -44,3 +44,4 @@ dependencies:
       - mknotebooks
       - typer-cli
       - case-converter
+      - rich

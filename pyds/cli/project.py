@@ -3,8 +3,9 @@
 from pathlib import Path
 
 import typer
-from caseconverter import snakecase
-
+from caseconverter import snakecase, kebabcase
+from rich.progress import track
+from rich.console import Console
 from ..utils import (
     CONDA_EXE,
     get_env_bin_dir,
@@ -12,6 +13,8 @@ from ..utils import (
     run,
     write_file,
 )
+
+console = Console()
 
 THIS_PATH = Path(__file__).parent
 TEMPLATE_DIR = THIS_PATH / "templates"
@@ -22,7 +25,9 @@ app = typer.Typer()
 @app.command()
 def initialize(
     project_name: str = typer.Option(
-        ..., help="The project name. Will be snake-cased.", prompt=True
+        ".",
+        help="The project name. Will be snake-cased. Defaults to current working directory.",
+        prompt=True,
     ),
     project_description: str = typer.Option(
         ..., help="A one-line description of your project.", prompt=True
@@ -41,6 +46,8 @@ def initialize(
     """Initialize a new Python data science project.
 
     :param project_name: Name of the new project to create.
+        Becomes the directory name, kebab-cased,
+        and custom source name, snake_cased.
     :param project_description: A one-line description of the project.
     :param license: The license to use for your new project. Defaults to "MIT".
     :param auto_create_env: Whether or not to automatically create
@@ -53,7 +60,12 @@ def initialize(
         the pre-commit hooks.
         Defaults to True.
     """
-    project_name = snakecase(project_name)
+    here = Path.cwd()
+    project_dir = here / kebabcase(project_name)
+
+    if project_name == ".":
+        project_name = here.name
+        project_dir = here
 
     information = dict(
         project_name=project_name,
@@ -62,61 +74,82 @@ def initialize(
     )
     information.update(read_config())
 
-    here = Path.cwd()
-
-    project_dir = here / project_name
-
     wanted_dirs = [
+        project_dir / ".devcontainer",
+        project_dir / ".github" / "workflows",
+        project_dir / ".github",
         project_dir / "docs",
         project_dir / "tests",
-        project_dir / project_name,
-        project_dir / ".github",
-        project_dir / ".github" / "workflows",
-        project_dir / ".devcontainer",
+        project_dir / snakecase(project_name),
     ]
 
-    for directory in wanted_dirs:
+    for directory in track(
+        wanted_dirs, description="[blue]Creating directory structure..."
+    ):
         directory.mkdir(parents=True, exist_ok=True)
 
     run("git init", cwd=project_dir, show_out=True)
-    run("ls -lah", cwd=project_dir, show_out=True)
+    run("git commit --allow-empty -m 'init'", cwd=project_dir)
+    run("git branch -m main", cwd=project_dir)
 
-    templates = TEMPLATE_DIR.glob("**/*.j2")
+    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
 
-    for template in templates:
+    for template in track(templates, description="[blue]Creating template files..."):
         destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
+        print(template, destination_file)
         if "src" in destination_file.parts:
             destination_file = Path(project_dir / project_name / destination_file.name)
-        write_file(
-            template_file=template,
-            information=information,
-            destination_file=destination_file.with_suffix(""),
-        )
+
+        if not destination_file.exists():
+
+            write_file(
+                template_file=template,
+                information=information,
+                destination_file=destination_file.with_suffix(""),
+            )
 
     if auto_create_env:
-        run(
-            f"{CONDA_EXE} env update -f environment.yml", cwd=project_dir, show_out=True
+        msg = (
+            "[bold blue]Creating conda environment (this might take a few moments!)..."
         )
+        with console.status(msg):
+            run(
+                f"{CONDA_EXE} env update -f environment.yml",
+                cwd=project_dir,
+                show_out=True,
+            )
 
     ENV_BIN_DIR = get_env_bin_dir(cwd=project_dir)
     if auto_jupyter_kernel:
-        run(
-            f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
-            cwd=project_dir,
-            show_out=True,
-        )
+        msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
+        with console.status(msg):
+            run(
+                f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
+                cwd=project_dir,
+                show_out=True,
+            )
 
-    run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
+    msg = (
+        "[bold blue]Installing your custom source package into the conda environment..."
+    )
+    with console.status(msg):
+        run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
 
-    repo_name = f"{information['github_username']}/{project_name}"
-    git_ssh_url = f"git@github.com:{repo_name}"
-    run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
+    msg = "[bold blue]Configuring git..."
+    with console.status(msg):
+        repo_name = f"{information['github_username']}/{project_name}"
+        git_ssh_url = f"git@github.com:{repo_name}"
+        run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
 
-    if auto_pre_commit:
-        run(f"{ENV_BIN_DIR}/pre-commit install", cwd=project_dir, show_out=True)
-        run(f"{ENV_BIN_DIR}/pre-commit run --all-files", cwd=project_dir, show_out=True)
+    msg = "[bold blue]Configuring pre-commit..."
+    with console.status(msg):
+        if auto_pre_commit:
+            run(
+                f"{ENV_BIN_DIR}/pre-commit install --install-hooks",
+                cwd=project_dir,
+                show_out=True,
+            )
 
-    run("git branch -m main", cwd=project_dir, show_out=True)
     run("git add .", cwd=project_dir, show_out=True)
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
     run("git add .", cwd=project_dir, show_out=True)

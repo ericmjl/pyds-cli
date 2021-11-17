@@ -40,7 +40,6 @@ plugins:
       watch:
         - pyds
 
-
 # Taken from here: https://squidfunk.github.io/mkdocs-material/extensions/codehilite/
 markdown_extensions:
   - codehilite

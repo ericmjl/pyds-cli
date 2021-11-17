@@ -178,14 +178,24 @@ def discover_conda_executable() -> Path:
     with other ways of getting the `conda_exe` programmatically.
 
     :raises Exception: If we cannot find a path to a conda executable.
-    :returns: Path to the conda executable.
+    :returns: Path to the conda or mamba executable.
     """
+    # First, try mamba
+    res = run("which mamba")
+    if res.returncode == 0:
+        return Path(res.stdout.decode("utf-8").strip("\n"))
+
+    # If mamba isn't available, try conda by using the `which conda` command.
+    res = run("which conda")
+    if res.returncode == 0:
+        return Path(res.stdout.decode("utf-8").strip("\n"))
+
+    # If `which conda` fails, try using environmenet variables.
     conda_exe = os.getenv("CONDA_EXE")
-    if conda_exe is None:
-        raise Exception(
-            "Could not find conda executable! Do you have `conda` installed?"
-        )
-    return Path(conda_exe)
+    if conda_exe is not None:
+        return Path(conda_exe)
+
+    raise Exception("Could not find conda executable! Do you have `conda` installed?")
 
 
 def discover_anaconda_installation() -> Path:
