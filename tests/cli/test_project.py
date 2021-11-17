@@ -9,13 +9,16 @@ from typer.testing import CliRunner
 runner = CliRunner()
 
 
-def test_project_initialize(tmp_path):
+def test_project_initialize(tmp_path, project_name: str = "asdf"):
     """Test for project initialization.
 
     :param tmp_path: Built-in pytest fixture to generate temporary directory.
+    :param project_name: Name of the test project.
     """
     os.chdir(tmp_path)
-    runner.invoke(app, ["project", "initialize"], input="asdf\nasdf\nMIT\nN\nY\nY\n")
+    runner.invoke(
+        app, ["project", "initialize"], input=f"{project_name}\nasdf\nMIT\nY\nY\nY\n"
+    )
 
     project_dir = tmp_path / "asdf"
 
