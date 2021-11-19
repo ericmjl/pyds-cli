@@ -1,6 +1,8 @@
 """Project initialization and state management tools."""
 
 from pathlib import Path
+from rich import print
+from loguru import logger
 
 import typer
 from caseconverter import snakecase, kebabcase
@@ -96,12 +98,14 @@ def initialize(
 
     for template in track(templates, description="[blue]Creating template files..."):
         destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
-        print(template, destination_file)
         if "src" in destination_file.parts:
-            destination_file = Path(project_dir / project_name / destination_file.name)
+            # project_name has to be snake-cased in order for imports to work.
+            destination_file = (
+                Path(project_dir) / snakecase(project_name) / destination_file.name
+            )
 
+        logger.info(destination_file.with_suffix(""))
         if not destination_file.exists():
-
             write_file(
                 template_file=template,
                 information=information,
@@ -156,8 +160,8 @@ def initialize(
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
 
     print(
-        f"🎉Your project {project_name} is created!\n"
-        f"⚠️Make sure that you own a repository named {repo_name} on GitHub."
+        f"[green]🎉Your project {project_name} is created!\n"
+        f"[green]⚠️Make sure that you own a repository named {repo_name} on GitHub."
     )
 
 
