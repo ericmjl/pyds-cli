@@ -215,4 +215,15 @@ def discover_anaconda_installation() -> Path:
     return Path(conda_base_path)
 
 
+def environment_exists(environment_name: str) -> bool:
+    """Function to identify whether an environment exists.
+
+    :param environment_name: The environment of interest.
+    :returns: Boolen on whether the expected environment exists.
+    """
+    conda_base_path = discover_anaconda_installation()
+    expected_env_path = conda_base_path / "envs" / environment_name
+    return expected_env_path.exists()
+
+
 CONDA_EXE = discover_conda_executable()
