@@ -181,7 +181,7 @@ def discover_conda_executable() -> Path:
     :returns: Path to the conda or mamba executable.
     """
     # First, try mamba
-    res = run("which mamba")
+    res = run("which mamba", log=False)
     if res.returncode == 0:
         return Path(res.stdout.decode("utf-8").strip("\n"))
 
