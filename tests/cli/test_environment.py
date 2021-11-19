@@ -20,7 +20,7 @@ def test_delete_env_var(initialized_project):
 
     :param initialized_project: conftest.py fixture for our initialized project.
     """
-    result = runner.invoke(app, ["env", "delete-env-var", "key", "value"])
+    result = runner.invoke(app, ["env", "delete-env-var", "key"])
     assert result.exit_code == 0
 
 
