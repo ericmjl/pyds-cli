@@ -12,7 +12,7 @@ from pyds.cli import app
 
 
 @pytest.fixture(scope="session")
-def initialized_project() -> Tuple(Path, Path):
+def initialized_project() -> Tuple[Path, Path]:
     """Initialize a project.
 
     :returns: A two-tuple of temp dir path and project directory path.
