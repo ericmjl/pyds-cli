@@ -9,7 +9,8 @@ runner = CliRunner()
 
 def test_clean():
     """Test for conda clean wrapper."""
-    runner.invoke(app, ["conda", "clean"])
+    result = runner.invoke(app, ["conda", "clean"])
+    assert result.exit_code == 0
 
 
 def test_rebuild(initialized_project):
@@ -19,4 +20,16 @@ def test_rebuild(initialized_project):
     """
     tmp_path, project_name = initialized_project
     os.chdir(tmp_path / project_name)
-    runner.invoke(app, ["conda", "rebuild"])
+    result = runner.invoke(app, ["conda", "rebuild"])
+    assert result.exit_code == 0
+
+
+def test_update(initialized_project):
+    """Execution test for conda update wrapper.
+
+    :param initialized_project: conftest.py fixture for our initialized project.
+    """
+    tmp_path, project_name = initialized_project
+    os.chdir(tmp_path / project_name)
+    result = runner.invoke(app, ["conda", "update"])
+    assert result.exit_code == 0

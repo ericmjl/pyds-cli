@@ -16,18 +16,23 @@ def clean():
 def rebuild():
     """Rebuild the conda environment from scratch."""
     with open("environment.yml", "r+") as f:
-        env_config = yaml.load(f)
+        env_config = yaml.safe_load(f)
         project_name = env_config["name"]
-    run(f"conda env remove -n {project_name}")
-    run(f"conda deactivate && {CONDA_EXE} env update -f environment.yml")
-    run(f"bash -c 'conda activate {project_name}' && python -m pip install -e .")
+    run(f"bash -c 'conda env remove -n {project_name}'", show_out=True)
+    run(
+        f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
+        show_out=True,
+    )
+    run(
+        f"bash -c 'source activate {project_name} && python -m pip install -e .'",
+        show_out=True,
+    )
 
 
 @app.command()
 def update():
     """Update the conda environment associated with the project."""
-    run(f"source activate base && {CONDA_EXE} clean --all")
-    run(f"source activate base && {CONDA_EXE} env update -f environment.yml")
+    run(f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'")
 
 
 if __name__ == "__main__":

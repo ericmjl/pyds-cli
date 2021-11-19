@@ -3,6 +3,7 @@
 from pyds.cli import app
 from pyds.utils import read_config
 from typer.testing import CliRunner
+import os
 
 runner = CliRunner()
 
@@ -22,3 +23,15 @@ def test_configure():
     assert config["twitter_username"] == "ericmjl"
     assert config["linkedin_username"] == "ericmjl"
     assert config["github_username"] == "ericmjl"
+
+
+def test_test(initialized_project):
+    """Test for the `pyds test` command.
+
+    :param initialized_project: conftest.py fixture for our initialized project.
+    """
+    tmp_path, project_name = initialized_project
+    os.chdir(tmp_path / project_name)
+
+    result = runner.invoke(app, ["test"])
+    assert result.exit_code == 0
