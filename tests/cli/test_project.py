@@ -12,7 +12,7 @@ runner = CliRunner()
 def test_project_initialize(initialized_project):
     """Test for project initialization.
 
-    :param initialized_project: conftest.py fixture.
+    :param initialized_project: conftest.py fixture for our initialized project.
     """
     tmp_path, project_name = initialized_project
     project_dir = tmp_path / project_name

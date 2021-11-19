@@ -2,7 +2,6 @@
 
 from pathlib import Path
 from rich import print
-from loguru import logger
 
 import typer
 from caseconverter import snakecase, kebabcase
@@ -104,7 +103,6 @@ def initialize(
                 Path(project_dir) / snakecase(project_name) / destination_file.name
             )
 
-        logger.info(destination_file.with_suffix(""))
         if not destination_file.exists():
             write_file(
                 template_file=template,
