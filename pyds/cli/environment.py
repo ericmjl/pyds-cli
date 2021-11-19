@@ -31,7 +31,7 @@ def set_env_var(key: str, value: str):
 
 
 @app.command()
-def delet_env_var(key: str):
+def delete_env_var(key: str):
     """Remove an environment variable from the `.env` file.
 
     :param key: The name of the environment variable.
