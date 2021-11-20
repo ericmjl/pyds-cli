@@ -28,7 +28,7 @@ Then, install from PyPI:
 pip install pyds
 ```
 
-At this point, look at the docs to see what comman
+For more information, take a look at [the CLI page](./cli) to see what commands exist!
 
 ## Design philosophy
 
