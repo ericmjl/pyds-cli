@@ -1,6 +1,6 @@
 """Wrapper commands for the important mkdocs commands."""
 from typer import Typer
-from ..utils import get_env_bin_dir, run
+from ..utils import run
 
 
 app = Typer()
@@ -9,17 +9,13 @@ app = Typer()
 @app.command()
 def build():
     """Build docs for the project."""
-    ENV_BIN_DIR = get_env_bin_dir()
-
-    run(f"{ENV_BIN_DIR}/mkdocs build")
+    run("mkdocs build", activate_env=True)
 
 
 @app.command()
 def serve():
     """Serve docs for the project."""
-    ENV_BIN_DIR = get_env_bin_dir()
-    cmd = f"{ENV_BIN_DIR}/mkdocs serve"
-    run(cmd, show_out=True)
+    run("mkdocs serve", show_out=True, activate_env=True)
 
 
 if __name__ == "__main__":

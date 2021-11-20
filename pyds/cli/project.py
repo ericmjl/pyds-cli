@@ -7,13 +7,7 @@ import typer
 from caseconverter import snakecase, kebabcase
 from rich.progress import track
 from rich.console import Console
-from ..utils import (
-    CONDA_EXE,
-    get_env_bin_dir,
-    read_config,
-    run,
-    write_file,
-)
+from ..utils import CONDA_EXE, read_config, run, write_file
 
 console = Console()
 
@@ -117,26 +111,26 @@ def initialize(
         )
         with console.status(msg):
             run(
-                f"{CONDA_EXE} env update -f environment.yml",
+                f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
                 cwd=project_dir,
                 show_out=True,
             )
 
-    ENV_BIN_DIR = get_env_bin_dir(cwd=project_dir)
     if auto_jupyter_kernel:
         msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
         with console.status(msg):
             run(
-                f"{ENV_BIN_DIR}/python -m ipykernel install --user --name {project_name}",
+                f"python -m ipykernel install --user --name {project_name}",
                 cwd=project_dir,
                 show_out=True,
+                activate_env=True,
             )
 
     msg = (
         "[bold blue]Installing your custom source package into the conda environment..."
     )
     with console.status(msg):
-        run(f"{ENV_BIN_DIR}/pip install -e .", cwd=project_dir)
+        run("pip install -e .", cwd=project_dir, activate_env=True)
 
     msg = "[bold blue]Configuring git..."
     with console.status(msg):
@@ -148,9 +142,10 @@ def initialize(
     with console.status(msg):
         if auto_pre_commit:
             run(
-                f"{ENV_BIN_DIR}/pre-commit install --install-hooks",
+                "pre-commit install --install-hooks",
                 cwd=project_dir,
                 show_out=True,
+                activate_env=True,
             )
 
     run("git add .", cwd=project_dir, show_out=True)

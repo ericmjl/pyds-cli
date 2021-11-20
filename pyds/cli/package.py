@@ -1,6 +1,6 @@
 """Tools to handle package publishing."""
 import typer
-from ..utils import get_env_bin_dir, run
+from ..utils import run
 from pyprojroot import here
 from enum import Enum
 
@@ -59,8 +59,7 @@ def reinstall(
     :param env_file: The filename of the conda environment file.
         Defaults to `environment.yml`.
     """
-    ENV_BIN_DIR = get_env_bin_dir(env_file)
-    run(f"{ENV_BIN_DIR}/python -m pip install -e .")
+    run("python -m pip install -e .", activate_env=True)
 
 
 if __name__ == "__main__":

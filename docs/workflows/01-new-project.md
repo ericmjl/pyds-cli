@@ -20,4 +20,7 @@ Your `project_name/` source also comes with basic command line interface capabil
 that you can expand on in case you wish to make a CLI tool for others to use.
 There are a smattering of code quality tools automatically installed
 as part of your `pre-commit` hooks.
-You can optionally create a `conda` environment automagically.
+You default to getting a `conda` environment automagically,
+and you have a custom Python package (`project_name/`)
+installed into the environment too,
+ensuring portability of your data analysis code.
