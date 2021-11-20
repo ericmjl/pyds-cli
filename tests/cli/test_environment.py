@@ -20,7 +20,7 @@ def test_delete_env_var(initialized_project):
 
     :param initialized_project: conftest.py fixture for our initialized project.
     """
-    result = runner.invoke(app, ["env", "delete-env-var", "key", "value"])
+    result = runner.invoke(app, ["env", "delete-env-var", "key"])
     assert result.exit_code == 0
 
 
@@ -29,5 +29,5 @@ def test_show_env_vars(initialized_project):
 
     :param initialized_project: conftest.py fixture for our initialized project.
     """
-    result = runner.invoke(app, ["env", "show-env-vars", "key", "value"])
+    result = runner.invoke(app, ["env", "show-env-vars"])
     assert result.exit_code == 0
