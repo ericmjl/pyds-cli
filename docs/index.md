@@ -1,5 +1,7 @@
 # PyDS: A wrapper for creating, configuring, and managing your data science projects
 
+<script id="asciicast-quuvL2LCafmRfpFAbQLREwpke" src="https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke.js" async></script>
+
 ## Why this project exists?
 
 We started by asking the simple questions:
