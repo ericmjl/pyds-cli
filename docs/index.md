@@ -2,9 +2,18 @@
 
 ## Why this project exists?
 
-PyDS was born out of the frustration of needing to
-memorize commands from a smattering of tools
-and repetitively recall a particular folder structure from memory
+We started by asking the simple questions:
+
+> Why do I have to memorize 4 bash incantations in order to release a Python package?
+
+> Why do I have to remember so many _sequences_ of commands to do anything?
+
+> What is the kind of tooling that we need to support making "good" workflows easy?
+
+PyDS was born out in response to these questions.
+We'd rather avoid the frustration of
+memorizing commands from a smattering of tools
+and repetitively recalling a particular folder structure from memory
 in order to set up my projects and perform common tasks
 (such as Python package publishing).
 
