@@ -1,3 +1,8 @@
 {
-    "python.formatting.blackPath": "/opt/conda/bin/black"
+    "python.formatting.blackPath": "/opt/conda/bin/black",
+    "python.testing.pytestArgs": [
+        "tests"
+    ],
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestEnabled": true
 }
