@@ -62,6 +62,7 @@ def run(
     capture_output: bool = True,
     log: bool = True,
     show_out: bool = False,
+    activate_env=True,
 ):
     """Convenience function to run a shell command while also logging the command.
 
@@ -71,8 +72,13 @@ def run(
     :param capture_output: Passed to `subprocess.run`'s `capture_output` argument.
     :param log: Whether or not to log the command to screen.
     :param show_out: Whether or not to show the output of `cmd` to the terminal.
+    :param activate_env: Whether or not to activate the project's conda environment or not
+        before running the command.
     :returns: The result of `subprocess.run`.
     """
+    if activate_env:
+        env = get_conda_env_name()
+        cmd = f"bash -c 'source activate {env} && {cmd}'"
     if log:
         logger.info(f"+ {cmd}")
 
