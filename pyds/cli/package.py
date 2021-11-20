@@ -21,8 +21,13 @@ def publish(
         ..., help="Is this a 'major', 'minor', or 'patch' release?", prompt=True
     ),
     to: str = typer.Option(
-        ...,
+        "pypi",
         help="The name of the pip server on which to publish the package. Should be configured in your .pypirc.",
+        prompt=True,
+    ),
+    dry_run: bool = typer.Option(
+        True,
+        help="Whether this is a dry-run or not.",
         prompt=True,
     ),
 ):
@@ -32,14 +37,17 @@ def publish(
     :param to: The name of the pip server on which to publish the package.
         Should be configured in your .pypirc.
         Can be run from anywhere within the project directory.
+        Defaults to 'pypi'.
+    :param dry_run: Whether you want to do just a dry-run.
     """
-    run(f"bumpversion {bump} --verbose --dry-run", show_out=True)
-    response = typer.confirm("Please double-check: is the version bump done right?")
-    if response:
-        run(f"bumpversion {bump} --verbose", show_out=True)
-        run("rm dist/*")
-        run(f"python -m build {here()}")
-        run(f"twine upload -r {to} dist/")
+    run(f"bumpversion {bump} --verbose --dry-run", show_out=True, activate_env=True)
+    if not dry_run:
+        response = typer.confirm("Please double-check: is the version bump done right?")
+        if response:
+            run(f"bumpversion {bump} --verbose", show_out=True, activate_env=True)
+            run("rm dist/*")
+            run(f"python -m build {here()}", activate_env=True)
+            run(f"twine upload -r {to} dist/", activate_env=True)
 
 
 @app.command()
