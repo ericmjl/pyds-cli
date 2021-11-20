@@ -1,5 +1,7 @@
 # PyDS CLI
 
+Helping you manage your data science projects _sanely_.
+
 [![asciicast](https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke.svg)](https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke)
 
 ## Requirements
