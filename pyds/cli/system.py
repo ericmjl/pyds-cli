@@ -69,7 +69,9 @@ def init():
 
 def install_conda():
     """Install conda onto a user's system."""
-    pass
+    run(
+        "wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+    )
 
 
 def install_homebrew():
