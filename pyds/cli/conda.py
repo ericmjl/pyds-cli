@@ -23,10 +23,7 @@ def rebuild():
         f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
         show_out=True,
     )
-    run(
-        f"bash -c 'source activate {project_name} && python -m pip install -e .'",
-        show_out=True,
-    )
+    run("python -m pip install -e .", show_out=True, activate_env=True)
 
 
 @app.command()
