@@ -80,6 +80,7 @@ def initialize(
         project_dir / ".github" / "workflows",
         project_dir / ".github",
         project_dir / "docs",
+        project_dir / "notebooks",
         project_dir / "tests",
         project_dir / snakecase(project_name),
     ]
