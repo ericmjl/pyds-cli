@@ -1,5 +1,7 @@
 # PyDS CLI
 
+[![asciicast](https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke.svg)](https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke)
+
 ## Requirements
 
 - [Anaconda]/[Miniconda]/[Miniforge]/[Mambaforge] (Mambaforge recommended!)
