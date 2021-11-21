@@ -1,21 +1,36 @@
 """Utility functions for projects."""
 from pathlib import Path
 from typing import List
+from caseconverter import snakecase
 
 
-def make_wanted_dirs(project_dir: Path, project_name: str) -> List[Path]:
-    """Return a list of wanted directories.
+def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
+    """Return a list of minimal directories in a project.
 
     :param project_dir: Directory of the project.
     :param project_name: Name of the project.
-    :returns: A list of wanted directories as Path objects.
+    :returns: A minimal list of directories as Path objects.
     """
-    wanted_dirs = [
-        project_dir / ".devcontainer",
-        project_dir / ".github" / "workflows",
-        project_dir / ".github",
+    dirs = [
         project_dir / "docs",
         project_dir / "tests",
-        project_dir / project_name,
+        project_dir / snakecase(project_name),
     ]
-    return wanted_dirs
+    return dirs
+
+
+def standard_dirs(project_dir: Path, project_name: str) -> List[Path]:
+    """Return a list of minimal directories in a project.
+
+    :param project_dir: Directory of the project.
+    :param project_name: Name of the project.
+    :returns: A minimal list of directories as Path objects.
+    """
+    dirs = minimal_dirs(project_dir, project_name)
+
+    additional_dirs = [
+        project_dir / ".devcontainer",
+        project_dir / ".github" / "workflows",
+    ]
+    dirs.extend(additional_dirs)
+    return dirs

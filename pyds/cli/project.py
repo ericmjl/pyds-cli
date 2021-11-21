@@ -7,6 +7,8 @@ import typer
 from caseconverter import snakecase, kebabcase
 from rich.progress import track
 from rich.console import Console
+
+from pyds.utils.project import standard_dirs
 from ..utils import CONDA_EXE, read_config, run, write_file
 
 console = Console()
@@ -69,15 +71,7 @@ def initialize(
     )
     information.update(read_config())
 
-    wanted_dirs = [
-        project_dir / ".devcontainer",
-        project_dir / ".github" / "workflows",
-        project_dir / ".github",
-        project_dir / "docs",
-        project_dir / "notebooks",
-        project_dir / "tests",
-        project_dir / snakecase(project_name),
-    ]
+    wanted_dirs = standard_dirs(project_dir, project_name)
 
     for directory in track(
         wanted_dirs, description="[blue]Creating directory structure..."
@@ -157,6 +151,32 @@ def initialize(
         f"[green]🎉Your project {project_name} is created!\n"
         f"[green]⚠️Make sure that you own a repository named {repo_name} on GitHub."
     )
+
+
+@app.command()
+def minitialize(
+    project_name: str = typer.Option(
+        ".",
+        help="The project name. Will be snake-cased. Defaults to current working directory.",
+        prompt=True,
+    ),
+):
+    """Generate minimal scratch-like environment for prototyping purposes.
+
+    This initializes `git`, source directory, tests, docs.
+    Conda environment is created, package still installed into environment,
+    implying setup.cfg and setup.py.
+
+    We omit:
+    - config files
+    - pre-commit
+    - devcontainer
+    - .github
+
+    :param project_name: Name of the new project to create.
+        Becomes the directory name, kebab-cased,
+        and custom source name, snake_cased.
+    """
 
 
 if __name__ == "__main__":
