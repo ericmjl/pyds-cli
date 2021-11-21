@@ -8,7 +8,12 @@ from caseconverter import snakecase, kebabcase
 from rich.progress import track
 from rich.console import Console
 
-from pyds.utils.project import standard_dirs
+from pyds.utils.project import (
+    initialize_git,
+    make_dirs_if_not_exist,
+    minimal_dirs,
+    standard_dirs,
+)
 from ..utils import CONDA_EXE, read_config, run, write_file
 
 console = Console()
@@ -72,15 +77,9 @@ def initialize(
     information.update(read_config())
 
     wanted_dirs = standard_dirs(project_dir, project_name)
+    make_dirs_if_not_exist(wanted_dirs)
 
-    for directory in track(
-        wanted_dirs, description="[blue]Creating directory structure..."
-    ):
-        directory.mkdir(parents=True, exist_ok=True)
-
-    run("git init", cwd=project_dir, show_out=True)
-    run("git commit --allow-empty -m 'init'", cwd=project_dir)
-    run("git branch -m main", cwd=project_dir)
+    initialize_git()
 
     templates = list(TEMPLATE_DIR.glob("**/*.j2"))
 
@@ -177,6 +176,14 @@ def minitialize(
         Becomes the directory name, kebab-cased,
         and custom source name, snake_cased.
     """
+    proceed = typer.prompt(
+        "Please confirm that you'd like to generate a _minimal_ project "
+        "in the current working directory, "
+        f"{Path.cwd()}",
+        default=True,
+    )
+    if proceed:
+        _ = minimal_dirs(".", project_name)
 
 
 if __name__ == "__main__":

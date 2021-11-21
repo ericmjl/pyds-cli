@@ -2,6 +2,8 @@
 from pathlib import Path
 from typing import List
 from caseconverter import snakecase
+from rich.progress import track
+from pyds.utils import run
 
 
 def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
@@ -34,3 +36,27 @@ def standard_dirs(project_dir: Path, project_name: str) -> List[Path]:
     ]
     dirs.extend(additional_dirs)
     return dirs
+
+
+def make_dirs_if_not_exist(dirs: List[Path]):
+    """Make directories if they do not exist.
+
+    :param dirs: A list of pathlib.Path objects.
+    """
+    for dir in track(dirs, description="[blue]Creating directory structure..."):
+        if not dir.exists:
+            dir.mkdir(parents=True)
+
+
+def initialize_git(project_dir: Path):
+    """Initialize a git repository in a project directory.
+
+    :param project_dir: The path to the project directory.
+    """
+    run("git init", cwd=project_dir, show_out=True)
+    run("git commit --allow-empty -m 'init'", cwd=project_dir)
+    run("git branch -m main", cwd=project_dir)
+
+
+def minstall_templates():
+    """Install minimal set of templates."""
