@@ -16,6 +16,15 @@
         "test",
         "tutorial"
       ]
+    },
+    {
+      "login": "loganthomas",
+      "name": "Logan Thomas",
+      "avatar_url": "https://avatars.githubusercontent.com/u/24984410?v=4",
+      "profile": "https://www.loganthomas.dev",
+      "contributions": [
+        "ideas"
+      ]
     }
   ],
   "contributorsPerLine": 7,
