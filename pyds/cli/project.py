@@ -1,8 +1,7 @@
 """Project initialization and state management tools."""
 
-from rich import print
-
 import typer
+from rich import print
 from rich.console import Console
 
 from pyds.utils.project import (
@@ -12,6 +11,7 @@ from pyds.utils.project import (
     project_name_to_dir,
     standard_dirs,
 )
+
 from ..utils import read_config, run
 from ..utils.project import (
     configure_git,

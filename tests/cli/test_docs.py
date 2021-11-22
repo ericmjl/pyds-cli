@@ -1,8 +1,9 @@
 """Tests for docs."""
-from typer.testing import CliRunner
-from pyds.cli import app
 import os
 
+from typer.testing import CliRunner
+
+from pyds.cli import app
 
 runner = CliRunner()
 

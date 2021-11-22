@@ -1,7 +1,7 @@
 """Wrapper commands for the important mkdocs commands."""
 from typer import Typer
-from ..utils import run
 
+from ..utils import run
 
 app = Typer()
 

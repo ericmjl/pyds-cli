@@ -5,9 +5,10 @@ from typing import Dict, List, Tuple
 from caseconverter import snakecase
 from caseconverter.caseconverter import kebabcase
 from jinja2 import Template
-from pyds.utils import run
 from rich.console import Console
 from rich.progress import track
+
+from pyds.utils import run
 
 from ..utils import CONDA_EXE
 

@@ -2,9 +2,9 @@
 from pathlib import Path
 
 from caseconverter.caseconverter import snakecase
+from typer.testing import CliRunner
 
 from pyds.cli.project import TEMPLATE_DIR
-from typer.testing import CliRunner
 
 runner = CliRunner()
 

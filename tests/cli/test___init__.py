@@ -1,9 +1,11 @@
 """Tests for the top-level CLI."""
 
+import os
+
+from typer.testing import CliRunner
+
 from pyds.cli import app
 from pyds.utils import read_config
-from typer.testing import CliRunner
-import os
 
 runner = CliRunner()
 

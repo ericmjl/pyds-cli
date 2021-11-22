@@ -7,10 +7,11 @@ Scope:
 """
 
 from typing import Dict
-from typer import Typer
+
 from dotenv import dotenv_values
 from pyprojroot import here
 from rich import print
+from typer import Typer
 
 # from ..utils import read_conda_env
 

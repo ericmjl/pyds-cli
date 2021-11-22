@@ -1,7 +1,8 @@
 """Conda surrogate commands."""
-from typer import Typer
 import yaml
-from ..utils import run, CONDA_EXE
+from typer import Typer
+
+from ..utils import CONDA_EXE, run
 
 app = Typer()
 
