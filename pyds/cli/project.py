@@ -12,7 +12,7 @@ from pyds.utils.project import (
     standard_dirs,
 )
 
-from ..utils import read_config, run
+from ..utils import read_config
 from ..utils.project import (
     configure_git,
     copy_templates,
@@ -97,11 +97,6 @@ def initialize(
     if auto_pre_commit:
         install_precommit_hooks(information)
 
-    run("git add .", cwd=project_dir, show_out=True)
-    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
-    run("git add .", cwd=project_dir, show_out=True)
-    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
-
     repo_name = f"{information['github_username']}/{information['project_name']}"
 
     print(
@@ -144,10 +139,15 @@ def minitialize(
     wanted_dirs = minimal_dirs(project_dir, project_name)
     make_dirs_if_not_exist(wanted_dirs)
 
-    initialize_git(project_dir)
+    initialize_git(information)
 
     templates = minimal_templates()
-    copy_templates(templates, project_dir, information)
+    copy_templates(templates, information)
+    create_environment(information)
+    create_jupyter_kernel(information)
+    install_custom_source_package(information)
+    configure_git(information)
+    install_precommit_hooks(information)
 
 
 if __name__ == "__main__":

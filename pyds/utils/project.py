@@ -250,3 +250,22 @@ def install_precommit_hooks(information):
             show_out=True,
             activate_env=True,
         )
+
+
+def initial_commit(information):
+    """Make initial commit of all code.
+
+    :param information: A dictionary of basic information for the project.
+    """
+    run("git add .", cwd=information["project_dir"], show_out=True)
+    run(
+        "git commit -m 'Initial commit.'",
+        cwd=information["project_dir"],
+        show_out=True,
+    )
+    run("git add .", cwd=information["project_dir"], show_out=True)
+    run(
+        "git commit -m 'Initial commit.'",
+        cwd=information["project_dir"],
+        show_out=True,
+    )
