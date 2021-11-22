@@ -65,9 +65,11 @@ def initialize_git(information: Path):
     :param information: A dictionary of basic information for the project.
     """
     project_dir = information["project_dir"]
-    run("git init", cwd=project_dir, show_out=True)
-    run("git commit --allow-empty -m 'init'", cwd=project_dir)
-    run("git branch -m main", cwd=project_dir)
+    git_dir = Path(".git")
+    if not git_dir.exists:
+        run("git init", cwd=project_dir, show_out=True)
+        run("git commit --allow-empty -m 'init'", cwd=project_dir)
+        run("git branch -m main", cwd=project_dir)
 
 
 def minstall_templates():
