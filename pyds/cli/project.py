@@ -1,26 +1,21 @@
 """Project initialization and state management tools."""
 
-from pathlib import Path
 from rich import print
 
 import typer
-from caseconverter import snakecase, kebabcase
-from rich.progress import track
 from rich.console import Console
 
 from pyds.utils.project import (
     initialize_git,
     make_dirs_if_not_exist,
     minimal_dirs,
+    project_name_to_dir,
     standard_dirs,
 )
-from ..utils import CONDA_EXE, read_config, run, write_file
+from ..utils import CONDA_EXE, read_config, run
+from ..utils.project import TEMPLATE_DIR, copy_templates
 
 console = Console()
-
-THIS_PATH = Path(__file__).parent
-TEMPLATE_DIR = THIS_PATH / "templates"
-
 app = typer.Typer()
 
 
@@ -62,12 +57,7 @@ def initialize(
         the pre-commit hooks.
         Defaults to True.
     """
-    here = Path.cwd()
-    project_dir = here / kebabcase(project_name)
-
-    if project_name == ".":
-        project_name = here.name
-        project_dir = here
+    project_name, project_dir = project_name_to_dir(project_name)
 
     information = dict(
         project_name=project_name,
@@ -82,21 +72,7 @@ def initialize(
     initialize_git(project_dir)
 
     templates = list(TEMPLATE_DIR.glob("**/*.j2"))
-
-    for template in track(templates, description="[blue]Creating template files..."):
-        destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
-        if "src" in destination_file.parts:
-            # project_name has to be snake-cased in order for imports to work.
-            destination_file = (
-                Path(project_dir) / snakecase(project_name) / destination_file.name
-            )
-
-        if not destination_file.exists():
-            write_file(
-                template_file=template,
-                information=information,
-                destination_file=destination_file.with_suffix(""),
-            )
+    copy_templates(templates, project_dir, information)
 
     if auto_create_env:
         msg = (
@@ -176,14 +152,9 @@ def minitialize(
         Becomes the directory name, kebab-cased,
         and custom source name, snake_cased.
     """
-    proceed = typer.prompt(
-        "Please confirm that you'd like to generate a _minimal_ project "
-        "in the current working directory, "
-        f"{Path.cwd()}",
-        default=True,
-    )
-    if proceed:
-        _ = minimal_dirs(".", project_name)
+    project_name, project_dir = project_name_to_dir(project_name)
+    wanted_dirs = minimal_dirs(project_dir, project_name)
+    make_dirs_if_not_exist(wanted_dirs)
 
 
 if __name__ == "__main__":

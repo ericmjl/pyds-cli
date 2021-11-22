@@ -5,35 +5,10 @@ from pathlib import Path
 from typing import Dict
 
 import ruamel.yaml
-from jinja2 import Template
 from loguru import logger
 from pyprojroot import here
 
 ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
-
-
-def read_template(path: Path) -> Template:
-    """Return the jinja2 template.
-
-    :param path: Path to template.
-    :returns: A jinja2 Template object.
-    """
-    with open(path, "r+") as f:
-        return Template(f.read())
-
-
-def write_file(template_file: Path, information: dict, destination_file: Path):
-    """Write a template file to disk.
-
-    :param template_file: Path to a template.
-    :param information: Dictionary of information to populate in the template.
-    :param destination_file: Path to where the filled template should be placed.
-    """
-    template = read_template(template_file)
-    text = template.render(**information)
-    destination_file.touch()
-    with destination_file.open(mode="w+") as f:
-        f.write(text)
 
 
 def read_config():
