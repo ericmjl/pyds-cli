@@ -79,7 +79,7 @@ def initialize(
     wanted_dirs = standard_dirs(project_dir, project_name)
     make_dirs_if_not_exist(wanted_dirs)
 
-    initialize_git()
+    initialize_git(project_dir)
 
     templates = list(TEMPLATE_DIR.glob("**/*.j2"))
 
