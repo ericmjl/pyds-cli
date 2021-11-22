@@ -1,14 +1,15 @@
 """Utility functions for projects."""
 from pathlib import Path
 from typing import Dict, List, Tuple
+
 from caseconverter import snakecase
 from caseconverter.caseconverter import kebabcase
-from rich.progress import track
-from pyds.utils import run
 from jinja2 import Template
+from pyds.utils import run
 from rich.console import Console
-from ..utils import CONDA_EXE
+from rich.progress import track
 
+from ..utils import CONDA_EXE
 
 SOURCE_DIR = Path(__file__).parent.parent
 TEMPLATE_DIR = SOURCE_DIR / "cli" / "templates"
