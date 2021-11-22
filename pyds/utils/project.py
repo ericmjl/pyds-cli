@@ -6,6 +6,8 @@ from caseconverter.caseconverter import kebabcase
 from rich.progress import track
 from pyds.utils import run
 from jinja2 import Template
+from rich.console import Console
+from ..utils import CONDA_EXE
 
 
 SOURCE_DIR = Path(__file__).parent.parent
@@ -27,13 +29,14 @@ def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
     return dirs
 
 
-def standard_dirs(project_dir: Path, project_name: str) -> List[Path]:
+def standard_dirs(information) -> List[Path]:
     """Return a list of minimal directories in a project.
 
-    :param project_dir: Directory of the project.
-    :param project_name: Name of the project.
+    :param information: A dictionary of basic information for the project.
     :returns: A minimal list of directories as Path objects.
     """
+    project_dir = information["project_dir"]
+    project_name = information["project_name"]
     dirs = minimal_dirs(project_dir, project_name)
 
     additional_dirs = [
@@ -54,11 +57,12 @@ def make_dirs_if_not_exist(dirs: List[Path]):
         dir.mkdir(parents=True, exist_ok=True)
 
 
-def initialize_git(project_dir: Path):
+def initialize_git(information: Path):
     """Initialize a git repository in a project directory.
 
-    :param project_dir: The path to the project directory.
+    :param information: A dictionary of basic information for the project.
     """
+    project_dir = information["project_dir"]
     run("git init", cwd=project_dir, show_out=True)
     run("git commit --allow-empty -m 'init'", cwd=project_dir)
     run("git branch -m main", cwd=project_dir)
@@ -69,7 +73,7 @@ def minstall_templates():
 
 
 def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
-    """Convert project name into a project dir.
+    """Convert project namecreate_environment into a project dir.
 
     The behaviour of this function is as follows:
 
@@ -92,14 +96,13 @@ def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
     return project_name, project_dir
 
 
-def copy_templates(templates: List[Path], project_dir: Path, information: Dict):
+def copy_templates(templates: List[Path], information: Dict):
     """Copy templates into project directory.
 
     :param templates: List of paths to templates.
-    :param project_dir: Path to the project directory.
     :param information: A dictionary of basic information for the project.
     """
-
+    project_dir = information["project_dir"]
     for template in track(templates, description="[blue]Creating template files..."):
         destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
         if "src" in destination_file.parts:
@@ -132,7 +135,7 @@ def write_template(template_file: Path, information: dict, destination_file: Pat
     """Write a template file to disk.
 
     :param template_file: Path to a template.
-    :param information: Dictionary of information to populate in the template.
+    :param information: A dictionary of basic information for the project.
     :param destination_file: Path to where the filled template should be placed.
     """
     template = read_template(template_file)
@@ -140,3 +143,108 @@ def write_template(template_file: Path, information: dict, destination_file: Pat
     destination_file.touch()
     with destination_file.open(mode="w+") as f:
         f.write(text)
+
+
+def standard_templates() -> List[Path]:
+    """Return the standard list of templates.
+
+    :returns: A list of Path objects.
+    """
+    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
+    return templates
+
+
+def minimal_templates() -> List[Path]:
+    """Return a minimal list of templates to copy.
+
+    :returns: A list of Path objects.
+    """
+    templates = standard_templates()
+    keep_keywords = [
+        "environment.yml.j2",
+        "pyproject.toml.j2",
+        "setup.cfg.j2",
+        "setup.py.j2",
+    ]
+
+    templates_minimal = []
+    for template in templates:
+        for keyword in keep_keywords:
+            if keyword in str(template):
+                templates_minimal.append(template)
+    return templates_minimal
+
+
+console = Console()
+
+
+def create_environment(information):
+    """Create conda environment
+
+    :param information: A dictionary of basic information for the project.
+    """
+    msg = "[bold blue]Creating conda environment (this might take a few moments!)..."
+    with console.status(msg):
+        run(
+            f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
+            cwd=information["project_dir"],
+            show_out=True,
+        )
+
+
+def create_jupyter_kernel(information: Dict):
+    """Create jupyter kernel.
+
+    :param information: A dictionary of basic information for the project.
+    """
+    msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
+    with console.status(msg):
+        run(
+            f"python -m ipykernel install --user --name {information['project_name']}",
+            cwd=information["project_dir"],
+            show_out=True,
+            activate_env=True,
+        )
+
+
+def install_custom_source_package(information):
+    """Instal custom source package.
+
+    :param information: A dictionary of basic information for the project.
+    """
+    msg = (
+        "[bold blue]Installing your custom source package into the conda environment..."
+    )
+    with console.status(msg):
+        run("pip install -e .", cwd=information["project_dir"], activate_env=True)
+
+
+def configure_git(information):
+    """Configure git.
+
+    :param information: A dictionary of basic information for the project.
+    """
+    msg = "[bold blue]Configuring git..."
+    with console.status(msg):
+        repo_name = f"{information['github_username']}/{information['project_name']}"
+        git_ssh_url = f"git@github.com:{repo_name}"
+        run(
+            f"git remote add origin {git_ssh_url}",
+            cwd=information["project_dir"],
+            show_out=True,
+        )
+
+
+def install_precommit_hooks(information):
+    """Install pre-commit.
+
+    :param information: A dictionary of basic information for the project.
+    """
+    msg = "[bold blue]Configuring pre-commit..."
+    with console.status(msg):
+        run(
+            "pre-commit install --install-hooks",
+            cwd=information["project_dir"],
+            show_out=True,
+            activate_env=True,
+        )

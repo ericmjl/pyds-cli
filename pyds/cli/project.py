@@ -12,8 +12,17 @@ from pyds.utils.project import (
     project_name_to_dir,
     standard_dirs,
 )
-from ..utils import CONDA_EXE, read_config, run
-from ..utils.project import TEMPLATE_DIR, copy_templates
+from ..utils import read_config, run
+from ..utils.project import (
+    configure_git,
+    copy_templates,
+    create_environment,
+    create_jupyter_kernel,
+    install_custom_source_package,
+    install_precommit_hooks,
+    minimal_templates,
+    standard_templates,
+)
 
 console = Console()
 app = typer.Typer()
@@ -61,66 +70,39 @@ def initialize(
 
     information = dict(
         project_name=project_name,
+        project_dir=project_dir,
         project_description=project_description,
         license=license,
     )
     information.update(read_config())
 
-    wanted_dirs = standard_dirs(project_dir, project_name)
+    wanted_dirs = standard_dirs(information)
     make_dirs_if_not_exist(wanted_dirs)
 
-    initialize_git(project_dir)
+    initialize_git(information)
 
-    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
-    copy_templates(templates, project_dir, information)
+    templates = standard_templates()
+    copy_templates(templates, information)
 
     if auto_create_env:
-        msg = (
-            "[bold blue]Creating conda environment (this might take a few moments!)..."
-        )
-        with console.status(msg):
-            run(
-                f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
-                cwd=project_dir,
-                show_out=True,
-            )
+        create_environment(information)
 
     if auto_jupyter_kernel:
-        msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
-        with console.status(msg):
-            run(
-                f"python -m ipykernel install --user --name {project_name}",
-                cwd=project_dir,
-                show_out=True,
-                activate_env=True,
-            )
+        create_jupyter_kernel(information)
 
-    msg = (
-        "[bold blue]Installing your custom source package into the conda environment..."
-    )
-    with console.status(msg):
-        run("pip install -e .", cwd=project_dir, activate_env=True)
+    install_custom_source_package(information)
 
-    msg = "[bold blue]Configuring git..."
-    with console.status(msg):
-        repo_name = f"{information['github_username']}/{project_name}"
-        git_ssh_url = f"git@github.com:{repo_name}"
-        run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
+    configure_git(information)
 
-    msg = "[bold blue]Configuring pre-commit..."
-    with console.status(msg):
-        if auto_pre_commit:
-            run(
-                "pre-commit install --install-hooks",
-                cwd=project_dir,
-                show_out=True,
-                activate_env=True,
-            )
+    if auto_pre_commit:
+        install_precommit_hooks(information)
 
     run("git add .", cwd=project_dir, show_out=True)
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
     run("git add .", cwd=project_dir, show_out=True)
     run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
+
+    repo_name = f"{information['github_username']}/{information['project_name']}"
 
     print(
         f"[green]🎉Your project {project_name} is created!\n"
@@ -153,8 +135,19 @@ def minitialize(
         and custom source name, snake_cased.
     """
     project_name, project_dir = project_name_to_dir(project_name)
+    information = dict(
+        project_dir=project_dir,
+        project_name=project_name,
+    )
+    information.update(read_config())
+
     wanted_dirs = minimal_dirs(project_dir, project_name)
     make_dirs_if_not_exist(wanted_dirs)
+
+    initialize_git(project_dir)
+
+    templates = minimal_templates()
+    copy_templates(templates, project_dir, information)
 
 
 if __name__ == "__main__":
