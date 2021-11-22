@@ -9,6 +9,7 @@ we look for environment variables such as:
 - `anaconda`
 """
 from pathlib import Path
+
 import typer
 
 from ..utils import run

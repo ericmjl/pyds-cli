@@ -1,7 +1,7 @@
 """Tests for system commands."""
 from typer.testing import CliRunner
-from pyds.cli import app
 
+from pyds.cli import app
 
 runner = CliRunner()
 

@@ -48,3 +48,7 @@ addopts = "-v --cov --cov-report term-missing"
 testpaths = [
     "tests",
 ]
+
+
+[tool.isort]
+profile = "black"

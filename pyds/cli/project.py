@@ -1,19 +1,30 @@
 """Project initialization and state management tools."""
 
-from pathlib import Path
-from rich import print
-
 import typer
-from caseconverter import snakecase, kebabcase
-from rich.progress import track
+from rich import print
 from rich.console import Console
-from ..utils import CONDA_EXE, read_config, run, write_file
+
+from pyds.utils.project import (
+    initialize_git,
+    make_dirs_if_not_exist,
+    minimal_dirs,
+    project_name_to_dir,
+    standard_dirs,
+)
+
+from ..utils import read_config
+from ..utils.project import (
+    configure_git,
+    copy_templates,
+    create_environment,
+    create_jupyter_kernel,
+    install_custom_source_package,
+    install_precommit_hooks,
+    minimal_templates,
+    standard_templates,
+)
 
 console = Console()
-
-THIS_PATH = Path(__file__).parent
-TEMPLATE_DIR = THIS_PATH / "templates"
-
 app = typer.Typer()
 
 
@@ -55,108 +66,88 @@ def initialize(
         the pre-commit hooks.
         Defaults to True.
     """
-    here = Path.cwd()
-    project_dir = here / kebabcase(project_name)
-
-    if project_name == ".":
-        project_name = here.name
-        project_dir = here
+    project_name, project_dir = project_name_to_dir(project_name)
 
     information = dict(
         project_name=project_name,
+        project_dir=project_dir,
         project_description=project_description,
         license=license,
     )
     information.update(read_config())
 
-    wanted_dirs = [
-        project_dir / ".devcontainer",
-        project_dir / ".github" / "workflows",
-        project_dir / ".github",
-        project_dir / "docs",
-        project_dir / "notebooks",
-        project_dir / "tests",
-        project_dir / snakecase(project_name),
-    ]
+    wanted_dirs = standard_dirs(information)
+    make_dirs_if_not_exist(wanted_dirs)
 
-    for directory in track(
-        wanted_dirs, description="[blue]Creating directory structure..."
-    ):
-        directory.mkdir(parents=True, exist_ok=True)
+    initialize_git(information)
 
-    run("git init", cwd=project_dir, show_out=True)
-    run("git commit --allow-empty -m 'init'", cwd=project_dir)
-    run("git branch -m main", cwd=project_dir)
-
-    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
-
-    for template in track(templates, description="[blue]Creating template files..."):
-        destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
-        if "src" in destination_file.parts:
-            # project_name has to be snake-cased in order for imports to work.
-            destination_file = (
-                Path(project_dir) / snakecase(project_name) / destination_file.name
-            )
-
-        if not destination_file.exists():
-            write_file(
-                template_file=template,
-                information=information,
-                destination_file=destination_file.with_suffix(""),
-            )
+    templates = standard_templates()
+    copy_templates(templates, information)
 
     if auto_create_env:
-        msg = (
-            "[bold blue]Creating conda environment (this might take a few moments!)..."
-        )
-        with console.status(msg):
-            run(
-                f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
-                cwd=project_dir,
-                show_out=True,
-            )
+        create_environment(information)
 
     if auto_jupyter_kernel:
-        msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
-        with console.status(msg):
-            run(
-                f"python -m ipykernel install --user --name {project_name}",
-                cwd=project_dir,
-                show_out=True,
-                activate_env=True,
-            )
+        create_jupyter_kernel(information)
 
-    msg = (
-        "[bold blue]Installing your custom source package into the conda environment..."
-    )
-    with console.status(msg):
-        run("pip install -e .", cwd=project_dir, activate_env=True)
+    install_custom_source_package(information)
 
-    msg = "[bold blue]Configuring git..."
-    with console.status(msg):
-        repo_name = f"{information['github_username']}/{project_name}"
-        git_ssh_url = f"git@github.com:{repo_name}"
-        run(f"git remote add origin {git_ssh_url}", cwd=project_dir, show_out=True)
+    configure_git(information)
 
-    msg = "[bold blue]Configuring pre-commit..."
-    with console.status(msg):
-        if auto_pre_commit:
-            run(
-                "pre-commit install --install-hooks",
-                cwd=project_dir,
-                show_out=True,
-                activate_env=True,
-            )
+    if auto_pre_commit:
+        install_precommit_hooks(information)
 
-    run("git add .", cwd=project_dir, show_out=True)
-    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
-    run("git add .", cwd=project_dir, show_out=True)
-    run("git commit -m 'Initial commit.'", cwd=project_dir, show_out=True)
+    repo_name = f"{information['github_username']}/{information['project_name']}"
 
     print(
         f"[green]🎉Your project {project_name} is created!\n"
         f"[green]⚠️Make sure that you own a repository named {repo_name} on GitHub."
     )
+
+
+@app.command()
+def minitialize(
+    project_name: str = typer.Option(
+        ".",
+        help="The project name. Will be snake-cased. Defaults to current working directory.",
+        prompt=True,
+    ),
+):
+    """Generate minimal scratch-like environment for prototyping purposes.
+
+    This initializes `git`, source directory, tests, docs.
+    Conda environment is created, package still installed into environment,
+    implying setup.cfg and setup.py.
+
+    We omit:
+    - config files
+    - pre-commit
+    - devcontainer
+    - .github
+
+    :param project_name: Name of the new project to create.
+        Becomes the directory name, kebab-cased,
+        and custom source name, snake_cased.
+    """
+    project_name, project_dir = project_name_to_dir(project_name)
+    information = dict(
+        project_dir=project_dir,
+        project_name=project_name,
+    )
+    information.update(read_config())
+
+    wanted_dirs = minimal_dirs(project_dir, project_name)
+    make_dirs_if_not_exist(wanted_dirs)
+
+    initialize_git(information)
+
+    templates = minimal_templates()
+    copy_templates(templates, information)
+    create_environment(information)
+    create_jupyter_kernel(information)
+    install_custom_source_package(information)
+    configure_git(information)
+    install_precommit_hooks(information)
 
 
 if __name__ == "__main__":
