@@ -1,6 +1,6 @@
 # PyDS CLI
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-2-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 Helping you manage your data science projects _sanely_.
@@ -39,6 +39,7 @@ Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/d
   <tr>
     <td align="center"><a href="https://ericmjl.github.io/"><img src="https://avatars.githubusercontent.com/u/2631566?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Eric Ma</b></sub></a><br /><a href="https://github.com/ericmjl/pyds-cli/commits?author=ericmjl" title="Code">💻</a> <a href="#infra-ericmjl" title="Infrastructure (Hosting, Build-Tools, etc)">🚇</a> <a href="https://github.com/ericmjl/pyds-cli/commits?author=ericmjl" title="Tests">⚠️</a> <a href="#tutorial-ericmjl" title="Tutorials">✅</a></td>
     <td align="center"><a href="https://www.loganthomas.dev"><img src="https://avatars.githubusercontent.com/u/24984410?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Logan Thomas</b></sub></a><br /><a href="#ideas-loganthomas" title="Ideas, Planning, & Feedback">🤔</a></td>
+    <td align="center"><a href="http://giessel.com"><img src="https://avatars.githubusercontent.com/u/1160997?v=4?s=100" width="100px;" alt=""/><br /><sub><b>andrew giessel</b></sub></a><br /><a href="#ideas-andrewgiessel" title="Ideas, Planning, & Feedback">🤔</a></td>
   </tr>
 </table>
 
