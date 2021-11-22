@@ -72,10 +72,6 @@ def initialize_git(information: Path):
         run("git branch -m main", cwd=project_dir)
 
 
-def minstall_templates():
-    """Install minimal set of templates."""
-
-
 def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
     """Convert project namecreate_environment into a project dir.
 
