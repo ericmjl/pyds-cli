@@ -32,6 +32,7 @@ def standard_dirs(project_dir: Path, project_name: str) -> List[Path]:
 
     additional_dirs = [
         project_dir / ".devcontainer",
+        project_dir / ".github",
         project_dir / ".github" / "workflows",
     ]
     dirs.extend(additional_dirs)
@@ -44,8 +45,7 @@ def make_dirs_if_not_exist(dirs: List[Path]):
     :param dirs: A list of pathlib.Path objects.
     """
     for dir in track(dirs, description="[blue]Creating directory structure..."):
-        if not dir.exists:
-            dir.mkdir(parents=True)
+        dir.mkdir(parents=True, exist_ok=True)
 
 
 def initialize_git(project_dir: Path):
