@@ -45,3 +45,4 @@ dependencies:
       - typer-cli
       - case-converter
       - rich
+      - jinja2-strcase
