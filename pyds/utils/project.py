@@ -4,7 +4,7 @@ from typing import Dict, List, Tuple
 
 from caseconverter import snakecase
 from caseconverter.caseconverter import kebabcase
-from jinja2 import Template
+from jinja2 import Environment, PackageLoader, Template
 from rich.console import Console
 from rich.progress import track
 
@@ -14,6 +14,11 @@ from ..utils import CONDA_EXE
 
 SOURCE_DIR = Path(__file__).parent.parent
 TEMPLATE_DIR = SOURCE_DIR / "cli" / "templates"
+
+jinja2_env = Environment(
+    loader=PackageLoader("pyds.cli", "templates"),
+    extensions=["jinja2_strcase.StrcaseExtension"],
+)
 
 
 def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
@@ -138,7 +143,7 @@ def write_template(template_file: Path, information: dict, destination_file: Pat
     :param information: A dictionary of basic information for the project.
     :param destination_file: Path to where the filled template should be placed.
     """
-    template = read_template(template_file)
+    template = jinja2_env.get_template(str(template_file.relative_to(TEMPLATE_DIR)))
     text = template.render(**information)
     destination_file.touch()
     with destination_file.open(mode="w+") as f:

@@ -36,4 +36,4 @@ def test_test(initialized_project):
     os.chdir(tmp_path / project_name)
 
     result = runner.invoke(app, ["test"])
-    assert result.exit_code == 0
+    assert result.exit_code == 0, result.stderr

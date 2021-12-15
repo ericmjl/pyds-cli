@@ -28,7 +28,7 @@ def initialized_project() -> Tuple[Path, Path]:
         ["project", "initialize"],
         input=".\nblah\nMIT\nY\nY\nY\n",
     )
-    assert result.exit_code == 0
+    assert result.exit_code == 0, result.stderr
     return tmp_path, project_name
 
 
