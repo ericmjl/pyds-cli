@@ -85,6 +85,12 @@ I wrote down my first ideas on the theme of "good data science project organizat
 The result was a GitHub gist with a lot of ideas,
 but not automation provided.
 
+### [The Good Research Code Handbook](https://goodresearch.dev)
+
+This is an excellent resource that I got wind of in December 2021.
+In it is a detailed handbook-style resource that lays out step-by-step instructions
+for structuring your data science and/or research project code.
+
 ### Conversations with colleagues at Moderna
 
 My conversations with colleagues on the DSAI team at Moderna
