@@ -8,17 +8,18 @@ import pytest
 from typer.testing import CliRunner
 
 from pyds.cli import app
+from pyds.utils import run
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="session", autouse=True)
 def initialized_project() -> Tuple[Path, Path]:
     """Initialize a project.
 
-    :returns: A two-tuple of temp dir path and project directory path.
+    :yields: A two-tuple of temp dir path and project directory path.
     """
     runner = CliRunner()
     project_name = str(uuid4())
-    tmp_path = Path("/tmp") / str(uuid4())
+    tmp_path = Path("/tmp/pyds-cli")
     project_dir = tmp_path / project_name
     project_dir.mkdir(parents=True)
     os.chdir(project_dir)
@@ -29,26 +30,6 @@ def initialized_project() -> Tuple[Path, Path]:
         input=".\nblah\nMIT\nY\nY\nY\n",
     )
     assert result.exit_code == 0, result.stderr
-    return tmp_path, project_name
-
-
-@pytest.fixture(scope="session")
-def minimal_project() -> Tuple[Path, Path]:
-    """Initialize a _minimal_ project.
-
-    :returns: A two-tuple of temp dir path and project directory path.
-    """
-    runner = CliRunner()
-    project_name = str(uuid4())
-    tmp_path = Path("/tmp") / str(uuid4())
-    project_dir = tmp_path / project_name
-    project_dir.mkdir(parents=True)
-    os.chdir(project_dir)
-
-    result = runner.invoke(
-        app,
-        ["project", "minitialize"],
-        input=".\n",
-    )
-    assert result.exit_code == 0
-    return tmp_path, project_name
+    yield tmp_path, project_name
+    run(f"conda env remove -n {project_name}")
+    run(f"rm -rf {tmp_path}")

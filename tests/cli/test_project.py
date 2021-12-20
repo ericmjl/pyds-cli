@@ -25,11 +25,3 @@ def test_project_initialize(initialized_project):
             f_str = f_str.replace("src", snakecase(project_name))
             f = Path(f_str)
         assert (project_dir / f).exists()
-
-
-def test_project_minitialize(minimal_project):
-    """Test minimal project initialization.
-
-    :param minimal_project: conftest.py fixture for our initialized project.
-    """
-    tmp_path, project_name = minimal_project
