@@ -27,7 +27,7 @@ def read_config():
         with config_path.open("r+") as f:
             return yaml.load(f.read())
     except FileNotFoundError:
-        raise Exception("❗️Please run `pyds init` to configure pyds!")
+        raise Exception("❗️Please run `pyds configure` to configure pyds!")
 
 
 def run(

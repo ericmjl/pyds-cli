@@ -18,6 +18,8 @@ def initialized_project() -> Tuple[Path, Path]:
     :yields: A two-tuple of temp dir path and project directory path.
     """
     runner = CliRunner()
+
+    runner.invoke(app, ["configure"], input="GitHub Bot\nbot@github.com\nbot\nbot\nbot")
     project_name = str(uuid4())
     tmp_path = Path("/tmp/pyds-cli")
     project_dir = tmp_path / project_name
