@@ -49,7 +49,7 @@ def publish(
             run(f"bumpversion {bump} --verbose", show_out=True, activate_env=True)
             run("rm dist/*")
             run(f"python -m build {here()}", activate_env=True)
-            run(f"twine upload -r {to} dist/", activate_env=True)
+            run(f"twine upload -r {to} dist/*", activate_env=True)
 
 
 @app.command()
