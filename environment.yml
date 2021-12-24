@@ -35,6 +35,7 @@ dependencies:
   - darglint
   - interrogate
   - flake8
+  - bumpversion
   # Documentation
   - mkdocs
   - mkdocs-material
