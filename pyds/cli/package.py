@@ -57,8 +57,8 @@ def publish(
             run(f"bumpversion {bump} --verbose", show_out=True, activate_env=True)
             run("git add . && git commit")
             run("rm dist/*")
-            run(f"python -m build {here()}", activate_env=True)
-            run(f"twine upload -r {to} dist/*", activate_env=True)
+            run(f"python -m build {here()}", show_out=True, activate_env=True)
+            run(f"twine upload -r {to} dist/*", show_out=True, activate_env=True)
 
 
 @app.command()
