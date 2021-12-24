@@ -5,6 +5,7 @@ import typer
 from pyprojroot import here
 
 from ..utils import run
+from ..utils.paths import PYPIRC_PATH
 
 app = typer.Typer()
 
@@ -41,7 +42,14 @@ def publish(
         Can be run from anywhere within the project directory.
         Defaults to 'pypi'.
     :param dry_run: Whether you want to do just a dry-run.
+    :raises FileNotFoundError: if the PyPI configuration file is not found.
     """
+    if not PYPIRC_PATH.exists():
+        raise FileNotFoundError(
+            f"Cannot find your `.pypirc` file at {PYPIRC_PATH}! "
+            "For more information, see https://packaging.python.org/en/latest/specifications/pypirc/.\n\n"
+            "Meanwhile, please rune `pyds system init` to add the file to your home directory. "
+        )
     run(f"bumpversion {bump} --verbose --dry-run", show_out=True, activate_env=True)
     if not dry_run:
         response = typer.confirm("Please double-check: is the version bump done right?")

@@ -8,13 +8,11 @@ we look for environment variables such as:
 - `CONDA_PREFIX`
 - `anaconda`
 """
-from pathlib import Path
 
 import typer
 
 from ..utils import run
-
-PYPIRC_PATH = Path.home() / ".pypirc"
+from ..utils.paths import PYPIRC_PATH
 
 app = typer.Typer()
 
