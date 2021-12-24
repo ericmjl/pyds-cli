@@ -18,7 +18,7 @@ def read_config():
     and has the name `.pyds.yaml`.
 
     :returns: A dictionary of PyDS configurations.
-    :raises Exception: when the pyds config file cannot be found.
+    :raises FileNotFoundError: when the pyds config file cannot be found.
     """
     try:
         config_path = Path.home() / ".pyds.yaml"
@@ -27,7 +27,7 @@ def read_config():
         with config_path.open("r+") as f:
             return yaml.load(f.read())
     except FileNotFoundError:
-        raise Exception("❗️Please run `pyds configure` to configure pyds!")
+        raise FileNotFoundError("❗️Please run `pyds configure` to configure pyds!")
 
 
 def run(
