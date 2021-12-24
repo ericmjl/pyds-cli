@@ -13,9 +13,6 @@ theme:
     - tabs
   language: en
 
-# We customize the navigation by hand to control the order
-# in which pages show up.
-
 plugins:
   - search
   - mknotebooks:
