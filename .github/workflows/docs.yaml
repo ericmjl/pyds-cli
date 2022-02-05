@@ -32,7 +32,7 @@ jobs:
 
       - name: Build docs
         run: |
-          source activate pyds
+          conda activate pyds
           python -m ipykernel install --user --name pyds
           pip install -e .
           typer pyds.cli utils docs --name pyds --output docs/cli.md
