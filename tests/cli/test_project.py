@@ -1,7 +1,7 @@
 """Tests for project creation and management."""
 from pathlib import Path
 
-from caseconverter.caseconverter import snakecase
+from caseconverter import snakecase
 from typer.testing import CliRunner
 
 from pyds.utils.project import TEMPLATE_DIR
