@@ -52,3 +52,30 @@ testpaths = [
 
 [tool.isort]
 profile = "black"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["pyds"]
+include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
+namespaces = false
+
+[project]
+name = pyds-cli
+version = 0.1.0
+dependencies = [
+    "typer >=0.3.2",
+    "pyyaml >=6.0",
+    "jinja2 >=3.0.2",
+    "loguru >=0.5.3",
+    "pyprojroot >=0.2.0",
+    "python-dotenv >=0.19.1",
+    "rich >=10.12.0",
+    "ruamel.yaml >=0.17.17",
+    "case-converter >=1.0.2",
+    "jinja2-strcase >= 0.0.2"
+]
+
+[project.scripts]
+pyds = "pyds.cli:app"
