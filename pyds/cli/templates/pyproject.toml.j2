@@ -1,6 +1,6 @@
 # https://setuptools.pypa.io/en/latest/userguide/quickstart.html
 [build-system]
-requires = ["setuptools", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [tool.black]
@@ -51,3 +51,31 @@ testpaths = [
 
 [tool.isort]
 profile = "black"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["{{ project_name }}"]
+include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
+namespaces = false
+
+[project]
+name = "{{ project_name }}"
+version = "0.0.1"
+dependencies = [
+    "openai",
+    "langchain"
+]
+
+[project.optional-dependencies]
+tests = [
+    "pytest"
+]
+docs = [
+    "mkdocs-material",
+    "mkdocs"
+]
+
+[project.scripts]
+{{ project_name }} = "{{ project_name }}.cli:app"
