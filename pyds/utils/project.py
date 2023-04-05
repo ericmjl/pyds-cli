@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 from caseconverter import snakecase
-from caseconverter.caseconverter import kebabcase
+from caseconverter import kebabcase
 from jinja2 import Environment, PackageLoader, Template
 from rich.console import Console
 from rich.progress import track
