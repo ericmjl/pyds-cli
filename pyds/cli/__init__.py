@@ -5,6 +5,7 @@ import typer
 import yaml
 
 from pyds.utils import run
+from pyds.version import __version__
 
 from .conda import app as conda_app
 from .docs import app as docs_app
@@ -58,7 +59,11 @@ def test():
     run("pytest .")
 
 
-{}
+@app.command()
+def version():
+    """Print the current version of pyds."""
+    print(__version__)
+
 
 if __name__ == "__main__":
     app()
