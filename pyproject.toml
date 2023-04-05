@@ -62,8 +62,8 @@ include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
 namespaces = false
 
 [project]
-name = pyds-cli
-version = 0.1.2
+name = "pyds-cli"
+version = "0.1.2"
 dependencies = [
     "typer >=0.3.2",
     "pyyaml >=6.0",
