@@ -15,14 +15,6 @@ dependencies:
   - loguru
   - pyprojroot
   - ruamel.yaml # allows preserving of EOL comments.
-  # Standard PyData stack
-  - pandas
-  - matplotlib
-  - numpy
-  - scipy
-  - seaborn
-  - pymc3
-  - scikit-learn
   # CLI development
   - typer
   # Software testing
