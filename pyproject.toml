@@ -58,7 +58,7 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["pyds"]
-include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
+include = ["*"]
 namespaces = false
 
 [project]
