@@ -55,7 +55,9 @@ profile = "black"
 
 [tool.setuptools]
 include-package-data = true
-package-dir = {"" = "pyds"}
+
+[tool.setuptools.packages]
+find = {}  # Scanning implicit namespaces is active by default
 
 [project]
 name = "pyds-cli"
