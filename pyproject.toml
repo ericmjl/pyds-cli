@@ -59,7 +59,7 @@ include-package-data = true
 [tool.setuptools.packages.find]
 where = ["pyds"]
 include = ["*"]
-namespaces = false
+namespaces = true
 
 [project]
 name = "pyds-cli"
