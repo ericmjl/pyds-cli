@@ -55,11 +55,7 @@ profile = "black"
 
 [tool.setuptools]
 include-package-data = true
-
-[tool.setuptools.packages.find]
-where = ["pyds"]
-include = ["*"]
-namespaces = true
+package-dir = {"" = "pyds"}
 
 [project]
 name = "pyds-cli"
