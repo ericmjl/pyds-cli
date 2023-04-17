@@ -149,7 +149,16 @@ def minitialize(
 
 @app.command()
 def update():
-    """Update the project."""
+    """Update the project.
+
+    This command will automatically update the pre-commit hooks
+    as well as the conda environment.
+
+    We run the commands with the base conda environment activated
+    rather than the project environment
+    to prevent phantom child environments from being created.
+    This is a known issue with mamba.
+    """
     run("pre-commit autoupdate", show_out=True)
     run("mamba env update -f environment.yml", show_out=True)
 
