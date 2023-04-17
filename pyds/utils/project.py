@@ -2,8 +2,7 @@
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-from caseconverter import snakecase
-from caseconverter import kebabcase
+from caseconverter import kebabcase, snakecase
 from jinja2 import Environment, PackageLoader, Template
 from rich.console import Console
 from rich.progress import track
@@ -64,7 +63,7 @@ def make_dirs_if_not_exist(dirs: List[Path]):
         dir.mkdir(parents=True, exist_ok=True)
 
 
-def initialize_git(information: Path):
+def initialize_git(information: dict):
     """Initialize a git repository in a project directory.
 
     :param information: A dictionary of basic information for the project.

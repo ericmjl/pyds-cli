@@ -1,5 +1,5 @@
 {
-    "python.formatting.blackPath": "/opt/conda/bin/black",
+    "python.formatting.blackPath": "black",
     "python.testing.pytestArgs": [
         "tests"
     ],
@@ -24,5 +24,7 @@
         "titleBar.inactiveBackground": "#ff3d0099",
         "titleBar.inactiveForeground": "#e7e7e799"
     },
-    "peacock.color": "#ff3d00"
+    "peacock.color": "#ff3d00",
+    "python.formatting.provider": "black",
+    "python.analysis.typeCheckingMode": "basic"
 }
