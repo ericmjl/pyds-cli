@@ -52,6 +52,7 @@ def run(
         Defaults to False.
     :returns: The result of `subprocess.run`.
     """
+    cmd = f"bash -c 'source activate base && {cmd}'"
     if activate_env:
         env = get_conda_env_name()
         cmd = f"bash -c 'source activate {env} && {cmd}'"
