@@ -4,23 +4,20 @@ import typer
 from rich import print
 from rich.console import Console
 
+from pyds.utils import read_config, run
 from pyds.utils.project import (
-    initialize_git,
-    make_dirs_if_not_exist,
-    minimal_dirs,
-    project_name_to_dir,
-    standard_dirs,
-)
-
-from ..utils import read_config
-from ..utils.project import (
     configure_git,
     copy_templates,
     create_environment,
     create_jupyter_kernel,
+    initialize_git,
     install_custom_source_package,
     install_precommit_hooks,
+    make_dirs_if_not_exist,
+    minimal_dirs,
     minimal_templates,
+    project_name_to_dir,
+    standard_dirs,
     standard_templates,
 )
 
@@ -148,6 +145,13 @@ def minitialize(
     install_custom_source_package(information)
     configure_git(information)
     install_precommit_hooks(information)
+
+
+@app.command()
+def update():
+    """Update the project."""
+    run("pre-commit autoupdate", show_out=True)
+    run("mamba env update -f environment.yml", show_out=True)
 
 
 if __name__ == "__main__":
