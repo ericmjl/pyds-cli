@@ -56,11 +56,6 @@ profile = "black"
 include-package-data = true
 packages = ["{{ project_name | replace('-', '_') }}"]
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
-namespaces = false
-
 [project]
 name = "{{ project_name }}"
 version = "0.0.1"
