@@ -54,6 +54,7 @@ profile = "black"
 
 [tool.setuptools]
 include-package-data = true
+packages = ["{{ project_name | replace('-', '_') }}"]
 
 [tool.setuptools.packages.find]
 where = ["."]
