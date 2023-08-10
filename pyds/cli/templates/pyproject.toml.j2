@@ -56,7 +56,7 @@ profile = "black"
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["{{ project_name }}"]
+where = ["."]
 include = ["pkg*"]  # alternatively: `exclude = ["additional*"]`
 namespaces = false
 
@@ -78,4 +78,4 @@ docs = [
 ]
 
 [project.scripts]
-{{ project_name }} = "{{ project_name }}.cli:app"
+{{ project_name }} = "{{ project_name | replace('-', '_') }}.cli:app"
