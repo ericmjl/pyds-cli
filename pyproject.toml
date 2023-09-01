@@ -74,6 +74,8 @@ dependencies = [
     "case-converter >=1.0.2",
     "jinja2-strcase >= 0.0.2"
 ]
+long_description = file: README.md
+long_description_content_type = text/markdown
 
 [project.scripts]
 pyds = "pyds.cli:app"
