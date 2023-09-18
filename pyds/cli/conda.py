@@ -43,7 +43,7 @@ def rebuild():
 def update():
     """Update the conda environment associated with the project."""
     ensure_base_env()
-    run(f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'")
+    run(f"source activate base && {CONDA_EXE} env update -f environment.yml")
 
 
 if __name__ == "__main__":

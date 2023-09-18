@@ -190,7 +190,7 @@ def create_environment(information):
     msg = "[bold blue]Creating conda environment (this might take a few moments!)..."
     with console.status(msg):
         run(
-            f"bash -c 'source activate base && {CONDA_EXE} env update -f environment.yml'",
+            f"source activate base && {CONDA_EXE} env update -f environment.yml",
             cwd=information["project_dir"],
             show_out=True,
         )
@@ -201,7 +201,10 @@ def create_jupyter_kernel(information: Dict):
 
     :param information: A dictionary of basic information for the project.
     """
-    msg = "[bold blue]Enabling Jupyter kernel discovery of your newfangled conda environment..."
+    msg = (
+        "[bold blue]Enabling Jupyter kernel discovery "
+        "of your newfangled conda environment..."
+    )
     with console.status(msg):
         run(
             f"python -m ipykernel install --user --name {information['project_name']}",
