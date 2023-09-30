@@ -35,7 +35,6 @@ jobs:
           conda activate {{ project_name }}
           python -m ipykernel install --user --name {{ project_name }}
           pip install -e .
-          typer {{ project_name | to_snake }}.cli utils docs --name {{ project_name }} --output docs/cli.md
           mkdocs build --site-dir /tmp/docs
 
       - name: Deploy website
