@@ -1,6 +1,7 @@
 """Conda surrogate commands."""
-import yaml
 import os
+
+import yaml
 from typer import Typer
 
 from ..utils import CONDA_EXE, run

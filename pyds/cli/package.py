@@ -25,7 +25,10 @@ def publish(
     ),
     to: str = typer.Option(
         "pypi",
-        help="The name of the pip server on which to publish the package. Should be configured in your .pypirc.",
+        help=(
+            "The name of the pip server on which to publish the package. "
+            "Should be configured in your .pypirc."
+        ),
         prompt=True,
     ),
     dry_run: bool = typer.Option(
@@ -48,7 +51,8 @@ def publish(
         raise FileNotFoundError(
             f"Cannot find your `.pypirc` file at {PYPIRC_PATH}! "
             "For more information, see https://packaging.python.org/en/latest/specifications/pypirc/.\n\n"
-            "Meanwhile, please rune `pyds system init` to add the file to your home directory. "
+            "Meanwhile, please rune `pyds system init` "
+            "to add the file to your home directory. "
         )
     run(f"bumpversion {bump} --verbose --dry-run", show_out=True, activate_env=True)
     if not dry_run:
