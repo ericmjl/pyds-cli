@@ -38,7 +38,10 @@ def check_conda():
     if out.returncode == 0:
         print("✅ Conda found! 🎉")
     else:
-        print("❌ Conda not found. Please run `pyds system bootstrap` to install conda.")
+        print(
+            "❌ Conda not found. "
+            "Please run `pyds system bootstrap` to install conda on your system."
+        )
 
 
 def check_homebrew():
@@ -56,7 +59,8 @@ def check_pypi():
         print("✅ ~/.pypirc exists! 🎉")
     else:
         print(
-            "❌ ~/.pypirc not found. Please run `pyds system bootstrap` to create the `.pypirc` file."
+            "❌ ~/.pypirc not found. "
+            "Please run `pyds system bootstrap` to create the `.pypirc` file."
         )
 
 
@@ -69,7 +73,7 @@ def init():
 def install_conda():
     """Install conda onto a user's system."""
     run(
-        "wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"
+        "wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"  # noqa: E501
     )
 
 

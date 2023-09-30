@@ -29,7 +29,10 @@ app = typer.Typer()
 def initialize(
     project_name: str = typer.Option(
         ".",
-        help="The project name. Will be snake-cased. Defaults to current working directory.",
+        help=(
+            "The project name. Will be snake-cased. "
+            "Defaults to current working directory."
+        ),
         prompt=True,
     ),
     project_description: str = typer.Option(
@@ -106,7 +109,10 @@ def initialize(
 def minitialize(
     project_name: str = typer.Option(
         ".",
-        help="The project name. Will be snake-cased. Defaults to current working directory.",
+        help=(
+            "The project name. Will be snake-cased. "
+            "Defaults to current working directory."
+        ),
         prompt=True,
     ),
 ):

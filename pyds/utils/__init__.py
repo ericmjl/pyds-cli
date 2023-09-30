@@ -47,8 +47,8 @@ def run(
     :param capture_output: Passed to `subprocess.run`'s `capture_output` argument.
     :param log: Whether or not to log the command to screen.
     :param show_out: Whether or not to show the output of `cmd` to the terminal.
-    :param activate_env: Whether or not to activate the project's conda environment or not
-        before running the command.
+    :param activate_env: Whether or not to activate
+        the project's conda environment or not before running the command.
         Defaults to False.
     :returns: The result of `subprocess.run`.
     """
@@ -106,23 +106,6 @@ def read_conda_env(env_file="environment.yml", cwd: Path = Path(".")) -> Dict:
     raise NameError(
         "❗️Unable to find environment.yml. Are you inside a project directory?"
     )
-
-
-# def write_conda_env(env_dict: dict, env_file="environment.yml", cwd: Path = Path(".")):
-#     """Write conda environment to disk.
-
-#     This function will always guarantee that we write the `environment.yml` file
-#     In the order of:
-#     - name
-#     - channels
-#     - dependencies
-
-#     The function also comes with auxiliary functionality.
-#     It will:
-
-#     - ensure that Python is listed at the top of the `dependencies` list.
-#     - ensure that the pip section is listed at the bottom of the `dependencies` list.
-#     """
 
 
 def get_conda_env_name(env_file="environment.yml", cwd: Path = Path(".")):
