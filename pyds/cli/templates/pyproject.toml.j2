@@ -52,6 +52,11 @@ testpaths = [
 [tool.isort]
 profile = "black"
 
+[tool.ruff]
+# See https://docs.astral.sh/ruff/rules/ for a list of rules.
+# See https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml for configuration documentation
+select = ["E", "F", "I"]
+
 [tool.setuptools]
 include-package-data = true
 packages = ["{{ project_name | replace('-', '_') }}"]
