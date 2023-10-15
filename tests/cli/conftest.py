@@ -11,7 +11,7 @@ from pyds.cli import app
 from pyds.utils import read_config, run
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="function", autouse=True)
 def initialized_project() -> Tuple[Path, Path]:
     """Initialize a project.
 
