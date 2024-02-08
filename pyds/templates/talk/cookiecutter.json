@@ -1,0 +1,5 @@
+{
+    "talk_name": "{{ cookiecutter.talk_name }}",
+    "project_name": "{{ cookiecutter.talk_name.lower().replace(' ', '-') }}",
+    "open_source_license": "MIT"
+}
