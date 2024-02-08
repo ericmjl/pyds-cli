@@ -1,5 +1,5 @@
-site_name: "{{ project_name }}"
-site_url: https://{{ github_username }}.github.io/{{ project_name }}
+site_name: "{{ cookiecutter.project_name }}"
+site_url: https://{{ cookiecutter.github_username }}.github.io/{{ cookiecutter.project_kebabcasecase }}
 
 docs_dir: docs/
 
@@ -38,7 +38,7 @@ plugins:
             docstring_style: restructured-text
       # custom_templates: templates
       watch:
-        - {{ project_name }}
+        - {{ cookiecutter.project_name }}
 # Taken from here: https://squidfunk.github.io/mkdocs-material/extensions/codehilite/
 markdown_extensions:
   - codehilite
@@ -52,18 +52,14 @@ extra_css:
 extra_javascript:
   - config.js
 
-repo_name: "{{ github_username }}/{{ project_name }}"
-repo_url: "https://github.com/{{ github_username }}/{{ project_name }}"
+repo_name: "{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebabcase }}"
+repo_url: "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebabcase }}"
 
 extra:
   social:
     - icon: "fontawesome/brands/github"
-      link: "https://github.com/{{ github_username }}"
-    {% if twitter_username %}
+      link: "https://github.com/{{ cookiecutter.github_username }}"
     - icon: "fontawesome/brands/twitter"
-      link: "https://twitter.com/{{ twitter_username }}"
-    {% endif %}
-    {% if linkedin_username %}
+      link: "https://twitter.com/{{ cookiecutter.twitter_username }}"
     - icon: "fontawesome/brands/linkedin"
-      link: "https://linkedin.com/in/{{ linkedin_username }}"
-    {% endif %}
+      link: "https://linkedin.com/in/{{ cookiecutter.linkedin_username }}"
