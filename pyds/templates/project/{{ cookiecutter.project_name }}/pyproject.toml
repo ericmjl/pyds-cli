@@ -61,10 +61,10 @@ select = ["E", "F", "I"]
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["{{ project_name | replace('-', '_') }}"]
+where = ["{{ cookiecutter.project_snake }}"]
 
 [project]
-name = "{{ project_name }}"
+name = "{{ cookiecutter.project_name }}"
 version = "0.0.1"
 dependencies = [
     "matplotlib",
@@ -84,4 +84,4 @@ docs = [
 ]
 
 [project.scripts]
-{{ project_name }} = "{{ project_name | replace('-', '_') }}.cli:app"
+{{ cookiecutter.project_kebabcase }} = "{{ cookiecutter.project_snake }}.cli:app"

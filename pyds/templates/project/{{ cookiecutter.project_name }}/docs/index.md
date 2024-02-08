@@ -8,13 +8,13 @@ Welcome to the repository for the {{ project_name }} project!
 ### Install from PyPI
 
 ```python
-pip install {{ project_name }}
+pip install {{ cookiecutter.project_kebab }}
 ```
 -->
 ### Install from source
 
 ```bash
-pip install git@github.com:{{ github_username }}/{{ project_name }}
+pip install git@github.com:{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebab }}
 ```
 
 ### Build and preview docs

@@ -1,8 +1,8 @@
-"""Top-level API for {{ project_name }}.
+"""Top-level API for {{ cookiecutter.project_name }}.
 
 This is the file from which you can do:
 
-    from {{ project_name | to_snake }} import some_function
+    from {{ cookiecutter.project_snake }} import some_function
 
 Use it to control the top-level API of your Python data science project.
 """

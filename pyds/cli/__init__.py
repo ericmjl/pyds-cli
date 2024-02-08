@@ -13,6 +13,7 @@ from .environment import app as env_app
 from .package import app as package_app
 from .project import app as project_app
 from .system import app as system_app
+from .talk import app as talk_app
 
 app = typer.Typer()
 app.add_typer(conda_app, name="conda")
@@ -21,6 +22,7 @@ app.add_typer(env_app, name="env")
 app.add_typer(package_app, name="package")
 app.add_typer(project_app, name="project")
 app.add_typer(system_app, name="system")
+app.add_typer(talk_app, name="talk")
 
 
 @app.command()
