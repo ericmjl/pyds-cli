@@ -3,21 +3,16 @@ from pathlib import Path
 from typing import Dict, List, Tuple
 
 from caseconverter import kebabcase, snakecase
-from jinja2 import Environment, PackageLoader, Template
 from rich.console import Console
-from rich.progress import track
 
 from pyds.utils import run
 
 from ..utils import CONDA_EXE
 
-SOURCE_DIR = Path(__file__).parent.parent
-TEMPLATE_DIR = SOURCE_DIR / "cli" / "templates"
-
-jinja2_env = Environment(
-    loader=PackageLoader("pyds.cli", "templates"),
-    extensions=["jinja2_strcase.StrcaseExtension"],
-)
+# jinja2_env = Environment(
+#     loader=PackageLoader("pyds.cli", "templates"),
+#     extensions=["jinja2_strcase.StrcaseExtension"],
+# )
 
 
 def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
@@ -54,15 +49,6 @@ def standard_dirs(information) -> List[Path]:
     return dirs
 
 
-def make_dirs_if_not_exist(dirs: List[Path]):
-    """Make directories if they do not exist.
-
-    :param dirs: A list of pathlib.Path objects.
-    """
-    for dir in track(dirs, description="[blue]Creating directory structure..."):
-        dir.mkdir(parents=True, exist_ok=True)
-
-
 def initialize_git(information: dict):
     """Initialize a git repository in a project directory.
 
@@ -77,7 +63,7 @@ def initialize_git(information: dict):
 
 
 def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
-    """Convert project namecreate_environment into a project dir.
+    """Convert project name into a project dir.
 
     The behaviour of this function is as follows:
 
@@ -98,85 +84,6 @@ def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
         project_dir = here
 
     return project_name, project_dir
-
-
-def copy_templates(templates: List[Path], information: Dict):
-    """Copy templates into project directory.
-
-    :param templates: List of paths to templates.
-    :param information: A dictionary of basic information for the project.
-    """
-    project_dir = information["project_dir"]
-    for template in track(templates, description="[blue]Creating template files..."):
-        destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
-        if "src" in destination_file.parts:
-            # project_name has to be snake-cased in order for imports to work.
-            destination_file = (
-                Path(project_dir)
-                / snakecase(information["project_name"])
-                / destination_file.name
-            )
-
-        if not destination_file.exists():
-            write_template(
-                template_file=template,
-                information=information,
-                destination_file=destination_file.with_suffix(""),
-            )
-
-
-def read_template(path: Path) -> Template:
-    """Return the jinja2 template.
-
-    :param path: Path to template.
-    :returns: A jinja2 Template object.
-    """
-    with open(path, "r+") as f:
-        return Template(f.read())
-
-
-def write_template(template_file: Path, information: dict, destination_file: Path):
-    """Write a template file to disk.
-
-    :param template_file: Path to a template.
-    :param information: A dictionary of basic information for the project.
-    :param destination_file: Path to where the filled template should be placed.
-    """
-    template = jinja2_env.get_template(str(template_file.relative_to(TEMPLATE_DIR)))
-    text = template.render(**information)
-    destination_file.touch()
-    with destination_file.open(mode="w+") as f:
-        f.write(text)
-
-
-def standard_templates() -> List[Path]:
-    """Return the standard list of templates.
-
-    :returns: A list of Path objects.
-    """
-    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
-    return templates
-
-
-def minimal_templates() -> List[Path]:
-    """Return a minimal list of templates to copy.
-
-    :returns: A list of Path objects.
-    """
-    templates = standard_templates()
-    keep_keywords = [
-        "environment.yml.j2",
-        "pyproject.toml.j2",
-        "setup.cfg.j2",
-        "setup.py.j2",
-    ]
-
-    templates_minimal = []
-    for template in templates:
-        for keyword in keep_keywords:
-            if keyword in str(template):
-                templates_minimal.append(template)
-    return templates_minimal
 
 
 console = Console()

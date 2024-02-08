@@ -5,6 +5,7 @@ from rich import print
 from rich.console import Console
 
 from pyds.utils import read_config, run
+from pyds.utils.paths import SOURCE_DIR
 from pyds.utils.project import (
     configure_git,
     copy_templates,
@@ -81,8 +82,9 @@ def initialize(
 
     initialize_git(information)
 
-    templates = standard_templates()
-    copy_templates(templates, information)
+    template_directory = SOURCE_DIR / "cli" / "templates" / "repo"
+    templates = standard_templates(template_directory=template_directory)
+    copy_templates(templates, information, template_directory=template_directory)
 
     if auto_create_env:
         create_environment(information)
@@ -144,8 +146,10 @@ def minitialize(
 
     initialize_git(information)
 
-    templates = minimal_templates()
-    copy_templates(templates, information)
+    template_directory = SOURCE_DIR / "cli" / "templates" / "repo"
+
+    templates = minimal_templates(template_directory=template_directory)
+    copy_templates(templates, information, template_directory=template_directory)
     create_environment(information)
     create_jupyter_kernel(information)
     install_custom_source_package(information)
