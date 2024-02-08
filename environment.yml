@@ -17,6 +17,7 @@ dependencies:
   - ruamel.yaml # allows preserving of EOL comments.
   # CLI development
   - typer
+  - cookiecutter
   # Software testing
   - pytest
   - hypothesis
