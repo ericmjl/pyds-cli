@@ -1,5 +1,5 @@
 site_name: "{{ cookiecutter.project_name }}"
-site_url: https://{{ cookiecutter.github_username }}.github.io/{{ cookiecutter.project_kebabcasecase }}
+site_url: https://{{ cookiecutter.github_username }}.github.io/{{ cookiecutter._project_kebabcase }}
 
 docs_dir: docs/
 
@@ -52,14 +52,10 @@ extra_css:
 extra_javascript:
   - config.js
 
-repo_name: "{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebabcase }}"
-repo_url: "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebabcase }}"
+repo_name: "{{ cookiecutter.github_username }}/{{ cookiecutter._project_kebabcase }}"
+repo_url: "https://github.com/{{ cookiecutter.github_username }}/{{ cookiecutter._project_kebabcase }}"
 
 extra:
   social:
     - icon: "fontawesome/brands/github"
       link: "https://github.com/{{ cookiecutter.github_username }}"
-    - icon: "fontawesome/brands/twitter"
-      link: "https://twitter.com/{{ cookiecutter.twitter_username }}"
-    - icon: "fontawesome/brands/linkedin"
-      link: "https://linkedin.com/in/{{ cookiecutter.linkedin_username }}"

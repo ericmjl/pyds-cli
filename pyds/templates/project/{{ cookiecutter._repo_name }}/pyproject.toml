@@ -61,7 +61,7 @@ select = ["E", "F", "I"]
 include-package-data = true
 
 [tool.setuptools.packages.find]
-where = ["{{ cookiecutter.project_snake }}"]
+where = ["{{ cookiecutter._module_name }}"]
 
 [project]
 name = "{{ cookiecutter.project_name }}"
@@ -84,4 +84,4 @@ docs = [
 ]
 
 [project.scripts]
-{{ cookiecutter.project_kebabcase }} = "{{ cookiecutter.project_snake }}.cli:app"
+{{ cookiecutter._cli_name }} = "{{ cookiecutter._module_name }}.cli:app"

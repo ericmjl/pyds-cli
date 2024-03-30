@@ -1,4 +1,4 @@
-name: {{ cookiecutter.project_kebabcase }}
+name: {{ cookiecutter._conda_env_name }}
 channels:
 - conda-forge
 dependencies:

@@ -2,7 +2,7 @@
 
 This is the file from which you can do:
 
-    from {{ cookiecutter.project_snake }} import some_function
+    from {{ cookiecutter._module_name }} import some_function
 
 Use it to control the top-level API of your Python data science project.
 """

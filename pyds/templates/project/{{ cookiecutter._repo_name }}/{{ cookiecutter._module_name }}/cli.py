@@ -1,4 +1,4 @@
-"""Custom CLI for your {{ project_name }}.
+"""Custom CLI for {{ project_name }}.
 
 This is totally optional;
 if you want to use it, though,
