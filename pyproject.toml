@@ -78,6 +78,7 @@ dependencies = [
     "case-converter >=1.0.2",
     "jinja2-strcase >= 0.0.2",
     "cookiecutter",
+    "sh",
 ]
 readme = "README.md"
 
