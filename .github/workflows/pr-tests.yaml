@@ -33,6 +33,5 @@ jobs:
 
       - name: Run tests
         run: |
-          conda activate pyds
           pip install -e .
           pytest
