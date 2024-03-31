@@ -85,3 +85,9 @@ docs = [
 
 [project.scripts]
 {{ cookiecutter.__cli_name }} = "{{ cookiecutter.__module_name }}.cli:app"
+
+
+[tool.coverage.run]
+omit = [
+    "tests/*",
+]
