@@ -84,3 +84,9 @@ readme = "README.md"
 
 [project.scripts]
 pyds = "pyds.cli:app"
+
+[tool.coverage.run]
+omit = [
+    "*/templates/*",
+    "tests/*",
+]
