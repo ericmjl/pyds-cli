@@ -10,10 +10,10 @@ app = typer.Typer()
 
 
 @app.command()
-def init(talk_name: str = typer.Option(..., help="The name of the talk.", prompt=True)):
+def init():
     """Initialize a new talk repository."""
     template_dir = SOURCE_DIR / "templates" / "talk"
-    cookiecutter(str(template_dir.resolve()), extra_context=dict(talk_name=talk_name))
+    cookiecutter(str(template_dir.resolve()))
 
 
 if __name__ == "__main__":
