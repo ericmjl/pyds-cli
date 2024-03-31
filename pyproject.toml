@@ -77,6 +77,7 @@ dependencies = [
     "ruamel.yaml >=0.17.17",
     "case-converter >=1.0.2",
     "jinja2-strcase >= 0.0.2",
+    "cookiecutter",
 ]
 readme = "README.md"
 
