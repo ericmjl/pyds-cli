@@ -3,6 +3,7 @@
     "short_description": "A short description of the project",
     "github_username": "Your GitHub username",
     "full_name": "Your full name",
+    "affiliation": "Your affiliation",
     "email": "Your email address",
     "__project_kebabcase": "{{ cookiecutter.talk_name.lower().replace(' ', '-') }}",
     "__project_snakecase": "{{ cookiecutter.talk_name.lower().replace(' ', '_') }}",

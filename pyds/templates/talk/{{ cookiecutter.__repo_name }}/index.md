@@ -3,9 +3,11 @@ revealOptions:
   transition: 'fade'
 ---
 
-# 🌟 Talk Title Goes Here
+# 🌟 {{ cookiecutter.talk_name }}
 
-Name & Title Goes Here
+{{ cookiecutter.full_name }}
+
+{{ cookiecutter.affiliation }}
 
 ---
 
