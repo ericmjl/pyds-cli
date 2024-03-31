@@ -1,6 +1,6 @@
-# {{ project_name }}
+# {{ cookiecutter.project_name }} }}
 
-Welcome to the repository for the {{ project_name }} project!
+Welcome to the repository for the {{ cookiecutter.project_name }} }} project!
 
 ## Quickstart
 
@@ -8,13 +8,13 @@ Welcome to the repository for the {{ project_name }} project!
 ### Install from PyPI
 
 ```python
-pip install {{ cookiecutter.project_kebab }}
+pip install {{ cookiecutter.__package_name }}
 ```
 -->
 ### Install from source
 
 ```bash
-pip install git@github.com:{{ cookiecutter.github_username }}/{{ cookiecutter.project_kebab }}
+pip install git@github.com:{{ cookiecutter.github_username }}/{{ cookiecutter.__repo_name }}
 ```
 
 ### Build and preview docs

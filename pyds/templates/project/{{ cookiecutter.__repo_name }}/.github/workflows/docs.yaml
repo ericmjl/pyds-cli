@@ -31,8 +31,8 @@ jobs:
 
       - name: Build docs
         run: |
-          conda activate {{ cookiecutter.project_kebab }}
-          python -m ipykernel install --user --name {{ cookiecutter.project_kebab }}
+          conda activate {{ cookiecutter.__conda_env_name }}
+          python -m ipykernel install --user --name {{ cookiecutter.__conda_env_name }}
           pip install -e .
           mkdocs build --site-dir /tmp/docs
 

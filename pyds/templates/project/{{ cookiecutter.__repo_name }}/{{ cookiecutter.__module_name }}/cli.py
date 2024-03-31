@@ -1,4 +1,4 @@
-"""Custom CLI for {{ project_name }}.
+"""Custom CLI for {{ cookiecutter.project_name }}.
 
 This is totally optional;
 if you want to use it, though,
@@ -18,13 +18,13 @@ app = typer.Typer()
 @app.command()
 def hello():
     """Echo the project's name."""
-    typer.echo("This project's name is {{ project_name }}")
+    typer.echo("This project's name is {{ cookiecutter.project_name }}")
 
 
 @app.command()
 def describe():
     """Describe the project."""
-    typer.echo("This project's description is {{ project_description }}")
+    typer.echo("{{ cookiecutter.short_description }}")
 
 
 if __name__ == "__main__":

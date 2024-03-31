@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests
         run: |
-          conda activate {{ cookiecutter.project_kebab }}
+          conda activate {{ cookiecutter.__conda_env_name }}
           pip install -e .
           pytest
 

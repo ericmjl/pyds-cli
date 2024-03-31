@@ -1,1 +1,1 @@
-"""Tests for {{ cookiecutter.project_slug }}.cli."""
+"""Tests for {{ cookiecutter.__module_name }}.cli."""

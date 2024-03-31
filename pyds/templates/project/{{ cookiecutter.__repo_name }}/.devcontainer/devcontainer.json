@@ -19,7 +19,7 @@
     "forwardPorts": [
         8888
     ],
-    "postCreateCommand": "pre-commit install && python -m ipykernel install --user --name {{ project_name }}",
+    "postCreateCommand": "pre-commit install && python -m ipykernel install --user --name {{ cookiecutter.project_name }} }}",
     // Use 'postStartCommand' to run commands after the container is _started_.
     "postStartCommand": "jupyter lab --allow-root"
 }
