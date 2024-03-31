@@ -10,7 +10,6 @@ dependencies:
 - ipywidgets
 - jupyter
 - jupyterlab
-- mamba
 - pip
 - twine
 # Standard PyData stack
