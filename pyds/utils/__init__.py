@@ -60,20 +60,19 @@ def run(
     if log:
         logger.info(f"+ {cmd}")
 
+    run_kwargs = {
+        "cwd": cwd,
+        "shell": shell,
+    }
+
     if show_out:
-        out = subprocess.run(
-            cmd,
-            cwd=cwd,
-            shell=shell,
-            stdout=subprocess.PIPE,
-        )
+        run_kwargs["stdout"] = subprocess.PIPE
     else:
-        out = subprocess.run(
-            cmd,
-            cwd=cwd,
-            shell=shell,
-            capture_output=capture_output,
-        )
+        run_kwargs["capture_output"] = capture_output
+    out = subprocess.run(
+        cmd,
+        **run_kwargs,
+    )
     return out
 
 

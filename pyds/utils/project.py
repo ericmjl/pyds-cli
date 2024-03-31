@@ -1,13 +1,14 @@
 """Utility functions for projects."""
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
+import yaml
 from caseconverter import kebabcase, snakecase
 from rich.console import Console
 
 from pyds.utils import run
 
-from ..utils import CONDA_EXE
+from ..utils import CONDA_EXE, get_conda_env_name
 
 # jinja2_env = Environment(
 #     loader=PackageLoader("pyds.cli", "templates"),
@@ -89,7 +90,7 @@ def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
 console = Console()
 
 
-def create_environment(information):
+def create_environment():
     """Create conda environment
 
     :param information: A dictionary of basic information for the project.
@@ -97,59 +98,60 @@ def create_environment(information):
     msg = "[bold blue]Creating conda environment (this might take a few moments!)..."
     with console.status(msg):
         run(
-            f"source activate base && {CONDA_EXE} env update -f environment.yml",
-            cwd=information["project_dir"],
+            f"{CONDA_EXE} env update -f environment.yml",
             show_out=True,
         )
 
 
-def create_jupyter_kernel(information: Dict):
-    """Create jupyter kernel.
-
-    :param information: A dictionary of basic information for the project.
-    """
+def create_jupyter_kernel():
+    """Create jupyter kernel."""
     msg = (
         "[bold blue]Enabling Jupyter kernel discovery "
         "of your newfangled conda environment..."
     )
+    # Read environment.yml and get the environment name.
+    project_name = get_conda_env_name()
     with console.status(msg):
         run(
-            f"python -m ipykernel install --user --name {information['project_name']}",
-            cwd=information["project_dir"],
+            f"python -m ipykernel install --user --name {project_name}",
             show_out=True,
             activate_env=True,
         )
 
 
-def install_custom_source_package(information):
-    """Instal custom source package.
-
-    :param information: A dictionary of basic information for the project.
-    """
+def install_custom_source_package():
+    """Instal custom source package."""
     msg = (
         "[bold blue]Installing your custom source package into the conda environment..."
     )
     with console.status(msg):
-        run("pip install -e .", cwd=information["project_dir"], activate_env=True)
+        run("pip install -e .", activate_env=True)
 
 
-def configure_git(information):
+def configure_git():
     """Configure git.
 
     :param information: A dictionary of basic information for the project.
     """
     msg = "[bold blue]Configuring git..."
+
+    with open("mkdocs.yaml", "r+") as f:
+        mkdocs_config = yaml.safe_load(f)
+        repo_url = mkdocs_config["repo_url"]
+
+    *unnecessary, github_username, repo_name = repo_url.split("/")
+
+    run("git init", show_out=True)
     with console.status(msg):
-        repo_name = f"{information['github_username']}/{information['project_name']}"
-        git_ssh_url = f"git@github.com:{repo_name}"
+        full_repo_name = f"{github_username}/{repo_name}"
+        git_ssh_url = f"git@github.com:{full_repo_name}"
         run(
             f"git remote add origin {git_ssh_url}",
-            cwd=information["project_dir"],
             show_out=True,
         )
 
 
-def install_precommit_hooks(information):
+def install_precommit_hooks():
     """Install pre-commit.
 
     :param information: A dictionary of basic information for the project.
@@ -158,7 +160,6 @@ def install_precommit_hooks(information):
     with console.status(msg):
         run(
             "pre-commit install --install-hooks",
-            cwd=information["project_dir"],
             show_out=True,
             activate_env=True,
         )
