@@ -1,4 +1,4 @@
-.PHONY: build present
+.PHONY: build present clean
 
 # Depends on imagemagick
 
