@@ -151,7 +151,12 @@ def discover_conda_executable() -> Path:
     if res.returncode == 0:
         return Path(res.stdout.decode("utf-8").strip("\n"))
 
-    # If mamba isn't available, try conda by using the `which conda` command.
+    # If mamba isn't available, try micromamba
+    res = run("which micromamba", log=False)
+    if res.returncode == 0:
+        return Path(res.stdout.decode("utf-8").strip("\n"))
+
+    # If micromamba isn't available, try conda by using the `which conda` command.
     res = run("which conda")
     if res.returncode == 0:
         return Path(res.stdout.decode("utf-8").strip("\n"))
