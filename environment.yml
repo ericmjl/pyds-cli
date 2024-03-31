@@ -10,7 +10,6 @@ dependencies:
   - jupyter
   - jupyterlab
   - ipykernel
-  - mamba
   - jinja2
   - loguru
   - pyprojroot
