@@ -19,7 +19,7 @@ app = Typer()
 
 
 @app.command()
-def set_env_var(key: str, value: str):
+def set(key: str, value: str):
     """Set a key-value pair in the `.env` file.
 
     :param key: The name of the environment variable.
@@ -32,7 +32,7 @@ def set_env_var(key: str, value: str):
 
 
 @app.command()
-def delete_env_var(key: str):
+def delete(key: str):
     """Remove an environment variable from the `.env` file.
 
     :param key: The name of the environment variable.
@@ -43,7 +43,7 @@ def delete_env_var(key: str):
 
 
 @app.command()
-def show_env_vars(keys: bool = True, values: bool = False):
+def show(keys: bool = True, values: bool = False):
     """Show all environment variables.
 
     :param keys: Whether to show the keys or not.
