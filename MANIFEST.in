@@ -1,1 +1,2 @@
 recursive-include pyds *.j2
+recursive-include pyds *
