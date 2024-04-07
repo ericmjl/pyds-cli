@@ -17,7 +17,7 @@ def initialized_project() -> Tuple[Path, Path]:
 
     :yields: A two-tuple of temp dir path and project directory path.
     """
-    runner = CliRunner()
+    runner = CliRunner(mix_stderr=False)
 
     # Run `pyds configure` only if the config file is not found.
     # This prevents local configurations from being overwritten by the test.
@@ -27,17 +27,18 @@ def initialized_project() -> Tuple[Path, Path]:
         runner.invoke(
             app, ["configure"], input="GitHub Bot\nbot@github.com\nbot\nbot\nbot"
         )
-    project_name = str(uuid4())
     tmp_path = Path("/tmp/pyds-cli")
-    project_dir = tmp_path / project_name
-    project_dir.mkdir(parents=True)
-    os.chdir(project_dir)
-
+    tmp_path.mkdir(exist_ok=True, parents=True)
+    os.chdir(tmp_path)
+    project_name = str(uuid4())
     result = runner.invoke(
         app,
-        ["project", "initialize"],
-        input=".\nblah\nMIT\nY\nY\nY\n",
+        ["project", "init"],
+        input=f"{project_name}\nTest Project\nericmjl\nEric Ma\ne@ma\n",
     )
+    project_dir = tmp_path / project_name
+    os.chdir(project_dir)
+
     assert result.exit_code == 0, result.stderr
     yield tmp_path, project_name
     run(f"conda env remove -n {project_name}")

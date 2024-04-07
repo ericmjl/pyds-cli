@@ -21,19 +21,17 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # See: https://github.com/marketplace/actions/setup-miniconda
-      - name: Setup miniconda
-        uses: conda-incubator/setup-miniconda@v2
+      - uses: mamba-org/setup-micromamba@v1
         with:
-          auto-update-conda: true
-          miniforge-variant: Mambaforge
-          channels: conda-forge
-          activate-environment: pyds
+          micromamba-version: 'latest'
           environment-file: environment.yml
-          use-mamba: true
+          init-shell: bash
+          cache-environment: true
+          cache-environment-key: environment-${{ steps.date.outputs.date }}
+          cache-downloads-key: downloads-${{ steps.date.outputs.date }}
+          post-cleanup: 'all'
 
       - name: Run tests
         run: |
-          conda activate pyds
           pip install -e .
           pytest

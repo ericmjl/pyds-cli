@@ -1,0 +1,49 @@
+name: Build documentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-docs:
+    runs-on: ubuntu-latest
+    name: Build documentation
+
+    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.4.5-0'
+          environment-file: environment.yml
+          init-shell: bash
+          cache-environment: true
+          cache-environment-key: environment-{{ '${{ steps.date.outputs.date }}' }}
+          cache-downloads-key: downloads-{{ '${{ steps.date.outputs.date }}' }}
+          post-cleanup: 'all'
+
+      - name: Build docs
+        run: |
+          conda activate {{ cookiecutter.__conda_env_name }}
+          python -m ipykernel install --user --name {{ cookiecutter.__conda_env_name }}
+          pip install -e .
+          mkdocs build --site-dir /tmp/docs
+
+      - name: Deploy website
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
+          personal_token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
+          publish_dir: /tmp/docs
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false

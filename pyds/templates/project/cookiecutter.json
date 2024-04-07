@@ -1,0 +1,14 @@
+{
+    "project_name": "Name of the Project",
+    "short_description": "A short description of the project",
+    "github_username": "Your GitHub username",
+    "full_name": "Your full name",
+    "email": "Your email address",
+    "__project_kebabcase": "{{ cookiecutter.project_name.lower().replace(' ', '-') }}",
+    "__project_snakecase": "{{ cookiecutter.project_name.lower().replace(' ', '_') }}",
+    "__cli_name": "{{ cookiecutter.__project_kebabcase }}",
+    "__conda_env_name": "{{ cookiecutter.__project_kebabcase }}",
+    "__repo_name": "{{ cookiecutter.__project_kebabcase }}",
+    "__module_name": "{{ cookiecutter.__project_snakecase }}",
+    "__package_name": "{{ cookiecutter.__project_kebabcase }}"
+}

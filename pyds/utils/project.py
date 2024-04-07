@@ -1,23 +1,19 @@
 """Utility functions for projects."""
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import List, Tuple
 
+import yaml
 from caseconverter import kebabcase, snakecase
-from jinja2 import Environment, PackageLoader, Template
 from rich.console import Console
-from rich.progress import track
 
 from pyds.utils import run
 
-from ..utils import CONDA_EXE
+from ..utils import CONDA_EXE, get_conda_env_name
 
-SOURCE_DIR = Path(__file__).parent.parent
-TEMPLATE_DIR = SOURCE_DIR / "cli" / "templates"
-
-jinja2_env = Environment(
-    loader=PackageLoader("pyds.cli", "templates"),
-    extensions=["jinja2_strcase.StrcaseExtension"],
-)
+# jinja2_env = Environment(
+#     loader=PackageLoader("pyds.cli", "templates"),
+#     extensions=["jinja2_strcase.StrcaseExtension"],
+# )
 
 
 def minimal_dirs(project_dir: Path, project_name: str) -> List[Path]:
@@ -54,15 +50,6 @@ def standard_dirs(information) -> List[Path]:
     return dirs
 
 
-def make_dirs_if_not_exist(dirs: List[Path]):
-    """Make directories if they do not exist.
-
-    :param dirs: A list of pathlib.Path objects.
-    """
-    for dir in track(dirs, description="[blue]Creating directory structure..."):
-        dir.mkdir(parents=True, exist_ok=True)
-
-
 def initialize_git(information: dict):
     """Initialize a git repository in a project directory.
 
@@ -77,7 +64,7 @@ def initialize_git(information: dict):
 
 
 def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
-    """Convert project namecreate_environment into a project dir.
+    """Convert project name into a project dir.
 
     The behaviour of this function is as follows:
 
@@ -100,89 +87,10 @@ def project_name_to_dir(project_name: str) -> Tuple[str, Path]:
     return project_name, project_dir
 
 
-def copy_templates(templates: List[Path], information: Dict):
-    """Copy templates into project directory.
-
-    :param templates: List of paths to templates.
-    :param information: A dictionary of basic information for the project.
-    """
-    project_dir = information["project_dir"]
-    for template in track(templates, description="[blue]Creating template files..."):
-        destination_file = project_dir / template.relative_to(TEMPLATE_DIR)
-        if "src" in destination_file.parts:
-            # project_name has to be snake-cased in order for imports to work.
-            destination_file = (
-                Path(project_dir)
-                / snakecase(information["project_name"])
-                / destination_file.name
-            )
-
-        if not destination_file.exists():
-            write_template(
-                template_file=template,
-                information=information,
-                destination_file=destination_file.with_suffix(""),
-            )
-
-
-def read_template(path: Path) -> Template:
-    """Return the jinja2 template.
-
-    :param path: Path to template.
-    :returns: A jinja2 Template object.
-    """
-    with open(path, "r+") as f:
-        return Template(f.read())
-
-
-def write_template(template_file: Path, information: dict, destination_file: Path):
-    """Write a template file to disk.
-
-    :param template_file: Path to a template.
-    :param information: A dictionary of basic information for the project.
-    :param destination_file: Path to where the filled template should be placed.
-    """
-    template = jinja2_env.get_template(str(template_file.relative_to(TEMPLATE_DIR)))
-    text = template.render(**information)
-    destination_file.touch()
-    with destination_file.open(mode="w+") as f:
-        f.write(text)
-
-
-def standard_templates() -> List[Path]:
-    """Return the standard list of templates.
-
-    :returns: A list of Path objects.
-    """
-    templates = list(TEMPLATE_DIR.glob("**/*.j2"))
-    return templates
-
-
-def minimal_templates() -> List[Path]:
-    """Return a minimal list of templates to copy.
-
-    :returns: A list of Path objects.
-    """
-    templates = standard_templates()
-    keep_keywords = [
-        "environment.yml.j2",
-        "pyproject.toml.j2",
-        "setup.cfg.j2",
-        "setup.py.j2",
-    ]
-
-    templates_minimal = []
-    for template in templates:
-        for keyword in keep_keywords:
-            if keyword in str(template):
-                templates_minimal.append(template)
-    return templates_minimal
-
-
 console = Console()
 
 
-def create_environment(information):
+def create_environment():
     """Create conda environment
 
     :param information: A dictionary of basic information for the project.
@@ -190,59 +98,60 @@ def create_environment(information):
     msg = "[bold blue]Creating conda environment (this might take a few moments!)..."
     with console.status(msg):
         run(
-            f"source activate base && {CONDA_EXE} env update -f environment.yml",
-            cwd=information["project_dir"],
+            f"{CONDA_EXE} env update -f environment.yml",
             show_out=True,
         )
 
 
-def create_jupyter_kernel(information: Dict):
-    """Create jupyter kernel.
-
-    :param information: A dictionary of basic information for the project.
-    """
+def create_jupyter_kernel():
+    """Create jupyter kernel."""
     msg = (
         "[bold blue]Enabling Jupyter kernel discovery "
         "of your newfangled conda environment..."
     )
+    # Read environment.yml and get the environment name.
+    project_name = get_conda_env_name()
     with console.status(msg):
         run(
-            f"python -m ipykernel install --user --name {information['project_name']}",
-            cwd=information["project_dir"],
+            f"python -m ipykernel install --user --name {project_name}",
             show_out=True,
             activate_env=True,
         )
 
 
-def install_custom_source_package(information):
-    """Instal custom source package.
-
-    :param information: A dictionary of basic information for the project.
-    """
+def install_custom_source_package():
+    """Instal custom source package."""
     msg = (
         "[bold blue]Installing your custom source package into the conda environment..."
     )
     with console.status(msg):
-        run("pip install -e .", cwd=information["project_dir"], activate_env=True)
+        run("pip install -e .", activate_env=True)
 
 
-def configure_git(information):
+def configure_git():
     """Configure git.
 
     :param information: A dictionary of basic information for the project.
     """
     msg = "[bold blue]Configuring git..."
+
+    with open("mkdocs.yaml", "r+") as f:
+        mkdocs_config = yaml.safe_load(f)
+        repo_url = mkdocs_config["repo_url"]
+
+    *unnecessary, github_username, repo_name = repo_url.split("/")
+
+    run("git init", show_out=True)
     with console.status(msg):
-        repo_name = f"{information['github_username']}/{information['project_name']}"
-        git_ssh_url = f"git@github.com:{repo_name}"
+        full_repo_name = f"{github_username}/{repo_name}"
+        git_ssh_url = f"git@github.com:{full_repo_name}"
         run(
             f"git remote add origin {git_ssh_url}",
-            cwd=information["project_dir"],
             show_out=True,
         )
 
 
-def install_precommit_hooks(information):
+def install_precommit_hooks():
     """Install pre-commit.
 
     :param information: A dictionary of basic information for the project.
@@ -251,7 +160,6 @@ def install_precommit_hooks(information):
     with console.status(msg):
         run(
             "pre-commit install --install-hooks",
-            cwd=information["project_dir"],
             show_out=True,
             activate_env=True,
         )

@@ -10,13 +10,14 @@ dependencies:
   - jupyter
   - jupyterlab
   - ipykernel
-  - mamba
   - jinja2
   - loguru
   - pyprojroot
   - ruamel.yaml # allows preserving of EOL comments.
+  - sh # lets me get rid of `run()`.
   # CLI development
   - typer
+  - cookiecutter
   # Software testing
   - pytest
   - hypothesis

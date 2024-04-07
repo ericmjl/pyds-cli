@@ -1,0 +1,115 @@
+name: Release Python Package
+
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: "One of major, minor, or patch"
+        required: true
+        type: choice
+        options:
+          - major
+          - minor
+          - patch
+        default: patch
+
+jobs:
+  deploy-package:
+    runs-on: ubuntu-latest
+    name: Publish Python Package to PyPI
+
+    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      # https://github.com/actions/checkout
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      # https://github.com/actions/setup-python
+      - name: Setup Python environment
+        uses: actions/setup-python@v3
+
+      - name: Install bump2version and wheel
+        run: python -m pip install bump2version
+
+      - name: Dry run bumpversion
+        run: |
+          bumpversion --dry-run {{ '${{ github.event.inputs.version_name }}' }} --allow-dirty --verbose
+
+      # This is lifted directly from the bump2version docs.
+      # Version number will be saved in `env` section of each consecutive stage
+      - name: Store new version number
+        run: echo "version_number=`bumpversion --dry-run --list {{ '${{ github.event.inputs.version_name }}' }} | grep new_version | sed -r s,"^.*=",,`" >> $GITHUB_ENV
+
+      - name: Display new version number
+        run: |
+          echo "version_name: {{ '${{ github.event.inputs.version_name }}' }}"
+          echo "version_number: {{ 'v${{ env.version_number }}' }}"
+
+      - name: Ensure repo status is clean
+        run: git status
+
+      - name: Configure Git
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+      - name: Run bumpversion
+        run: bumpversion {{ '${{ github.event.inputs.version_name }}' }} --verbose
+
+      - name: Ensure tag creation
+        run: git tag | grep {{ '${{ env.version_number }}' }}
+
+      # Uncomment the following if you want to have automatic release notes.
+      #
+      # NOTE: the line `pre-commit run --all-files || true` ensures that all LLM-generated files
+      # adhere to the file quality standards enforced in the pre-commit hooks.
+      # The `|| true` ensures that we get a `0` exit code even if the generated files do not pass checks,
+      # as the default configuration of pre-commit by this tool will automatically fix those files.
+      # NOTE: you will need an OpenAI API key.
+      # consult the `llamabot` CLI documentation for more information.
+      # https://ericmjl.github.io/llamabot/cli/llamabot/
+      # - name: Write release notes
+      #   run: |
+      #     python -m pip install -e .
+      #     python -m pip install -U llamabot pre-commit
+      #     llamabot configure api-key --api-key="{{ '${{ secrets.OPENAI_API_KEY }}' }}"
+      #     llamabot configure default-model --model-name="{{ '${{ secrets.OPENAI_DEFAULT_MODEL }}' }}"
+      #     llamabot git write-release-notes
+      #     pre-commit run --all-files || true
+      #     git add .
+      #     git commit -m "Add release notes for {{ '${{ env.version_number }}' }}"
+
+      - name: Build package
+        run: |
+          python -m pip install build wheel
+          python -m build -w -s
+
+      - name: Publish package
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: {{ '${{ secrets.PYPI_API_TOKEN }}' }}
+
+      # Ensure that GH Actions is allowed to write to repo.
+      # Reference: https://ericmjl.github.io/blog/2023/8/26/enable-github-actions-to-push-code-changes/
+      - name: Push changes with tags
+        run: |
+          git push && git push --tags
+
+      # This will create an actual pointer in the "Release" section of the GitHub repo
+      # The intent is to always have "latest" point to <this> release
+      - name: Create release in GitHub repo
+        uses: ncipollo/release-action@v1
+        with:
+          token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
+          tag: {{ 'v${{ env.version_number}}' }}
+
+      - name: Ensure complete
+        run: echo "Your package has been published to PyPI!"

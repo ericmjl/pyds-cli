@@ -1,0 +1,36 @@
+name: Build and deploy slides
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-slides:
+    runs-on: ubuntu-latest
+    name: Build slides
+
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Build slides
+        run: |
+          npm i -g reveal-md
+          reveal-md --static _static
+
+      - name: Deploy slides
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          personal_token: {{ '${{ secrets.GHPAGES_TOKEN }}' }}
+          publish_dir: ./_static/
+          publish_branch: gh-pages
+          allow_empty_commit: false
+          keep_files: false
+          force_orphan: true
+          enable_jekyll: false
+          disable_nojekyll: false

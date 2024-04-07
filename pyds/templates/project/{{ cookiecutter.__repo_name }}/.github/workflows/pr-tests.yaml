@@ -1,0 +1,40 @@
+name: Run tests on pull requests
+
+on: [pull_request]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+    name: Run test suite
+
+    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
+    defaults:
+      run:
+        shell: bash -l {0}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - uses: mamba-org/setup-micromamba@v1
+        with:
+          micromamba-version: '1.4.5-0'
+          environment-file: environment.yml
+          init-shell: bash
+          cache-environment: true
+          cache-environment-key: environment-{{ '${{ steps.date.outputs.date }}' }}
+          cache-downloads-key: downloads-{{ '${{ steps.date.outputs.date }}' }}
+          post-cleanup: 'all'
+
+      - name: Run tests
+        run: |
+          conda activate {{ cookiecutter.__conda_env_name }}
+          pip install -e .
+          pytest
+
+      # https://github.com/codecov/codecov-action
+      - name: Upload code coverage
+        uses: codecov/codecov-action@v2
+        with:
+          # fail_ci_if_error: true # optional (default = false)
+          verbose: true # optional (default = false)

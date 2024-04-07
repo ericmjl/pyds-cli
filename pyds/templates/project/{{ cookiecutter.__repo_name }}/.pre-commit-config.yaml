@@ -1,7 +1,8 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v4.4.0
     hooks:
+      - id: check-yaml
       - id: end-of-file-fixer
       - id: trailing-whitespace
   - repo: https://github.com/kynan/nbstripout
@@ -13,15 +14,14 @@ repos:
     hooks:
       - id: interrogate
         args: [-c, pyproject.toml]
-  - repo: https://github.com/jsh9/pydoclint
-    rev: 0.3.8
+  - repo: https://github.com/terrencepreilly/darglint
+    rev: v1.8.1
     hooks:
-      - id: pydoclint
-        args:
-          - "--config=pyproject.toml"
+      - id: darglint
+        args: [-v 2] # this config makes the error messages a bit less cryptic.
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.1.1
+    rev: v0.0.287
     hooks:
       - id: ruff
-        args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py, --config, pyproject.toml]
+        args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py]

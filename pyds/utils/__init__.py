@@ -7,6 +7,7 @@ from typing import Dict
 import ruamel.yaml
 from loguru import logger
 from pyprojroot import here
+from sh import which
 
 ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
 
@@ -60,20 +61,19 @@ def run(
     if log:
         logger.info(f"+ {cmd}")
 
+    run_kwargs = {
+        "cwd": cwd,
+        "shell": shell,
+    }
+
     if show_out:
-        out = subprocess.run(
-            cmd,
-            cwd=cwd,
-            shell=shell,
-            stdout=subprocess.PIPE,
-        )
+        run_kwargs["stdout"] = subprocess.PIPE
     else:
-        out = subprocess.run(
-            cmd,
-            cwd=cwd,
-            shell=shell,
-            capture_output=capture_output,
-        )
+        run_kwargs["capture_output"] = capture_output
+    out = subprocess.run(
+        cmd,
+        **run_kwargs,
+    )
     return out
 
 
@@ -148,14 +148,20 @@ def discover_conda_executable() -> Path:
     :returns: Path to the conda or mamba executable.
     """
     # First, try mamba
-    res = run("which mamba", log=False)
-    if res.returncode == 0:
-        return Path(res.stdout.decode("utf-8").strip("\n"))
+    try:
+        return which("mamba").strip("\n")
+    except Exception:
+        pass
 
-    # If mamba isn't available, try conda by using the `which conda` command.
-    res = run("which conda")
-    if res.returncode == 0:
-        return Path(res.stdout.decode("utf-8").strip("\n"))
+    try:
+        return which("micromamba").strip("\n")
+    except Exception:
+        pass
+
+    try:
+        return which("conda").strip("\n")
+    except Exception:
+        pass
 
     # If `which conda` fails, try using environmenet variables.
     conda_exe = os.getenv("CONDA_EXE")
