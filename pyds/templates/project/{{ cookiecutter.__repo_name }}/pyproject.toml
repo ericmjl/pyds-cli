@@ -64,7 +64,7 @@ include-package-data = true
 where = ["{{ cookiecutter.__module_name }}"]
 
 [project]
-name = "{{ cookiecutter.project_name }}"
+name = "{{ cookiecutter.__package_name }}"
 version = "0.0.1"
 dependencies = [
     "matplotlib",
