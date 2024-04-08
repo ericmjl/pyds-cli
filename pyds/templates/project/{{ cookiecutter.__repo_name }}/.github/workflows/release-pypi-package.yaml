@@ -83,7 +83,7 @@ jobs:
       #     llamabot configure default-model --model-name="{{ '${{ secrets.OPENAI_DEFAULT_MODEL }}' }}"
       #     llamabot git write-release-notes
       #     pre-commit install
-      #     pre-commit run --all-files || true
+      #     pre-commit run --all-files || pre-commit run --all-files
       #     git add .
       #     git commit -m "Add release notes for {{ '${{ env.version_number }}' }}"
 
