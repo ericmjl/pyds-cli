@@ -1,6 +1,7 @@
 ---
 revealOptions:
-  transition: 'fade'
+  transition: slide
+highlightTheme: nord
 ---
 
 # 🌟 {{ cookiecutter.talk_name }}
