@@ -21,12 +21,12 @@ jobs:
       - name: Build slides
         run: |
           npm i -g reveal-md
-          reveal-md --static _static
+          make build
 
       - name: Deploy slides
         uses: peaceiris/actions-gh-pages@v3
         with:
-          personal_token: {{ '${{ secrets.GHPAGES_TOKEN }}' }}
+          personal_token: ${{ secrets.GHPAGES_TOKEN }}
           publish_dir: ./_static/
           publish_branch: gh-pages
           allow_empty_commit: false
