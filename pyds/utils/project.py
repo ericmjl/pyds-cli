@@ -182,3 +182,15 @@ def initial_commit(information):
         cwd=information["project_dir"],
         show_out=True,
     )
+
+def write_dotenv():
+    """Write a.env file."""
+    dotenv_text = """# Environment variables for {{ cookiecutter.project_name }}
+# NOTE: This file is _never_ committed into the git repository!
+#       It might contain secrets (e.g. API keys) that should never be exposed publicly.
+# export ENV_VAR="some_value"
+XLA_FLAGS="--xla_gpu_cuda_data_dir=${CONDA_PREFIX}/lib"
+LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
+"""
+    with open(".env", "w") as f:
+        f.write(dotenv_text)

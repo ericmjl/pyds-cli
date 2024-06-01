@@ -14,6 +14,7 @@ from pyds.utils.project import (
     create_jupyter_kernel,
     install_custom_source_package,
     install_precommit_hooks,
+    write_dotenv,
 )
 
 console = Console()
@@ -24,10 +25,11 @@ app = typer.Typer()
 def init():
     """Initialize a new Python data science project."""
     template_dir = SOURCE_DIR / "templates" / "project"
-    result = cookiecutter(str(template_dir.resolve()))
+    project_path = cookiecutter(str(template_dir.resolve()))
 
-    os.chdir(result)
+    os.chdir(project_path)
 
+    write_dotenv()
     create_environment()
     create_jupyter_kernel()
     install_custom_source_package()
