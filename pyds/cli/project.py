@@ -11,7 +11,6 @@ from sh import git, ls, pixi, pre_commit
 
 # from pyds.utils import run
 from pyds.utils.paths import SOURCE_DIR
-from pyds.utils.project import write_dotenv
 
 console = Console()
 app = typer.Typer()
@@ -29,7 +28,14 @@ def init():
 
     ls("-lah", ".")
 
-    write_dotenv()
+    dotenv_text = """# Environment variables for {{ cookiecutter.project_name }}
+# NOTE: This file is _never_ committed into the git repository!
+#       It might contain secrets (e.g. API keys) that should never be exposed publicly.
+# export ENV_VAR="some_value"
+"""
+    with open(".env", "w") as f:
+        f.write(dotenv_text)
+
     # Create environment
     msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
     with console.status(msg):

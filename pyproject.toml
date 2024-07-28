@@ -95,6 +95,9 @@ omit = [
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64"]
 
+[tool.pixi.feature.bare.pypi-dependencies]
+pyds-cli = { path = ".", editable = true }
+
 [tool.pixi.feature.core.pypi-dependencies]
 pyds-cli = { path = ".", editable = true }
 case-converter = "*"
@@ -136,7 +139,11 @@ lint = "pre-commit run --all-files"
 build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
 
+[tool.pixi.feature.bare.tasks]
+run = "pyds --help"
+
 [tool.pixi.environments]
 default = ["core", "testing", "devtools"]
 docs = ["docs"]
 testing = ["core", "testing"]
+bare = ["bare"]
