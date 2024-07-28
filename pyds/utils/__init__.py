@@ -200,3 +200,5 @@ def environment_exists(environment_name: str) -> bool:
 
 
 CONDA_EXE = discover_conda_executable()
+# Set PIXI_EXE to be the result of executing `which pixi`:
+PIXI_EXE = which("pixi").strip("\n")

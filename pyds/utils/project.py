@@ -8,7 +8,7 @@ from rich.console import Console
 
 from pyds.utils import run
 
-from ..utils import CONDA_EXE, get_conda_env_name
+from ..utils import PIXI_EXE, get_conda_env_name
 
 # jinja2_env = Environment(
 #     loader=PackageLoader("pyds.cli", "templates"),
@@ -97,10 +97,7 @@ def create_environment():
     """
     msg = "[bold blue]Creating conda environment (this might take a few moments!)..."
     with console.status(msg):
-        run(
-            f"{CONDA_EXE} env update -f environment.yml",
-            show_out=True,
-        )
+        run(f"{PIXI_EXE} install")
 
 
 def create_jupyter_kernel():
@@ -112,20 +109,7 @@ def create_jupyter_kernel():
     # Read environment.yml and get the environment name.
     project_name = get_conda_env_name()
     with console.status(msg):
-        run(
-            f"python -m ipykernel install --user --name {project_name}",
-            show_out=True,
-            activate_env=True,
-        )
-
-
-def install_custom_source_package():
-    """Instal custom source package."""
-    msg = (
-        "[bold blue]Installing your custom source package into the conda environment..."
-    )
-    with console.status(msg):
-        run("pip install -e .", activate_env=True)
+        run(f"{PIXI_EXE} run python -m ipykernel install --user --name {project_name}")
 
 
 def configure_git():
@@ -139,7 +123,7 @@ def configure_git():
         mkdocs_config = yaml.safe_load(f)
         repo_url = mkdocs_config["repo_url"]
 
-    *unnecessary, github_username, repo_name = repo_url.split("/")
+    *_, github_username, repo_name = repo_url.split("/")
 
     run("git init", show_out=True)
     with console.status(msg):
@@ -184,13 +168,11 @@ def initial_commit(information):
     )
 
 def write_dotenv():
-    """Write a.env file."""
+    """Write a .env file."""
     dotenv_text = """# Environment variables for {{ cookiecutter.project_name }}
 # NOTE: This file is _never_ committed into the git repository!
 #       It might contain secrets (e.g. API keys) that should never be exposed publicly.
 # export ENV_VAR="some_value"
-XLA_FLAGS="--xla_gpu_cuda_data_dir=${CONDA_PREFIX}/lib"
-LD_LIBRARY_PATH="${CONDA_PREFIX}/lib:${LD_LIBRARY_PATH}"
 """
     with open(".env", "w") as f:
         f.write(dotenv_text)
