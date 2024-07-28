@@ -151,3 +151,6 @@ testdrive.ipynb
 
 # Ignored b/c this is auto-generated.
 docs/cli.md
+# pixi environments
+.pixi
+*.egg-info

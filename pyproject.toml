@@ -90,3 +90,50 @@ omit = [
     "*/templates/*",
     "tests/*",
 ]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tool.pixi.feature.core.pypi-dependencies]
+pyds-cli = { path = ".", editable = true }
+case-converter = "*"
+jinja2-strcase = "*"
+
+[tool.pixi.feature.core.dependencies]
+typer = "*"
+pyyaml = "*"
+jinja2 = "*"
+loguru = "*"
+pyprojroot = "*"
+python-dotenv = "*"
+rich = "*"
+ruamel.yaml = "*"
+cookiecutter = "*"
+sh = "*"
+
+[tool.pixi.feature.testing.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mknotebooks = "*"
+mkdocstrings = "*"
+
+[tool.pixi.feature.devtools.pypi-dependencies]
+llamabot = ">=0.5.0"
+pre-commit = "*"
+
+[tool.pixi.feature.testing.tasks]
+test = "pytest"
+
+[tool.pixi.feature.docs.tasks]
+build-docs = "mkdocs build"
+serve-docs = "mkdocs serve"
+
+[tool.pixi.environments]
+dev = ["core", "testing", "devtools"]
+docs = ["docs"]
+testing = ["core", "testing"]

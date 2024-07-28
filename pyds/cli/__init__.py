@@ -11,6 +11,7 @@ from .conda import app as conda_app
 from .docs import app as docs_app
 from .environment import app as env_app
 from .package import app as package_app
+from .pixi import app as pixi_app
 from .project import app as project_app
 from .system import app as system_app
 from .talk import app as talk_app
@@ -23,6 +24,7 @@ app.add_typer(package_app, name="package")
 app.add_typer(project_app, name="project")
 app.add_typer(system_app, name="system")
 app.add_typer(talk_app, name="talk")
+app.add_typer(pixi_app, name="pixi")
 
 
 @app.command()
