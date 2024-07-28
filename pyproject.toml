@@ -143,7 +143,6 @@ isort = "*"
 [tool.pixi.feature.devtools.pypi-dependencies]
 llamabot = ">=0.5.0"
 pre-commit = "*"
-cfgv = ">=3.4.0"
 pydoclint = "*"
 
 [tool.pixi.feature.testing.tasks]
