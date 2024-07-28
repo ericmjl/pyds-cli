@@ -1,4 +1,5 @@
 """Tests for talk slides creation."""
+
 import os
 import tempfile
 

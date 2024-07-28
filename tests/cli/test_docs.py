@@ -1,4 +1,5 @@
 """Tests for docs."""
+
 import os
 
 from typer.testing import CliRunner

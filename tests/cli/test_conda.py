@@ -1,4 +1,5 @@
 """Tests for conda sub-commands."""
+
 import os
 
 from typer.testing import CliRunner

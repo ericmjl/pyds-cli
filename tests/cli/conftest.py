@@ -1,4 +1,5 @@
 """Project-wide fixtures."""
+
 import os
 from pathlib import Path
 from typing import Tuple
