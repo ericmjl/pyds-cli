@@ -28,7 +28,6 @@ def status():
     3. The presence of a .pypirc file.
     """
     check_pypi()
-    check_homebrew()
     check_pixi()
 
 
@@ -43,15 +42,6 @@ def check_pixi():
             "❌ pixi not found. "
             "Please follow instructions at https://pixi.sh/install.sh to install pixi."
         )
-
-
-def check_homebrew():
-    """Check that `homebrew` is installed."""
-    out = which("brew")
-    if out:
-        print("✅ Homebrew installed! 🎉")
-    else:
-        print("❌ Homebrew not installed. Please run `pyds system init`.")
 
 
 def check_pypi():
