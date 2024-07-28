@@ -82,6 +82,7 @@ dependencies = [
     "jinja2-strcase >= 0.0.2",
     "cookiecutter",
     "sh",
+    "pre-commit",
 ]
 readme = "README.md"
 
