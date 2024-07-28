@@ -6,8 +6,10 @@ from .version import __version__
 try:
     from sh import pixi  # noqa: F401
 except ImportError:
-    import subprocess
+    err_msg = """To use `pyds`, you need to have `pixi` installed.
 
-    subprocess.run("curl", "-fsSL", "https://pixi.sh/install.sh", "|", "bash")
+Please follow installation instructions available at: https://pixi.sh/latest/
+"""
+    raise ImportError(err_msg)
 
 __all__ = ["__version__"]
