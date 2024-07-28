@@ -20,11 +20,12 @@ app = typer.Typer()
 def init():
     """Initialize a new Python data science project."""
     template_dir = SOURCE_DIR / "templates" / "project"
-    project_path = cookiecutter(str(template_dir.resolve()))
+    project_path: str = cookiecutter(str(template_dir.resolve()))
 
     os.chdir(project_path)
 
-    os.environ["PIXI_PROJECT_MANIFEST"] = "pyproject.toml"
+    os.environ["PIXI_PROJECT_MANIFEST"] = str(Path(project_path) / "pyproject.toml")
+    print(os.environ["PIXI_PROJECT_MANIFEST"])
 
     ls("-lah", ".")
 

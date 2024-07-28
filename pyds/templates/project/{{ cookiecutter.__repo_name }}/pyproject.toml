@@ -139,7 +139,6 @@ ruff = "*"
 isort = "*"
 
 [tool.pixi.feature.devtools.pypi-dependencies]
-llamabot = ">=0.5.0"
 pre-commit = "*"
 pydoclint = "*"
 
