@@ -21,4 +21,4 @@ or else directly run `pixi install` in your terminal.
 """
         raise FileNotFoundError(error_msg)
     rm("-rf", ".pixi")
-    pixi("install", "-e", "dev" "--manifest-path", "pyproject.toml")
+    pixi("install", "--manifest-path", "pyproject.toml")

@@ -103,7 +103,7 @@ platforms = ["osx-arm64", "linux-64", "win-64"]
 [tool.pixi.tasks]
 
 # PACKAGES NEEDED FOR DEVELOPMENT
-[tool.pixi.feature.core-ds.dependencies]
+[tool.pixi.feature.core.dependencies]
 ipykernel = "*"
 ipython = "*"
 jupyter = "*"
@@ -125,7 +125,12 @@ pytest = "*"
 pytest-cov = "*"
 hypothesis = "*"
 
-[tool.pixi.feature.code-quality.dependencies]
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mknotebooks = "*"
+
+[tool.pixi.feature.devtools.dependencies]
 black = "*"
 flake8 = "*"
 interrogate = "*"
@@ -133,23 +138,27 @@ pre-commit = "*"
 ruff = "*"
 isort = "*"
 
-[tool.pixi.feature.code-quality.pypi-dependencies]
+[tool.pixi.feature.devtools.pypi-dependencies]
+llamabot = ">=0.5.0"
+pre-commit = "*"
 pydoclint = "*"
 
-[tool.pixi.feature.docs.dependencies]
-mkdocs = "*"
-mkdocs-material = "*"
-mknotebooks = "*"
-mkdocstrings = "*"
-
-[tool.pixi.feature.dev.tasks]
+[tool.pixi.feature.testing.tasks]
 test = "pytest"
+
+[tool.pixi.feature.devtools.tasks]
+lint = "pre-commit run --all-files"
+commit = "git commit"
 
 [tool.pixi.feature.docs.tasks]
 build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
 
-# ENVIRONMENTS DEFINITION
+[tool.pixi.feature.setup.tasks]
+setup = "pre-commit install --install-hooks && pre-commit autoupdate"
+update = "pre-commit autoupdate"
+
 [tool.pixi.environments]
-default = ["core-ds", "cli", "testing", "code-quality", "dev"]
+default = ["core", "cli", "testing", "devtools", "setup"]
 docs = ["docs"]
+testing = ["core", "testing", "setup"]

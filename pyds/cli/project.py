@@ -7,7 +7,7 @@ import typer
 import yaml
 from cookiecutter.main import cookiecutter
 from rich.console import Console
-from sh import git, ls, pixi, pre_commit
+from sh import git, ls, pixi
 
 # from pyds.utils import run
 from pyds.utils.paths import SOURCE_DIR
@@ -39,7 +39,7 @@ def init():
     # Create environment
     msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
     with console.status(msg):
-        pixi("install", "-e", "dev")
+        pixi("install")
     # Create Jupyter kernel:
     msg = (
         "[bold blue]Enabling Jupyter kernel discovery "
@@ -73,26 +73,9 @@ def init():
         git("remote", "add", "origin", git_ssh_url)
 
     # Install pre-commit hooks:
-    pre_commit("install", "--install-hooks")
-    # install_precommit_hooks()
+    pixi("run", "setup")
 
     print("[green]🎉Your project repo has been created!")
-
-
-@app.command()
-def update():
-    """Update the project.
-
-    This command will automatically update the pre-commit hooks
-    as well as the conda environment.
-
-    We run the commands with the base conda environment activated
-    rather than the project environment
-    to prevent phantom child environments from being created.
-    This is a known issue with mamba.
-    """
-    pre_commit("autoupdate")
-    pixi("install", "-e", "dev")
 
 
 if __name__ == "__main__":

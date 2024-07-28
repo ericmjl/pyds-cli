@@ -10,7 +10,7 @@ we look for environment variables such as:
 """
 
 import typer
-from sh import wget, which
+from sh import bash, curl, which
 
 from ..utils.paths import PYPIRC_PATH
 
@@ -23,31 +23,32 @@ def status():
 
     We check for the presence of:
 
-    1. A `conda` installation.
+    1. A `pixi` installation.
     2. A `homebrew` installation.
     3. The presence of a .pypirc file.
     """
     check_pypi()
     check_homebrew()
-    check_conda()
+    check_pixi()
 
 
-def check_conda():
-    """Check that `conda` is installed."""
-    out = which("conda")
-    if out.returncode == 0:
-        print("✅ Conda found! 🎉")
+def check_pixi():
+    """Check that `pixi` is installed."""
+    out = which("pixi")
+    if out:
+        location = out.strip("\n")
+        print(f"✅ pixi found at {location}! 🎉")
     else:
         print(
-            "❌ Conda not found. "
-            "Please run `pyds system bootstrap` to install conda on your system."
+            "❌ pixi not found. "
+            "Please follow instructions at https://pixi.sh/install.sh to install pixi."
         )
 
 
 def check_homebrew():
     """Check that `homebrew` is installed."""
     out = which("brew")
-    if out.returncode == 0:
+    if out:
         print("✅ Homebrew installed! 🎉")
     else:
         print("❌ Homebrew not installed. Please run `pyds system init`.")
@@ -68,13 +69,14 @@ def check_pypi():
 def init():
     """Bootstrap user's system with necessary programs."""
     install_pypirc()
+    install_pixi()
 
 
-def install_conda():
+def install_pixi():
     """Install conda onto a user's system."""
-    wget(
-        "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"  # noqa: E501
-    )
+    # curl -fsSL https://pixi.sh/install.sh | bash
+    curl("-fsSL", "https://pixi.sh/install.sh", "-o", "/tmp/install_pixi.sh")
+    bash("/tmp/install_pixi.sh")
 
 
 def install_homebrew():

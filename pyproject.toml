@@ -123,15 +123,28 @@ sh = "*"
 pytest = "*"
 pytest-cov = "*"
 
+[tool.pixi.feature.testing.pypi-dependencies]
+wonderwords = ">=2.2.0"
+
 [tool.pixi.feature.docs.dependencies]
 mkdocs = "*"
 mkdocs-material = "*"
 mknotebooks = "*"
-mkdocstrings = "*"
+mkdocstrings = { version = "*", extras = "python" }
+
+[tool.pixi.feature.devtools.dependencies]
+black = "*"
+flake8 = "*"
+interrogate = "*"
+pre-commit = "*"
+ruff = "*"
+isort = "*"
 
 [tool.pixi.feature.devtools.pypi-dependencies]
 llamabot = ">=0.5.0"
 pre-commit = "*"
+cfgv = ">=3.4.0"
+pydoclint = "*"
 
 [tool.pixi.feature.testing.tasks]
 test = "pytest"
@@ -144,11 +157,11 @@ commit = "git commit"
 build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
 
-[tool.pixi.feature.bare.tasks]
-run = "pyds --help"
+[tool.pixi.feature.setup.tasks]
+setup = "pre-commit install --install-hooks && pre-commit autoupdate"
 
 [tool.pixi.environments]
-default = ["core", "testing", "devtools"]
+default = ["core", "testing", "devtools", "setup"]
 docs = ["docs"]
-testing = ["core", "testing"]
+testing = ["core", "testing", "setup"]
 bare = ["bare"]
