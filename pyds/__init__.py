@@ -6,8 +6,8 @@ from .version import __version__
 try:
     from sh import pixi  # noqa: F401
 except ImportError:
-    from sh import curl
+    import subprocess
 
-    curl("-fsSL", "https://pixi.sh/install.sh", "|", "bash")
+    subprocess.run("curl", "-fsSL", "https://pixi.sh/install.sh", "|", "bash")
 
 __all__ = ["__version__"]
