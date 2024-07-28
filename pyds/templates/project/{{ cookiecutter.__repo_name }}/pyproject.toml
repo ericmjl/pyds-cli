@@ -169,7 +169,7 @@ setup = "pre-commit install --install-hooks && pre-commit autoupdate"
 update = "pre-commit autoupdate"
 
 [tool.pixi.environments]
-default = ["core", "cli", "testing", "devtools", "setup"]
+default = ["core", "testing", "devtools", "setup"]
 docs = ["docs"]
 testing = ["core", "testing", "setup"]
-cuda = ["core", "cli", "testing", "devtools", "setup", "cuda"]
+cuda = ["core", "testing", "devtools", "setup", "cuda"]
