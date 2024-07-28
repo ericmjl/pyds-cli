@@ -4,7 +4,6 @@ from pathlib import Path
 
 import typer
 import yaml
-from sh import pytest
 
 from pyds.version import __version__
 
@@ -56,12 +55,6 @@ def configure(
     config_file_path = Path.home() / ".pyds.yaml"
     with config_file_path.open("w+") as f:
         f.write(yaml.dump(info))
-
-
-@app.command()
-def test():
-    """Run all tests in the project."""
-    pytest(".")
 
 
 @app.command()
