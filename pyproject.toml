@@ -153,6 +153,7 @@ lint = "pre-commit run --all-files"
 commit = "git commit"
 
 [tool.pixi.feature.docs.tasks]
+cli-docs = "typer pyds.cli utils docs --name pyds --output docs/cli.md"
 build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
 
