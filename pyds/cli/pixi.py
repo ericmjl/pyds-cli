@@ -1,12 +1,13 @@
 """Pixi surrogate commands."""
+
 from pathlib import Path
 
 import typer
 
-from ..utils import run
+# from ..utils import run
+from sh import pixi, rm
 
 app = typer.Typer()
-
 
 
 @app.command()
@@ -19,5 +20,5 @@ You should either navigate to the root of your project and run `pyds pixi rebuil
 or else directly run `pixi install` in your terminal.
 """
         raise FileNotFoundError(error_msg)
-    run("rm -rf .pixi/")
-    run("pixi install")
+    rm("-rf", ".pixi")
+    pixi("install", "-e", "dev" "--manifest-path", "pyproject.toml")

@@ -1,10 +1,11 @@
 """Global commands for pyds."""
+
 from pathlib import Path
 
 import typer
 import yaml
+from sh import pytest
 
-from pyds.utils import run
 from pyds.version import __version__
 
 from .conda import app as conda_app
@@ -60,7 +61,7 @@ def configure(
 @app.command()
 def test():
     """Run all tests in the project."""
-    run("pytest .")
+    pytest(".")
 
 
 @app.command()

@@ -1,21 +1,17 @@
 """Project initialization and state management tools."""
 
 import os
+from pathlib import Path
 
 import typer
+import yaml
 from cookiecutter.main import cookiecutter
 from rich.console import Console
+from sh import git, ls, pixi, pre_commit
 
-from pyds.utils import run
+# from pyds.utils import run
 from pyds.utils.paths import SOURCE_DIR
-from pyds.utils.project import (
-    configure_git,
-    create_environment,
-    create_jupyter_kernel,
-    install_custom_source_package,
-    install_precommit_hooks,
-    write_dotenv,
-)
+from pyds.utils.project import write_dotenv
 
 console = Console()
 app = typer.Typer()
@@ -29,17 +25,52 @@ def init():
 
     os.chdir(project_path)
 
+    os.environ["PIXI_PROJECT_MANIFEST"] = "pyproject.toml"
+
+    ls("-lah", ".")
+
     write_dotenv()
-    create_environment()
-    create_jupyter_kernel()
-    install_custom_source_package()
-    configure_git()
-    install_precommit_hooks()
-
-    print(
-        "[green]🎉Your project repo has been created!"
+    # Create environment
+    msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
+    with console.status(msg):
+        pixi("install", "-e", "dev")
+    # Create Jupyter kernel:
+    msg = (
+        "[bold blue]Enabling Jupyter kernel discovery "
+        "of your newfangled conda environment..."
     )
+    with console.status(msg):
+        pixi(
+            "run",
+            "python",
+            "-m",
+            "ipykernel",
+            "install",
+            "--user",
+            "--name",
+            Path(project_path).name,
+        )
 
+    # Configure Git:
+    msg = "[bold blue]Configuring git..."
+
+    with open("mkdocs.yaml", "r+") as f:
+        mkdocs_config = yaml.safe_load(f)
+        repo_url = mkdocs_config["repo_url"]
+
+    *_, github_username, repo_name = repo_url.split("/")
+
+    git("init")
+    with console.status(msg):
+        full_repo_name = f"{github_username}/{repo_name}"
+        git_ssh_url = f"git@github.com:{full_repo_name}"
+        git("remote", "add", "origin", git_ssh_url)
+
+    # Install pre-commit hooks:
+    pre_commit("install", "--install-hooks")
+    # install_precommit_hooks()
+
+    print("[green]🎉Your project repo has been created!")
 
 
 @app.command()
@@ -54,8 +85,8 @@ def update():
     to prevent phantom child environments from being created.
     This is a known issue with mamba.
     """
-    run("pre-commit autoupdate", show_out=True, activate_env=True)
-    run("mamba env update -f environment.yml", show_out=True, activate_env=True)
+    pre_commit("autoupdate")
+    pixi("install", "-e", "dev")
 
 
 if __name__ == "__main__":

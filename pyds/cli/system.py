@@ -10,8 +10,8 @@ we look for environment variables such as:
 """
 
 import typer
+from sh import wget, which
 
-from ..utils import run
 from ..utils.paths import PYPIRC_PATH
 
 app = typer.Typer()
@@ -34,7 +34,7 @@ def status():
 
 def check_conda():
     """Check that `conda` is installed."""
-    out = run("which conda", log=False)
+    out = which("conda")
     if out.returncode == 0:
         print("✅ Conda found! 🎉")
     else:
@@ -46,7 +46,7 @@ def check_conda():
 
 def check_homebrew():
     """Check that `homebrew` is installed."""
-    out = run("which brew", log=False)
+    out = which("brew")
     if out.returncode == 0:
         print("✅ Homebrew installed! 🎉")
     else:
@@ -72,8 +72,8 @@ def init():
 
 def install_conda():
     """Install conda onto a user's system."""
-    run(
-        "wget https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"  # noqa: E501
+    wget(
+        "https://github.com/conda-forge/miniforge/releases/latest/download/Mambaforge-$(uname)-$(uname -m).sh"  # noqa: E501
     )
 
 

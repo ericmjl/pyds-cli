@@ -127,12 +127,14 @@ hypothesis = "*"
 
 [tool.pixi.feature.code-quality.dependencies]
 black = "*"
-pydoclint = "*"
-flake = "*"
+flake8 = "*"
 interrogate = "*"
 pre-commit = "*"
 ruff = "*"
 isort = "*"
+
+[tool.pixi.feature.code-quality.pypi-dependencies]
+pydoclint = "*"
 
 [tool.pixi.feature.docs.dependencies]
 mkdocs = "*"
@@ -149,5 +151,5 @@ serve-docs = "mkdocs serve"
 
 # ENVIRONMENTS DEFINITION
 [tool.pixi.environments]
-dev = ["core-ds", "cli", "testing", "code-quality"]
+dev = ["core-ds", "cli", "testing", "code-quality", "dev"]
 docs = ["docs"]
