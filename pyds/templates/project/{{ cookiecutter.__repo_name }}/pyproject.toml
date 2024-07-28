@@ -151,5 +151,5 @@ serve-docs = "mkdocs serve"
 
 # ENVIRONMENTS DEFINITION
 [tool.pixi.environments]
-dev = ["core-ds", "cli", "testing", "code-quality", "dev"]
+default = ["core-ds", "cli", "testing", "code-quality", "dev"]
 docs = ["docs"]
