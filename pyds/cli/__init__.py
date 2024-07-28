@@ -7,7 +7,6 @@ import yaml
 
 from pyds.version import __version__
 
-from .conda import app as conda_app
 from .docs import app as docs_app
 from .environment import app as env_app
 from .package import app as package_app
@@ -17,7 +16,6 @@ from .system import app as system_app
 from .talk import app as talk_app
 
 app = typer.Typer()
-app.add_typer(conda_app, name="conda")
 app.add_typer(docs_app, name="docs")
 app.add_typer(env_app, name="env")
 app.add_typer(package_app, name="package")

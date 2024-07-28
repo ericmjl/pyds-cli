@@ -129,6 +129,9 @@ pre-commit = "*"
 [tool.pixi.feature.testing.tasks]
 test = "pytest"
 
+[tool.pixi.feature.devtools.tasks]
+lint = "pre-commit run --all-files"
+
 [tool.pixi.feature.docs.tasks]
 build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
