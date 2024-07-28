@@ -104,6 +104,7 @@ platforms = ["osx-arm64", "linux-64", "win-64"]
 platforms = ["linux-64"]
 system-requirements = {cuda = "12"}
 
+# NOTE: Core dependencies (needed for running the program) go here.
 [tool.pixi.feature.core.dependencies]
 ipykernel = "*"
 ipython = "*"
@@ -117,20 +118,21 @@ scipy = "*"
 seaborn = "*"
 pymc = "*"
 python-dotenv = "*"
-
-[tool.pixi.feature.cli.dependencies]
 typer = "*"
 
+# NOTE: Testing dependencies (not needed for running program) go here.
 [tool.pixi.feature.testing.dependencies]
 pytest = "*"
 pytest-cov = "*"
 hypothesis = "*"
 
+# NOTE: Docs dependencies (needed for documentation and notebooks) go here.
 [tool.pixi.feature.docs.dependencies]
 mkdocs = "*"
 mkdocs-material = "*"
 mknotebooks = "*"
 
+# NOTE: Developer tools (for code checks and quality) go here.
 [tool.pixi.feature.devtools.dependencies]
 black = "*"
 flake8 = "*"
@@ -143,6 +145,7 @@ isort = "*"
 pre-commit = "*"
 pydoclint = "*"
 
+# NOTE: CUDA-specific dependencies go here.
 [tool.pixi.feature.cuda.dependencies]
 cuda-version = "==12.1"
 cuda-libraries = "*"
