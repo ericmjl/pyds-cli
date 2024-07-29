@@ -1,14 +1,15 @@
 """Project-wide fixtures."""
+
 import os
 from pathlib import Path
 from typing import Tuple
-from uuid import uuid4
 
 import pytest
 from typer.testing import CliRunner
+from wonderwords import RandomWord
 
 from pyds.cli import app
-from pyds.utils import read_config, run
+from pyds.utils import read_config
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -30,7 +31,10 @@ def initialized_project() -> Tuple[Path, Path]:
     tmp_path = Path("/tmp/pyds-cli")
     tmp_path.mkdir(exist_ok=True, parents=True)
     os.chdir(tmp_path)
-    project_name = str(uuid4())
+    r = RandomWord()
+    project_name = r.word()
+
+    os.environ["PIXI_PROJECT_MANIFEST"] = ""
     result = runner.invoke(
         app,
         ["project", "init"],
@@ -41,5 +45,5 @@ def initialized_project() -> Tuple[Path, Path]:
 
     assert result.exit_code == 0, result.stderr
     yield tmp_path, project_name
-    run(f"conda env remove -n {project_name}")
-    run(f"rm -rf {tmp_path}")
+
+    # rm("-rf", tmp_path)

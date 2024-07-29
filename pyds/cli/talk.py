@@ -1,6 +1,5 @@
 """CLI for creating new talk repositories."""
 
-
 import typer
 from cookiecutter.main import cookiecutter
 

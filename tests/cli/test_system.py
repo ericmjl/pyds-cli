@@ -1,4 +1,5 @@
 """Tests for system commands."""
+
 from typer.testing import CliRunner
 
 from pyds.cli import app

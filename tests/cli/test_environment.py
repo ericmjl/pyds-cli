@@ -1,4 +1,5 @@
 """Tests for environment variables."""
+
 import pytest
 from typer.testing import CliRunner
 

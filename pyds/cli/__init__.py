@@ -1,28 +1,24 @@
 """Global commands for pyds."""
+
 from pathlib import Path
 
 import typer
 import yaml
 
-from pyds.utils import run
 from pyds.version import __version__
 
-from .conda import app as conda_app
-from .docs import app as docs_app
 from .environment import app as env_app
-from .package import app as package_app
+from .pixi import app as pixi_app
 from .project import app as project_app
 from .system import app as system_app
 from .talk import app as talk_app
 
 app = typer.Typer()
-app.add_typer(conda_app, name="conda")
-app.add_typer(docs_app, name="docs")
 app.add_typer(env_app, name="env")
-app.add_typer(package_app, name="package")
 app.add_typer(project_app, name="project")
 app.add_typer(system_app, name="system")
 app.add_typer(talk_app, name="talk")
+app.add_typer(pixi_app, name="pixi")
 
 
 @app.command()
@@ -53,12 +49,6 @@ def configure(
     config_file_path = Path.home() / ".pyds.yaml"
     with config_file_path.open("w+") as f:
         f.write(yaml.dump(info))
-
-
-@app.command()
-def test():
-    """Run all tests in the project."""
-    run("pytest .")
 
 
 @app.command()

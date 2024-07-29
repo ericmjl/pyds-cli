@@ -10,40 +10,26 @@ jobs:
     runs-on: ubuntu-latest
     name: Build documentation
 
-    # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
-    defaults:
-      run:
-        shell: bash -l {0}
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # See: https://github.com/marketplace/actions/setup-miniconda
-      - name: Setup miniconda
-        uses: conda-incubator/setup-miniconda@v2
+      - uses: prefix-dev/setup-pixi@v0.8.1
         with:
-          auto-update-conda: true
-          miniforge-variant: Mambaforge
-          channels: conda-forge
-          activate-environment: pyds
-          environment-file: environment.yml
-          use-mamba: true
+          cache: true
+          environments: docs
 
       - name: Build docs
         run: |
-          conda activate pyds
-          python -m ipykernel install --user --name pyds
-          pip install -e .
-          typer pyds.cli utils docs --name pyds --output docs/cli.md
-          mkdocs build --site-dir /tmp/docs
+          pixi run cli-docs
+          pixi run build-docs
 
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3
         with:
           # https://github.com/peaceiris/actions-gh-pages#%EF%B8%8F-set-personal-access-token-personal_token
           personal_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: /tmp/docs
+          publish_dir: site
           publish_branch: gh-pages
           # destination_dir: manuscript
           allow_empty_commit: false

@@ -1,11 +1,10 @@
 """Utility functions for pyds."""
+
 import os
-import subprocess
 from pathlib import Path
 from typing import Dict
 
 import ruamel.yaml
-from loguru import logger
 from pyprojroot import here
 from sh import which
 
@@ -31,50 +30,50 @@ def read_config():
         raise FileNotFoundError("❗️Please run `pyds configure` to configure pyds!")
 
 
-def run(
-    cmd: str,
-    cwd=Path("."),
-    shell: bool = True,
-    capture_output: bool = True,
-    log: bool = True,
-    show_out: bool = False,
-    activate_env=False,
-):
-    """Convenience function to run a shell command while also logging the command.
+# def run(
+#     cmd: str,
+#     cwd=Path("."),
+#     shell: bool = True,
+#     capture_output: bool = True,
+#     log: bool = True,
+#     show_out: bool = False,
+#     activate_env=False,
+# ):
+#     """Convenience function to run a shell command while also logging the command.
 
-    :param cmd: The command to run.
-    :param cwd: The working directory in which to run the code.
-    :param shell: Passed to `subprocess.run`'s `shell` argument.
-    :param capture_output: Passed to `subprocess.run`'s `capture_output` argument.
-    :param log: Whether or not to log the command to screen.
-    :param show_out: Whether or not to show the output of `cmd` to the terminal.
-    :param activate_env: Whether or not to activate
-        the project's conda environment or not before running the command.
-        Defaults to False.
-    :returns: The result of `subprocess.run`.
-    """
-    if activate_env:
-        env = get_conda_env_name()
-        cmd = f"bash -c 'source activate {env} && {cmd}'"
-    else:
-        cmd = f"bash -c 'source activate base && {cmd}'"
-    if log:
-        logger.info(f"+ {cmd}")
+#     :param cmd: The command to run.
+#     :param cwd: The working directory in which to run the code.
+#     :param shell: Passed to `subprocess.run`'s `shell` argument.
+#     :param capture_output: Passed to `subprocess.run`'s `capture_output` argument.
+#     :param log: Whether or not to log the command to screen.
+#     :param show_out: Whether or not to show the output of `cmd` to the terminal.
+#     :param activate_env: Whether or not to activate
+#         the project's conda environment or not before running the command.
+#         Defaults to False.
+#     :returns: The result of `subprocess.run`.
+#     """
+#     if activate_env:
+#         env = get_conda_env_name()
+#         cmd = f"bash -c 'source activate {env} && {cmd}'"
+#     else:
+#         cmd = f"bash -c 'source activate base && {cmd}'"
+#     if log:
+#         logger.info(f"+ {cmd}")
 
-    run_kwargs = {
-        "cwd": cwd,
-        "shell": shell,
-    }
+#     run_kwargs = {
+#         "cwd": cwd,
+#         "shell": shell,
+#     }
 
-    if show_out:
-        run_kwargs["stdout"] = subprocess.PIPE
-    else:
-        run_kwargs["capture_output"] = capture_output
-    out = subprocess.run(
-        cmd,
-        **run_kwargs,
-    )
-    return out
+#     if show_out:
+#         run_kwargs["stdout"] = subprocess.PIPE
+#     else:
+#         run_kwargs["capture_output"] = capture_output
+#     out = subprocess.run(
+#         cmd,
+#         **run_kwargs,
+#     )
+#     return out
 
 
 def read_conda_env(env_file="environment.yml", cwd: Path = Path(".")) -> Dict:
@@ -200,3 +199,5 @@ def environment_exists(environment_name: str) -> bool:
 
 
 CONDA_EXE = discover_conda_executable()
+# Set PIXI_EXE to be the result of executing `which pixi`:
+PIXI_EXE = which("pixi").strip("\n")

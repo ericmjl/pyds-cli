@@ -92,3 +92,84 @@ docs = [
 omit = [
     "tests/*",
 ]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64", "win-64"]
+
+[tool.pixi.pypi-dependencies]
+{{ cookiecutter.__package_name }} = { path = ".", editable = true }
+
+[tool.pixi.feature.cuda]
+platforms = ["linux-64"]
+system-requirements = {cuda = "12"}
+
+# NOTE: Core dependencies (needed for running the program) go here.
+[tool.pixi.feature.core.dependencies]
+ipykernel = "*"
+ipython = "*"
+jupyter = "*"
+matplotlib = "*"
+numpy = "*"
+pandas = "*"
+pyprojroot = "*"
+scikit-learn = "*"
+scipy = "*"
+seaborn = "*"
+pymc = "*"
+python-dotenv = "*"
+typer = "*"
+
+# NOTE: Testing dependencies (not needed for running program) go here.
+[tool.pixi.feature.testing.dependencies]
+pytest = "*"
+pytest-cov = "*"
+hypothesis = "*"
+
+# NOTE: Docs dependencies (needed for documentation and notebooks) go here.
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mknotebooks = "*"
+
+# NOTE: Developer tools (for code checks and quality) go here.
+[tool.pixi.feature.devtools.dependencies]
+black = "*"
+flake8 = "*"
+interrogate = "*"
+pre-commit = "*"
+ruff = "*"
+isort = "*"
+
+[tool.pixi.feature.devtools.pypi-dependencies]
+pre-commit = "*"
+pydoclint = "*"
+
+# NOTE: CUDA-specific dependencies go here.
+[tool.pixi.feature.cuda.dependencies]
+cuda-version = "==12.1"
+cuda-libraries = "*"
+cudnn = "*"
+jaxlib = "* *cuda*"
+__cuda = "*"
+
+[tool.pixi.feature.testing.tasks]
+test = "pytest"
+
+[tool.pixi.feature.devtools.tasks]
+lint = "pre-commit run --all-files"
+commit = "git commit"
+
+[tool.pixi.feature.docs.tasks]
+build-docs = "mkdocs build"
+serve-docs = "mkdocs serve"
+
+[tool.pixi.feature.setup.tasks]
+setup = "pre-commit install --install-hooks && pre-commit autoupdate"
+update = "pre-commit autoupdate"
+
+[tool.pixi.environments]
+default = ["core", "testing", "devtools", "setup"]
+docs = ["docs"]
+testing = ["core", "testing", "setup"]
+cuda = ["core", "testing", "devtools", "setup", "cuda"]

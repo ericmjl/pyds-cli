@@ -1,7 +1,5 @@
 """Tests for the top-level CLI."""
 
-import os
-
 from typer.testing import CliRunner
 
 from pyds.cli import app
@@ -25,15 +23,3 @@ def test_configure():
     assert config["twitter_username"] == "ericmjl"
     assert config["linkedin_username"] == "ericmjl"
     assert config["github_username"] == "ericmjl"
-
-
-def test_test(initialized_project):
-    """Test for the `pyds test` command.
-
-    :param initialized_project: conftest.py fixture for our initialized project.
-    """
-    tmp_path, project_name = initialized_project
-    os.chdir(tmp_path / project_name)
-
-    result = runner.invoke(app, ["test"])
-    assert result.exit_code == 0, result.stderr

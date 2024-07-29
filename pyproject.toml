@@ -52,10 +52,13 @@ testpaths = [
 [tool.isort]
 profile = "black"
 
-[tool.ruff]
+[tool.ruff.lint]
 # See https://docs.astral.sh/ruff/rules/ for a list of rules.
 # See https://docs.astral.sh/ruff/configuration/#using-pyprojecttoml for configuration documentation
 select = ["E", "F", "I"]
+
+[tool.ruff.lint.per-file-ignores]
+
 
 [tool.setuptools]
 include-package-data = true
@@ -79,6 +82,7 @@ dependencies = [
     "jinja2-strcase >= 0.0.2",
     "cookiecutter",
     "sh",
+    "pre-commit",
 ]
 readme = "README.md"
 
@@ -90,3 +94,74 @@ omit = [
     "*/templates/*",
     "tests/*",
 ]
+
+[tool.pixi.project]
+channels = ["conda-forge"]
+platforms = ["osx-arm64", "linux-64"]
+
+[tool.pixi.feature.bare.pypi-dependencies]
+pyds-cli = { path = ".", editable = true }
+
+[tool.pixi.feature.core.pypi-dependencies]
+pyds-cli = { path = ".", editable = true }
+case-converter = "*"
+jinja2-strcase = "*"
+
+[tool.pixi.feature.core.dependencies]
+typer = "*"
+pyyaml = "*"
+jinja2 = "*"
+loguru = "*"
+pyprojroot = "*"
+python-dotenv = "*"
+rich = "*"
+ruamel.yaml = "*"
+cookiecutter = "*"
+sh = "*"
+
+[tool.pixi.feature.testing.dependencies]
+pytest = "*"
+pytest-cov = "*"
+
+[tool.pixi.feature.testing.pypi-dependencies]
+wonderwords = ">=2.2.0"
+
+[tool.pixi.feature.docs.dependencies]
+mkdocs = "*"
+mkdocs-material = "*"
+mknotebooks = "*"
+mkdocstrings = { version = "*", extras = "python" }
+
+[tool.pixi.feature.devtools.dependencies]
+black = "*"
+flake8 = "*"
+interrogate = "*"
+pre-commit = "*"
+ruff = "*"
+isort = "*"
+
+[tool.pixi.feature.devtools.pypi-dependencies]
+llamabot = ">=0.5.0"
+pre-commit = "*"
+pydoclint = "*"
+
+[tool.pixi.feature.testing.tasks]
+test = "pytest"
+
+[tool.pixi.feature.devtools.tasks]
+lint = "pre-commit run --all-files"
+commit = "git commit"
+
+[tool.pixi.feature.docs.tasks]
+cli-docs = "typer pyds.cli utils docs --name pyds --output docs/cli.md"
+build-docs = "mkdocs build"
+serve-docs = "mkdocs serve"
+
+[tool.pixi.feature.setup.tasks]
+setup = "pre-commit install --install-hooks && pre-commit autoupdate"
+
+[tool.pixi.environments]
+default = ["core", "testing", "devtools", "setup"]
+docs = ["docs"]
+testing = ["core", "testing", "setup"]
+bare = ["bare"]

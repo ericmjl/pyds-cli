@@ -4,8 +4,6 @@ import os
 
 from typer.testing import CliRunner
 
-from pyds.cli import app
-
 runner = CliRunner()
 
 
@@ -18,12 +16,3 @@ def test_dotenv_presence(initialized_project):
     os.chdir(tmp_path / project_name)
 
     assert (tmp_path / project_name / ".env").exists()
-
-
-def test_project_update(initialized_project):
-    """Test for project initialization.
-
-    :param initialized_project: conftest.py fixture for our initialized project.
-    """
-    result = runner.invoke(app, ["project", "update"])
-    assert result.exit_code == 0
