@@ -85,6 +85,7 @@ dependencies = [
     "pre-commit",
 ]
 readme = "README.md"
+requires-python = ">=3.10"
 
 [project.scripts]
 pyds = "pyds.cli:app"
@@ -141,7 +142,6 @@ ruff = "*"
 isort = "*"
 
 [tool.pixi.feature.devtools.pypi-dependencies]
-llamabot = ">=0.5.0"
 pre-commit = "*"
 pydoclint = "*"
 
@@ -165,3 +165,4 @@ default = ["core", "testing", "devtools", "setup"]
 docs = ["docs"]
 testing = ["core", "testing", "setup"]
 bare = ["bare"]
+devtools = ["devtools"]
