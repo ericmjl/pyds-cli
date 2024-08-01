@@ -170,34 +170,4 @@ def discover_conda_executable() -> Path:
     raise Exception("Could not find conda executable! Do you have `conda` installed?")
 
 
-def discover_anaconda_installation() -> Path:
-    """Return path to the user's anaconda installation.
-
-    :raises Exception: If we cannot find the path to anaconda installation.
-    :returns: Path to anaconda installation directory.
-    """
-    conda_base_path = os.getenv("CONDA_PREFIX_1")
-    if conda_base_path is None:
-        conda_base_path = os.getenv("CONDA_PREFIX")
-    if conda_base_path is None:
-        raise Exception(
-            "Could not find path to your anaconda installation! "
-            "Do you have `conda` installed?"
-        )
-    return Path(conda_base_path)
-
-
-def environment_exists(environment_name: str) -> bool:
-    """Function to identify whether an environment exists.
-
-    :param environment_name: The environment of interest.
-    :returns: Boolen on whether the expected environment exists.
-    """
-    conda_base_path = discover_anaconda_installation()
-    expected_env_path = conda_base_path / "envs" / environment_name
-    return expected_env_path.exists()
-
-
-CONDA_EXE = discover_conda_executable()
-# Set PIXI_EXE to be the result of executing `which pixi`:
 PIXI_EXE = which("pixi").strip("\n")
