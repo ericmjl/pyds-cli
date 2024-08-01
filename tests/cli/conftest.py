@@ -5,12 +5,12 @@ from pathlib import Path
 from typing import Tuple
 
 import pytest
+from sh import rm
 from typer.testing import CliRunner
 from wonderwords import RandomWord
 
 from pyds.cli import app
 from pyds.utils import read_config
-from sh import rm
 
 
 @pytest.fixture(scope="session", autouse=True)
