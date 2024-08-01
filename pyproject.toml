@@ -162,7 +162,7 @@ setup = "pre-commit install --install-hooks && pre-commit autoupdate"
 
 [tool.pixi.environments]
 default = ["core", "testing", "devtools", "setup"]
-docs = ["docs"]
+docs = ["core", "docs"]
 testing = ["core", "testing", "setup"]
 bare = ["bare"]
 devtools = ["devtools"]
