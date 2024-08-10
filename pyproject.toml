@@ -116,7 +116,7 @@ loguru = "*"
 pyprojroot = "*"
 python-dotenv = "*"
 rich = "*"
-ruamel.yaml = "*"
+"ruamel.yaml" = "*"
 cookiecutter = "*"
 sh = "*"
 
@@ -131,7 +131,8 @@ wonderwords = ">=2.2.0"
 mkdocs = "*"
 mkdocs-material = "*"
 mknotebooks = "*"
-mkdocstrings = { version = "*", extras = "python" }
+mkdocstrings = { version = "*" }
+mkdocstrings-python = "*"
 
 [tool.pixi.feature.devtools.dependencies]
 black = "*"
