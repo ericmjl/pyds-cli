@@ -145,13 +145,13 @@ isort = "*"
 pre-commit = "*"
 pydoclint = "*"
 
+[tool.pixi.feature.cuda]
+platforms = ["linux-64"]
+system-requirements = {cuda = "12"}
+
 # NOTE: CUDA-specific dependencies go here.
 [tool.pixi.feature.cuda.dependencies]
-cuda-version = "==12.1"
-cuda-libraries = "*"
-cudnn = "*"
-jaxlib = "* *cuda*"
-__cuda = "*"
+jaxlib = { version = "*", build = "*cuda12*" }
 
 [tool.pixi.feature.testing.tasks]
 test = "pytest"
