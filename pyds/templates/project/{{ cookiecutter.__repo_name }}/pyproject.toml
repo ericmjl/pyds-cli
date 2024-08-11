@@ -100,10 +100,6 @@ platforms = ["osx-arm64", "linux-64", "win-64"]
 [tool.pixi.pypi-dependencies]
 {{ cookiecutter.__package_name }} = { path = ".", editable = true }
 
-[tool.pixi.feature.cuda]
-platforms = ["linux-64"]
-system-requirements = {cuda = "12"}
-
 # NOTE: Core dependencies (needed for running the program) go here.
 [tool.pixi.feature.core.dependencies]
 ipykernel = "*"
