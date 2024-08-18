@@ -68,7 +68,7 @@ find = {}  # Scanning implicit namespaces is active by default
 
 [project]
 name = "pyds-cli"
-version = "0.6.3"
+version = "0.6.4"
 dependencies = [
     "typer >=0.3.8",
     "pyyaml >=6.0",
