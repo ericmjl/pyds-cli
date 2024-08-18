@@ -67,7 +67,7 @@ def init():
 
     *_, github_username, repo_name = repo_url.split("/")
 
-    git("init")
+    git("init", "-b", "main")
     with console.status(msg):
         full_repo_name = f"{github_username}/{repo_name}"
         git_ssh_url = f"git@github.com:{full_repo_name}"
@@ -77,6 +77,9 @@ def init():
     pixi("run", "setup")
 
     print("[green]🎉Your project repo has been created!")
+
+    git("add", ".")
+    git("commit", "-m", "Initial commit")
 
 
 if __name__ == "__main__":
