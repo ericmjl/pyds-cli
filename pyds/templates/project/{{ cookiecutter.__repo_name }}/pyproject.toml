@@ -136,6 +136,7 @@ interrogate = "*"
 pre-commit = "*"
 ruff = "*"
 isort = "*"
+pixi-kernel = "*"
 
 [tool.pixi.feature.devtools.pypi-dependencies]
 pre-commit = "*"

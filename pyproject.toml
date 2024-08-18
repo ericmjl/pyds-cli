@@ -145,6 +145,7 @@ isort = "*"
 [tool.pixi.feature.devtools.pypi-dependencies]
 pre-commit = "*"
 pydoclint = "*"
+ipython = ">=8.26.0,<9"
 
 [tool.pixi.feature.testing.tasks]
 test = "pytest"
