@@ -3922,30 +3922,9 @@ packages:
   requires_python: '>=3.8'
 - kind: pypi
   name: pyds-cli
-  version: 0.6.3
+  version: 0.6.4
   path: .
-  sha256: 61a0aae148f29ce924672baa19388f66a4c4d92439db3d2ecaa24692b78abc26
-  requires_dist:
-  - typer>=0.3.8
-  - pyyaml>=6.0
-  - jinja2>=3.0.2
-  - loguru>=0.5.3
-  - pyprojroot
-  - python-dotenv>=0.19.1
-  - rich>=10.12.0
-  - ruamel-yaml>=0.17.17
-  - case-converter>=1.0.2
-  - jinja2-strcase>=0.0.2
-  - cookiecutter
-  - sh
-  - pre-commit
-  requires_python: '>=3.10'
-  editable: true
-- kind: pypi
-  name: pyds-cli
-  version: 0.6.3
-  path: .
-  sha256: 61a0aae148f29ce924672baa19388f66a4c4d92439db3d2ecaa24692b78abc26
+  sha256: 286b8d9c3ae9af65f0bbcb32a977352da01556aefc61fc228a59235ac26d3618
   requires_dist:
   - typer>=0.3.8
   - pyyaml>=6.0
