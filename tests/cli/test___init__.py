@@ -1,6 +1,5 @@
 """Tests for the top-level CLI."""
 
-from sh import git
 from typer.testing import CliRunner
 
 from pyds.cli import app
@@ -11,8 +10,6 @@ runner = CliRunner()
 
 def test_configure():
     """Test for configuring the pyds CLI."""
-    git("config", "--global", "user.name", "GitHub Tester")
-    git("config", "--global", "user.email", "github@tester.com")
     result = runner.invoke(
         app,
         ["configure"],
