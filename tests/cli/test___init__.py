@@ -1,5 +1,6 @@
 """Tests for the top-level CLI."""
 
+from sh import git
 from typer.testing import CliRunner
 
 from pyds.cli import app
@@ -10,16 +11,18 @@ runner = CliRunner()
 
 def test_configure():
     """Test for configuring the pyds CLI."""
+    git("config", "--global", "user.name", "GitHub Tester")
+    git("config", "--global", "user.email", "github@tester.com")
     result = runner.invoke(
         app,
         ["configure"],
-        input="Eric Ma\nericmajinglong@gmail.com\nericmjl\nericmjl\nericmjl\n",
+        input="GitHub Tester\ngithub@tester.com\ngh.tester\ngh.tester\ngh.tester\n",
     )
     assert result.exit_code == 0
     config = read_config()
 
-    assert config["name"] == "Eric Ma"
-    assert config["email"] == "ericmajinglong@gmail.com"
-    assert config["twitter_username"] == "ericmjl"
-    assert config["linkedin_username"] == "ericmjl"
-    assert config["github_username"] == "ericmjl"
+    assert config["name"] == "GitHub Tester"
+    assert config["email"] == "github@tester.com"
+    assert config["twitter_username"] == "gh.tester"
+    assert config["linkedin_username"] == "gh.tester"
+    assert config["github_username"] == "gh.tester"
