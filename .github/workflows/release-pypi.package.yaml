@@ -82,6 +82,16 @@ jobs:
           pre-commit run --all-files || pre-commit run --all-files
           git add .
           git commit -m "Add release notes for ${{ env.version_number }}"
+          - name: Setup pixi
+          uses: prefix-dev/setup-pixi@v0.8.1
+          with:
+            cache: true
+
+      - name: Update lock file
+        run: |
+          pixi install
+          git add .
+          git commit -m "infra: update pixi lock file"
 
       - name: Build package
         run: |
@@ -93,6 +103,7 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_API_TOKEN }}
+
 
       # Ensure that GH Actions is allowed to write to repo.
       # Reference: https://ericmjl.github.io/blog/2023/8/26/enable-github-actions-to-push-code-changes/
