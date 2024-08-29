@@ -26,3 +26,12 @@ repos:
     hooks:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py]
+  - repo: local
+    hooks:
+      - id: pixi-install
+        name: Keep lockfile up-to-date
+        entry: pixi install
+        language: system
+        always_run: true
+        require_serial: true
+        pass_filenames: false
