@@ -27,3 +27,12 @@ repos:
         args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py, --config, pyproject.toml]
       - id: ruff-format
         args: [--config, pyproject.toml]
+  - repo: local
+    hooks:
+      - id: pixi-install
+        name: Keep lockfile up-to-date
+        entry: pixi install
+        language: system
+        always_run: true
+        require_serial: true
+        pass_filenames: false
