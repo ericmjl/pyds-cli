@@ -25,7 +25,6 @@ def init():
     os.chdir(project_path)
 
     os.environ["PIXI_PROJECT_MANIFEST"] = str(Path(project_path) / "pyproject.toml")
-    print(os.environ["PIXI_PROJECT_MANIFEST"])
 
     ls("-lah", ".")
 
@@ -76,7 +75,7 @@ def init():
     # Install pre-commit hooks:
     pixi("run", "setup")
 
-    print("[green]🎉Your project repo has been created!")
+    console.print("[green]🎉Your project repo has been created!")
 
     git("add", ".")
     git("commit", "-m", "Initial commit")
