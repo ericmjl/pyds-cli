@@ -84,6 +84,7 @@ dependencies = [
     "sh",
     "pre-commit",
     "juv >=0.2.18",
+    "tomli >=2.0.2,<3",
 ]
 readme = "README.md"
 requires-python = ">=3.10"
