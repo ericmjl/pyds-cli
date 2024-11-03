@@ -34,7 +34,7 @@ def initialized_analysis(tmp_path) -> Generator[Tuple[Path, str], None, None]:
             ]
         ),
     )
-    assert result.exit_code == 0
+    assert result.exit_code == 0, result.stdout
 
     yield tmp_path, "test-analysis"
 
