@@ -39,7 +39,7 @@ def init():
     # Create environment
     msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
     with console.status(msg):
-        pixi("install")
+        pixi("install", "--manifest-path", "pyproject.toml")
     # Create Jupyter kernel:
     msg = (
         "[bold blue]Enabling Jupyter kernel discovery "

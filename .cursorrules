@@ -1,0 +1,3 @@
+Always use pyprojroot's here() function to find a project root. Never write a replacement for calling on pyprojroot's here().
+Always prefer using sh over shutil. Never use shutil.
+This project always uses pyproject.toml within the templates. Don't create pixi.toml files.

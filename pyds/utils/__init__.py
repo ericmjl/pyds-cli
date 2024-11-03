@@ -148,21 +148,21 @@ def discover_conda_executable() -> Path:
     """
     # First, try mamba
     try:
-        return which("mamba").strip("\n")
+        return Path(str(which("mamba")).strip())
     except Exception:
         pass
 
     try:
-        return which("micromamba").strip("\n")
+        return Path(str(which("micromamba")).strip())
     except Exception:
         pass
 
     try:
-        return which("conda").strip("\n")
+        return Path(str(which("conda")).strip())
     except Exception:
         pass
 
-    # If `which conda` fails, try using environmenet variables.
+    # If which fails, try using environment variables.
     conda_exe = os.getenv("CONDA_EXE")
     if conda_exe is not None:
         return Path(conda_exe)
@@ -170,4 +170,4 @@ def discover_conda_executable() -> Path:
     raise Exception("Could not find conda executable! Do you have `conda` installed?")
 
 
-PIXI_EXE = which("pixi").strip("\n")
+PIXI_EXE = str(which("pixi")).strip()

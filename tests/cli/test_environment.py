@@ -1,11 +1,35 @@
 """Tests for environment variables."""
 
+import os
+
 import pytest
 from typer.testing import CliRunner
 
 from pyds.cli import app
 
 runner = CliRunner()
+
+
+@pytest.fixture
+def initialized_project(tmp_path):
+    """Create an initialized project for testing.
+
+    :param tmp_path: pytest fixture for temporary directory
+    :yields: Tuple of (tmp_path, project_name)
+    """
+    os.chdir(tmp_path)
+
+    # Create minimal project structure
+    with open(tmp_path / "pyproject.toml", "w") as f:
+        f.write("""
+[tool.poetry]
+name = "test-project"
+version = "0.1.0"
+description = "Test project"
+authors = ["Test User <test@example.com>"]
+        """)
+
+    yield tmp_path, "test-project"
 
 
 def test_set(initialized_project):
