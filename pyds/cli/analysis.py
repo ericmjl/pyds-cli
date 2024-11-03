@@ -128,13 +128,27 @@ def init(
 
     ls("-lah", ".")
 
-    dotenv_text = """# Environment variables for {{ cookiecutter.project_name }}
+    # Create .env file with template content
+    dotenv_path = Path(".env")
+    dotenv_template = f"""# Environment variables for {context['project_name']}
 # NOTE: This file is _never_ committed into the git repository!
 #       It might contain secrets (e.g. API keys) that should never be exposed publicly.
-# export ENV_VAR="some_value"
+
+# Add your environment variables here:
+# export API_KEY="your_api_key"
+# export DATABASE_URL="your_database_url"
 """
-    with open(".env", "w") as f:
-        f.write(dotenv_text)
+    dotenv_path.write_text(dotenv_template)
+
+    # Add .env to .gitignore if not already present
+    gitignore_path = Path(".gitignore")
+    if not gitignore_path.exists():
+        gitignore_path.write_text(".env\n")
+    else:
+        gitignore_content = gitignore_path.read_text()
+        if ".env" not in gitignore_content:
+            with gitignore_path.open("a") as f:
+                f.write("\n.env\n")
 
     # Create pixi environment for project-level dependencies
     msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
