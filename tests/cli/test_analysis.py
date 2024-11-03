@@ -21,16 +21,6 @@ def initialized_analysis(tmp_path) -> Generator[Tuple[Path, str], None, None]:
     """
     os.chdir(tmp_path)
 
-    # Create minimal pyproject.toml first
-    with open(tmp_path / "pyproject.toml", "w") as f:
-        f.write("""
-[tool.poetry]
-name = "test-project"
-version = "0.1.0"
-description = "Test project"
-authors = ["Test User <test@example.com>"]
-        """)
-
     # Mock user input for cookiecutter
     result = runner.invoke(
         app,
@@ -71,38 +61,24 @@ def test_default_notebook_presence(initialized_analysis):
     assert (tmp_path / project_name / DEFAULT_NOTEBOOK).exists()
 
 
-def test_create_notebook():
+def test_create_notebook(initialized_analysis):
     """Test creation of a new notebook with custom name."""
-    with runner.isolated_filesystem():
-        # Create minimal project structure
-        Path("pyproject.toml").write_text("""
-[tool.poetry]
-name = "test-project"
-version = "0.1.0"
-description = "Test project"
-authors = ["Test User <test@example.com>"]
-        """)
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
 
-        result = runner.invoke(app, ["create", "test_notebook.ipynb"])
-        assert result.exit_code == 0
+    result = runner.invoke(app, ["create", "test_notebook.ipynb"])
+    assert result.exit_code == 0
 
 
-def test_create_notebook_with_packages():
+def test_create_notebook_with_packages(initialized_analysis):
     """Test creation of a notebook with additional packages."""
-    with runner.isolated_filesystem():
-        # Create minimal project structure
-        Path("pyproject.toml").write_text("""
-[tool.poetry]
-name = "test-project"
-version = "0.1.0"
-description = "Test project"
-authors = ["Test User <test@example.com>"]
-        """)
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
 
-        result = runner.invoke(
-            app, ["create", "test_notebook.ipynb", "-p", "pandas", "-p", "numpy"]
-        )
-        assert result.exit_code == 0
+    result = runner.invoke(
+        app, ["create", "test_notebook.ipynb", "-p", "pandas", "-p", "numpy"]
+    )
+    assert result.exit_code == 0
 
 
 def test_add_dependencies(initialized_analysis):
@@ -119,16 +95,18 @@ def test_add_dependencies(initialized_analysis):
     assert result.exit_code == 0
 
 
-def test_create_duplicate_notebook():
+def test_create_duplicate_notebook(initialized_analysis):
     """Test that creating a duplicate notebook raises an error."""
-    with runner.isolated_filesystem():
-        # Create first notebook
-        runner.invoke(app, ["create", "test_notebook.ipynb"])
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
 
-        # Try to create duplicate
-        result = runner.invoke(app, ["create", "test_notebook.ipynb"])
-        assert result.exit_code != 0
-        assert "already exists" in result.stdout
+    # Create first notebook
+    runner.invoke(app, ["create", "test_notebook.ipynb"])
+
+    # Try to create duplicate
+    result = runner.invoke(app, ["create", "test_notebook.ipynb"])
+    assert result.exit_code != 0
+    assert "already exists" in result.stdout
 
 
 def test_add_dependencies_nonexistent_notebook(initialized_analysis):
@@ -144,12 +122,14 @@ def test_add_dependencies_nonexistent_notebook(initialized_analysis):
     assert "No notebook found" in result.stdout
 
 
-def test_run_nonexistent_notebook():
+def test_run_nonexistent_notebook(initialized_analysis):
     """Test that running a non-existent notebook raises error."""
-    with runner.isolated_filesystem():
-        result = runner.invoke(app, ["run", "--notebook", "nonexistent.ipynb"])
-        assert result.exit_code != 0
-        assert "No notebook found" in result.stdout
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
+
+    result = runner.invoke(app, ["run", "--notebook", "nonexistent.ipynb"])
+    assert result.exit_code != 0
+    assert "No notebook found" in result.stdout
 
 
 def test_env_in_gitignore(initialized_analysis):
