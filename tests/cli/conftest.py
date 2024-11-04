@@ -9,7 +9,7 @@ from sh import rm
 from typer.testing import CliRunner
 from wonderwords import RandomWord
 
-from pyds.cli import app
+from pyds.cli import app as main_app
 from pyds.utils import read_config
 
 
@@ -27,14 +27,14 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
         read_config()
     except FileNotFoundError:
         config_result = runner.invoke(
-            app, ["configure"], input="GitHub Bot\nbot@github.com\nbot\nbot\nbot"
+            main_app, ["configure"], input="GitHub Bot\nbot@github.com\nbot\nbot\nbot"
         )
         if config_result.exit_code != 0:
             print(f"Configuration failed with stdout: {config_result.stdout}")
             print(f"Configuration failed with stderr: {config_result.stderr}")
             raise RuntimeError("Configuration failed")
 
-    tmp_path = Path("/tmp/pyds-cli")
+    tmp_path = Path("/tmp/pyds-cli/project")
     tmp_path.mkdir(exist_ok=True, parents=True)
     os.chdir(tmp_path)
     r = RandomWord()
@@ -45,7 +45,7 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
     print(f"PIXI_PROJECT_MANIFEST: {os.environ.get('PIXI_PROJECT_MANIFEST')}")
 
     result = runner.invoke(
-        app,
+        main_app,
         ["project", "init"],
         input=f"{project_name}\nTest Project\nericmjl\nEric Ma\ne@ma\n",
         catch_exceptions=False,  # Let exceptions bubble up for better error messages
@@ -75,5 +75,38 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
 
     os.chdir(project_dir)
     yield tmp_path, project_dir
+
+    rm("-rf", tmp_path)
+
+
+@pytest.fixture(scope="session", autouse=True)
+def initialized_analysis() -> Generator[Tuple[Path, str], None, None]:
+    """Create an initialized analysis project for testing.
+
+    :param tmp_path: pytest fixture for temporary directory
+    :yields: Tuple of (tmp_path, project_name)
+    """
+    runner = CliRunner(mix_stderr=False)
+    tmp_path = Path("/tmp/pyds-cli/analysis")
+    tmp_path.mkdir(exist_ok=True, parents=True)
+    os.chdir(tmp_path)
+
+    # Mock user input for cookiecutter
+    result = runner.invoke(
+        main_app,
+        ["analysis", "init"],
+        input="\n".join(
+            [
+                "Test Analysis",  # project_name
+                "test-analysis",  # short_description
+                "test_user",  # github_username
+                "Test analysis project",  # full_name
+                "blah@blah.com",  # email
+            ]
+        ),
+    )
+    assert result.exit_code == 0, result.stdout
+
+    yield tmp_path, "test-analysis"
 
     rm("-rf", tmp_path)

@@ -20,6 +20,15 @@ def test_talk_init():
         result = runner.invoke(
             app,
             ["talk", "init"],
-            input="dummy talk\ndummy desc\nericmjl\nEric Ma\naffiliation\ne@ma\n",
+            input="\n".join(
+                [
+                    "dummy talk",
+                    "dummy desc",
+                    "ericmjl",
+                    "Eric Ma",
+                    "affiliation",
+                    "e@ma",
+                ]
+            ),
         )
         assert result.exit_code == 0
