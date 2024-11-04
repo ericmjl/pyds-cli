@@ -1,13 +1,46 @@
 """Tests for analysis project creation and management."""
 
 import os
+from pathlib import Path
+from typing import Generator, Tuple
 
+import pytest
+from click.testing import Result
 from typer.testing import CliRunner
 
 from pyds.cli import app
 from pyds.cli.analysis import DEFAULT_NOTEBOOK
+from pyds.cli.analysis import app as analysis_app
 
 runner = CliRunner()
+
+
+@pytest.fixture
+def initialized_analysis(tmp_path) -> Generator[Tuple[Path, str], None, None]:
+    """Create an initialized analysis project for testing.
+
+    :param tmp_path: pytest fixture for temporary directory
+    :yields: Tuple of (tmp_path, project_name)
+    """
+    os.chdir(tmp_path)
+
+    # Mock user input for cookiecutter
+    result = runner.invoke(
+        app,
+        ["analysis", "init"],
+        input="\n".join(
+            [
+                "Test Analysis",  # project_name
+                "test-analysis",  # short_description
+                "test_user",  # github_username
+                "Test analysis project",  # full_name
+                "blah@blah.com",  # email
+            ]
+        ),
+    )
+    assert result.exit_code == 0, result.stdout
+
+    yield tmp_path, "test-analysis"
 
 
 def test_dotenv_presence(initialized_analysis):
@@ -37,8 +70,10 @@ def test_create_notebook(initialized_analysis):
     tmp_path, project_name = initialized_analysis
     os.chdir(tmp_path / project_name)
 
-    result = runner.invoke(app, ["analysis", "create", "test_notebook.ipynb"])
+    result = runner.invoke(analysis_app, ["create", "test_notebook.ipynb"])
     assert result.exit_code == 0
+
+    assert (tmp_path / project_name / "notebooks" / "test_notebook.ipynb").exists()
 
 
 def test_create_notebook_with_packages(initialized_analysis):
@@ -46,11 +81,15 @@ def test_create_notebook_with_packages(initialized_analysis):
     tmp_path, project_name = initialized_analysis
     os.chdir(tmp_path / project_name)
 
-    result = runner.invoke(
-        app,
-        ["analysis", "create", "test_notebook.ipynb", "-p", "pandas", "-p", "numpy"],
+    # Create notebook with packages
+    result: Result = runner.invoke(
+        analysis_app,
+        ["create", "test_notebook.ipynb", "-p", "pandas", "-p", "numpy"],
     )
-    assert result.exit_code == 0
+    assert result.exit_code == 0, result.stdout
+
+    # Verify notebook exists
+    assert (tmp_path / project_name / "notebooks" / "test_notebook.ipynb").exists()
 
 
 def test_add_dependencies(initialized_analysis):
@@ -62,7 +101,7 @@ def test_add_dependencies(initialized_analysis):
     os.chdir(tmp_path / project_name)
 
     result = runner.invoke(
-        app, ["analysis", "add", "pandas", "numpy", "--notebook", DEFAULT_NOTEBOOK]
+        analysis_app, ["add", "pandas", "numpy", "--notebook", DEFAULT_NOTEBOOK]
     )
     assert result.exit_code == 0
 
@@ -73,12 +112,13 @@ def test_create_duplicate_notebook(initialized_analysis):
     os.chdir(tmp_path / project_name)
 
     # Create first notebook
-    runner.invoke(app, ["analysis", "create", "test_notebook.ipynb"])
+    first_result = runner.invoke(analysis_app, ["create", "test_notebook.ipynb"])
+    assert first_result.exit_code == 0
 
     # Try to create duplicate
-    result = runner.invoke(app, ["analysis", "create", "test_notebook.ipynb"])
-    assert result.exit_code != 0
-    assert "already exists" in result.stdout
+    second_result = runner.invoke(analysis_app, ["create", "test_notebook.ipynb"])
+    assert second_result.exit_code != 0
+    assert "already exists" in second_result.stdout
 
 
 def test_add_dependencies_nonexistent_notebook(initialized_analysis):
@@ -90,7 +130,7 @@ def test_add_dependencies_nonexistent_notebook(initialized_analysis):
     os.chdir(tmp_path / project_name)
 
     result = runner.invoke(
-        app, ["analysis", "add", "pandas", "--notebook", "nonexistent.ipynb"]
+        analysis_app, ["add", "pandas", "--notebook", "nonexistent.ipynb"]
     )
     assert result.exit_code != 0
     assert "No notebook found" in result.stdout
@@ -101,7 +141,7 @@ def test_run_nonexistent_notebook(initialized_analysis):
     tmp_path, project_name = initialized_analysis
     os.chdir(tmp_path / project_name)
 
-    result = runner.invoke(app, ["analysis", "run", "--notebook", "nonexistent.ipynb"])
+    result = runner.invoke(analysis_app, ["run", "--notebook", "nonexistent.ipynb"])
     assert result.exit_code != 0
     assert "No notebook found" in result.stdout
 

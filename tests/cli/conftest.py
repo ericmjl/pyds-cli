@@ -77,36 +77,3 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
     yield tmp_path, project_dir
 
     rm("-rf", tmp_path)
-
-
-@pytest.fixture(scope="session", autouse=True)
-def initialized_analysis() -> Generator[Tuple[Path, str], None, None]:
-    """Create an initialized analysis project for testing.
-
-    :param tmp_path: pytest fixture for temporary directory
-    :yields: Tuple of (tmp_path, project_name)
-    """
-    runner = CliRunner(mix_stderr=False)
-    tmp_path = Path("/tmp/pyds-cli/analysis")
-    tmp_path.mkdir(exist_ok=True, parents=True)
-    os.chdir(tmp_path)
-
-    # Mock user input for cookiecutter
-    result = runner.invoke(
-        main_app,
-        ["analysis", "init"],
-        input="\n".join(
-            [
-                "Test Analysis",  # project_name
-                "test-analysis",  # short_description
-                "test_user",  # github_username
-                "Test analysis project",  # full_name
-                "blah@blah.com",  # email
-            ]
-        ),
-    )
-    assert result.exit_code == 0, result.stdout
-
-    yield tmp_path, "test-analysis"
-
-    rm("-rf", tmp_path)
