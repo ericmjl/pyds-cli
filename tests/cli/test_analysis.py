@@ -50,7 +50,7 @@ def test_create_notebook_with_packages(initialized_analysis):
         app,
         ["analysis", "create", "test_notebook.ipynb", "-p", "pandas", "-p", "numpy"],
     )
-    assert result.exit_code == 0, result.stderr
+    assert result.exit_code == 0
 
 
 def test_add_dependencies(initialized_analysis):
