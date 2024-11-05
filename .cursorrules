@@ -1,3 +1,10 @@
 Always use pyprojroot's here() function to find a project root. Never write a replacement for calling on pyprojroot's here().
 Always prefer using sh over shutil. Never use shutil.
 This project always uses pyproject.toml within the templates. Don't create pixi.toml files.
+For any templates within the pyds/templates directory, if they use jinja2-like syntax
+(e.g. GitHub Actions) but need to be literal, make sure to escape them using syntax
+that looks like this:
+
+```yaml
+{{ '${{ github.event_name == "push" && github.ref_name == "main" }}' }}
+```
