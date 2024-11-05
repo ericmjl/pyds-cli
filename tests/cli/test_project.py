@@ -2,10 +2,6 @@
 
 import os
 
-from typer.testing import CliRunner
-
-runner = CliRunner()
-
 
 def test_dotenv_presence(initialized_project):
     """Assert that the.env file is present in the initialized project directory.

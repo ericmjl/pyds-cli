@@ -7,6 +7,7 @@ import yaml
 
 from pyds.version import __version__
 
+from .analysis import app as analysis_app
 from .environment import app as env_app
 from .pixi import app as pixi_app
 from .project import app as project_app
@@ -19,6 +20,7 @@ app.add_typer(project_app, name="project")
 app.add_typer(system_app, name="system")
 app.add_typer(talk_app, name="talk")
 app.add_typer(pixi_app, name="pixi")
+app.add_typer(analysis_app, name="analysis")
 
 
 @app.command()

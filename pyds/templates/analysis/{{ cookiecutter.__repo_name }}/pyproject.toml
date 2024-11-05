@@ -1,0 +1,19 @@
+[project]
+name = "{{ cookiecutter.__project_name }}"
+version = "0.0.1"
+dependencies = [
+    "juv",
+]
+readme = "README.md"
+
+# Default packages and python versions for new notebooks.
+[tool.pyds-cli]
+default_packages = [
+    "pandas",
+    "polars",
+    "matplotlib",
+    "numpy",
+    "seaborn",
+    "scikit-learn"
+]
+python_version = ">=3.10"

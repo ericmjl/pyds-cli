@@ -79,10 +79,12 @@ dependencies = [
     "rich >=10.12.0",
     "ruamel.yaml >=0.17.17",
     "case-converter >=1.0.2",
-    "jinja2-strcase >= 0.0.2",
+    "jinja2-strcase >=0.0.2",
     "cookiecutter",
     "sh",
     "pre-commit",
+    "juv >=0.2.18",
+    "tomli >=2.0.2,<3",
 ]
 readme = "README.md"
 requires-python = ">=3.10"
@@ -98,7 +100,7 @@ omit = [
 
 [tool.pixi.project]
 channels = ["conda-forge"]
-platforms = ["osx-arm64", "linux-64"]
+platforms = ["osx-arm64", "linux-64", "osx-64"]
 
 [tool.pixi.feature.bare.pypi-dependencies]
 pyds-cli = { path = ".", editable = true }

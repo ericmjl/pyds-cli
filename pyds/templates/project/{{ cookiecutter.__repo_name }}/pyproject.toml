@@ -117,7 +117,7 @@ python-dotenv = "*"
 typer = "*"
 
 # NOTE: Testing dependencies (not needed for running program) go here.
-[tool.pixi.feature.testing.dependencies]
+[tool.pixi.feature.tests.dependencies]
 pytest = "*"
 pytest-cov = "*"
 hypothesis = "*"
@@ -142,15 +142,15 @@ pixi-kernel = "*"
 pre-commit = "*"
 pydoclint = "*"
 
-[tool.pixi.feature.cuda]
-platforms = ["linux-64"]
-system-requirements = {cuda = "12"}
+# [tool.pixi.feature.cuda]
+# platforms = ["linux-64"]
+# system-requirements = {cuda = "12"}
 
-# NOTE: CUDA-specific dependencies go here.
-[tool.pixi.feature.cuda.dependencies]
-jaxlib = { version = "*", build = "*cuda12*" }
+# # NOTE: CUDA-specific dependencies go here.
+# [tool.pixi.feature.cuda.dependencies]
+# jaxlib = { version = "*", build = "*cuda12*" }
 
-[tool.pixi.feature.testing.tasks]
+[tool.pixi.feature.tests.tasks]
 test = "pytest"
 
 [tool.pixi.feature.devtools.tasks]
@@ -166,7 +166,7 @@ setup = "pre-commit install --install-hooks && pre-commit autoupdate"
 update = "pre-commit autoupdate"
 
 [tool.pixi.environments]
-default = ["core", "testing", "devtools", "setup"]
+default = ["core", "tests", "devtools", "setup"]
 docs = ["docs"]
-testing = ["core", "testing", "setup"]
-cuda = ["core", "testing", "devtools", "setup", "cuda"]
+tests = ["core", "tests", "setup"]
+# cuda = ["core", "tests", "devtools", "setup", "cuda"]
