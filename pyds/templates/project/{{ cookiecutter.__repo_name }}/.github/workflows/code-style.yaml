@@ -14,5 +14,5 @@ jobs:
         with:
           pixi-version: v0.25.0
           cache: true
-          cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
+          cache-write: {{ '${{ github.event_name == "push" && github.ref_name == "main" }}' }}
       - uses: pre-commit/action@v2.0.0
