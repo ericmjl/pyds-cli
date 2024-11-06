@@ -17,7 +17,7 @@ from pyds.utils.paths import SOURCE_DIR
 console = Console()
 app = typer.Typer()
 
-DEFAULT_NOTEBOOK = "notebook/analysis.ipynb"
+DEFAULT_NOTEBOOK_FILENAME = "analysis.ipynb"
 
 
 def get_default_packages() -> List[str]:
@@ -60,7 +60,7 @@ def create(
     ),
 ):
     """Create a new notebook in the notebooks directory with default dependencies."""
-    notebooks_dir = here() / "notebooks"
+    notebooks_dir = Path("notebooks")
     notebooks_dir.mkdir(exist_ok=True)
 
     # Ensure .ipynb extension
@@ -99,7 +99,7 @@ def init(
         None, "--python", help="Minimum Python version for the analysis"
     ),
     notebook: Path = typer.Option(
-        DEFAULT_NOTEBOOK, help="Name of the notebook to create"
+        DEFAULT_NOTEBOOK_FILENAME, help="Name of the notebook to create"
     ),
 ):
     """Initialize a new data analysis project with a juv-managed notebook."""
@@ -115,16 +115,20 @@ def init(
 
     os.chdir(project_path)
 
+    # Ensure notebooks directory exists
+    notebooks_dir = Path("notebooks")
+    notebooks_dir.mkdir(exist_ok=True)
+
     # Create initial notebook with juv
     if python_version:
-        juv("init", "--python", python_version, str(notebook))
+        juv("init", "--python", python_version, str(notebooks_dir / notebook))
     else:
-        juv("init", str(notebook))
+        juv("init", str(notebooks_dir / notebook))
 
     # Add default packages
     default_packages = get_default_packages()
     if default_packages:
-        juv("add", str(notebook), *default_packages)
+        juv("add", str(notebooks_dir / notebook), *default_packages)
 
     ls("-lah", ".")
 
@@ -178,9 +182,11 @@ def init(
 
 @app.command()
 def add(
-    packages: List[str] = typer.Argument(..., help="Packages to add to the notebook"),
+    packages: Optional[List[str]] = typer.Option(
+        None, "--package", "-p", help="Packages to add to the notebook"
+    ),
     notebook: Path = typer.Option(
-        DEFAULT_NOTEBOOK, help="Path to the notebook to modify"
+        DEFAULT_NOTEBOOK_FILENAME, help="Path to the notebook to modify"
     ),
     requirements: Optional[Path] = typer.Option(
         None, "--requirements", help="Requirements file to add dependencies from"
@@ -190,24 +196,50 @@ def add(
     ),
 ):
     """Add dependencies to the analysis notebook."""
-    if not notebook.exists():
-        raise typer.BadParameter(
-            f"No notebook found at {notebook}. " "Run 'pyds analysis init' first."
-        )
+    # Debug prints
+    console.print(f"[blue]Packages: {packages}")
+    console.print(f"[blue]Notebook: {notebook}")
+    console.print(f"[blue]Requirements: {requirements}")
+    console.print(f"[blue]Extra: {extra}")
+    if not packages and not requirements:
+        msg = "Must specify either packages with -p/--package or a requirements file"
+        console.print(f"[red]{msg}")
+        raise typer.BadParameter(msg)
 
-    cmd = ["add", str(notebook)]
+    notebooks_dir = Path("notebooks")
+    notebook_path = notebooks_dir / notebook
+
+    if not notebook_path.exists():
+        msg = f"No notebook found at {notebook_path}. Run 'pyds analysis init' first."
+        console.print(f"[red]{msg}")
+        raise typer.BadParameter(msg)
+
+    # Build the juv command
+    cmd = ["add", str(notebook_path)]
     if extra:
         cmd.extend(["--extra", extra])
     if requirements:
         cmd.extend(["--requirements", str(requirements)])
-    cmd.extend(packages)
+    if packages:
+        # Add each package as a separate argument
+        cmd.extend(packages)
 
-    juv(*cmd)
+    # Debug print
+    console.print(f"[blue]Running command: juv {' '.join(cmd)}")
+
+    try:
+        juv(*cmd)
+    except Exception as e:
+        msg = f"Error adding dependencies: {str(e)}"
+        console.print(f"[red]{msg}")
+        raise typer.Exit(1)
 
 
 @app.command()
 def run(
-    notebook: Path = typer.Option(DEFAULT_NOTEBOOK, help="Path to the notebook to run"),
+    notebook: Path = typer.Option(
+        DEFAULT_NOTEBOOK_FILENAME, help="Path to the notebook to run"
+    ),
     jupyter: Optional[str] = typer.Option(
         None, "--jupyter", help="Specific Jupyter frontend to use (e.g. lab, notebook)"
     ),
@@ -218,7 +250,9 @@ def run(
     """Start working on the analysis in Jupyter."""
     if not notebook.exists():
         raise typer.BadParameter(
-            f"No notebook found at {notebook}. " "Run 'pyds analysis init' first."
+            f"No notebook found at {notebook}. "
+            "Please provide the path to the notebook "
+            "relative to your current working directory in the shell."
         )
 
     cmd = ["run"]
