@@ -17,7 +17,7 @@ from pyds.utils.paths import SOURCE_DIR
 console = Console()
 app = typer.Typer()
 
-DEFAULT_NOTEBOOK = "analysis.ipynb"
+DEFAULT_NOTEBOOK = "notebook/analysis.ipynb"
 
 
 def get_default_packages() -> List[str]:
