@@ -4,6 +4,7 @@ import os
 import traceback
 from pathlib import Path
 from typing import Generator, Tuple
+from unittest.mock import patch
 
 import pytest
 from click.testing import Result
@@ -225,3 +226,117 @@ def test_env_in_gitignore(initialized_analysis):
     assert gitignore_path.exists()
     gitignore_content = gitignore_path.read_text()
     assert ".env" in gitignore_content
+
+
+def test_run_notebook(initialized_analysis):
+    """Test running a notebook with default settings."""
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
+
+    # Create a test notebook
+    notebook_path = Path("notebooks") / DEFAULT_NOTEBOOK_FILENAME
+    notebook_path.parent.mkdir(exist_ok=True)
+    notebook_path.touch()
+
+    with patch("pyds.cli.analysis.juv") as mock_juv:
+        result = runner.invoke(
+            analysis_app,
+            ["run", "--notebook", DEFAULT_NOTEBOOK_FILENAME],
+        )
+        assert result.exit_code == 0
+        mock_juv.assert_called_once_with("run", str(notebook_path), _fg=True)
+
+
+def test_run_with_jupyter_option(initialized_analysis):
+    """Test running a notebook with specific Jupyter frontend."""
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
+
+    # Create a test notebook
+    notebook_path = Path("notebooks") / DEFAULT_NOTEBOOK_FILENAME
+    notebook_path.parent.mkdir(exist_ok=True)
+    notebook_path.touch()
+
+    with patch("pyds.cli.analysis.juv") as mock_juv:
+        result = runner.invoke(
+            analysis_app,
+            ["run", "--notebook", DEFAULT_NOTEBOOK_FILENAME, "--jupyter", "lab"],
+        )
+        assert result.exit_code == 0
+        mock_juv.assert_called_once_with(
+            "run", "--jupyter", "lab", str(notebook_path), _fg=True
+        )
+
+
+def test_run_with_extra_dependencies(initialized_analysis):
+    """Test running a notebook with additional dependencies."""
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
+
+    # Create a test notebook
+    notebook_path = Path("notebooks") / DEFAULT_NOTEBOOK_FILENAME
+    notebook_path.parent.mkdir(exist_ok=True)
+    notebook_path.touch()
+
+    with patch("pyds.cli.analysis.juv") as mock_juv:
+        result = runner.invoke(
+            analysis_app,
+            [
+                "run",
+                "--notebook",
+                DEFAULT_NOTEBOOK_FILENAME,
+                "--with",
+                "pandas",
+                "--with",
+                "numpy",
+            ],
+        )
+        assert result.exit_code == 0
+        mock_juv.assert_called_once_with(
+            "run",
+            "--with",
+            "pandas",
+            "--with",
+            "numpy",
+            str(notebook_path),
+            _fg=True,
+        )
+
+
+def test_run_with_all_options(initialized_analysis):
+    """Test running a notebook with all available options."""
+    tmp_path, project_name = initialized_analysis
+    os.chdir(tmp_path / project_name)
+
+    # Create a test notebook
+    notebook_path = Path("notebooks") / DEFAULT_NOTEBOOK_FILENAME
+    notebook_path.parent.mkdir(exist_ok=True)
+    notebook_path.touch()
+
+    with patch("pyds.cli.analysis.juv") as mock_juv:
+        result = runner.invoke(
+            analysis_app,
+            [
+                "run",
+                "--notebook",
+                DEFAULT_NOTEBOOK_FILENAME,
+                "--jupyter",
+                "lab",
+                "--with",
+                "pandas",
+                "--with",
+                "numpy",
+            ],
+        )
+        assert result.exit_code == 0
+        mock_juv.assert_called_once_with(
+            "run",
+            "--jupyter",
+            "lab",
+            "--with",
+            "pandas",
+            "--with",
+            "numpy",
+            str(notebook_path),
+            _fg=True,
+        )
