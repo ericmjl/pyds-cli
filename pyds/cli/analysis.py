@@ -263,7 +263,8 @@ def run(
             cmd.extend(["--with", dep])
     cmd.append(str(notebook))
 
-    juv(*cmd)
+    # Run juv in interactive mode (_fg=True) to keep the process in foreground
+    juv(*cmd, _fg=True)
 
 
 if __name__ == "__main__":
