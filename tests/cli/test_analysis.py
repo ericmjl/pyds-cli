@@ -185,7 +185,7 @@ def test_add_dependencies_nonexistent_notebook(initialized_analysis):
         analysis_app, ["add", "-p", "pandas", "--notebook", "nonexistent.ipynb"]
     )
     assert result.exit_code != 0
-    assert "No notebook found" in result.stdout
+    assert "No notebook found" in result.stderr
 
 
 def test_create_duplicate_notebook(initialized_analysis):
@@ -210,7 +210,7 @@ def test_run_nonexistent_notebook(initialized_analysis):
 
     result = runner.invoke(analysis_app, ["run", "--notebook", "nonexistent.ipynb"])
     assert result.exit_code != 0
-    assert "No notebook found" in result.stdout
+    assert "No notebook found" in result.stderr
 
 
 def test_env_in_gitignore(initialized_analysis):
