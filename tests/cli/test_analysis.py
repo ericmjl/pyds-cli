@@ -200,7 +200,7 @@ def test_create_duplicate_notebook(initialized_analysis):
     # Try to create duplicate
     second_result = runner.invoke(analysis_app, ["create", "test_notebook.ipynb"])
     assert second_result.exit_code != 0
-    assert "already exists" in second_result.stdout
+    assert "already exists" in second_result.stderr
 
 
 def test_run_nonexistent_notebook(initialized_analysis):
