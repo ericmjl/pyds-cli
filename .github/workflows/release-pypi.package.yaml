@@ -89,12 +89,6 @@ jobs:
           git add .
           git commit -m "Add release notes for ${{ env.version_number }}"
 
-      - name: Update lock file
-        run: |
-          pixi install
-          git add .
-          git commit -m "infra: update pixi lock file"
-
       - name: Build package
         run: |
           python -m pip install build wheel
