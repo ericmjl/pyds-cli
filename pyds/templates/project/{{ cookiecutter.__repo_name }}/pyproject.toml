@@ -67,22 +67,22 @@ namespaces = false
 [project]
 name = "{{ cookiecutter.__package_name }}"
 version = "0.0.1"
+# NOTE: move dependencies into this section if you need to distribute the project as a Python package.
+requires-python = ">=3.10"
 dependencies = [
     "matplotlib",
     "pandas",
     "scikit-learn",
     "numpy",
+    "pyprojroot",
+    "scipy",
+    "pymc",
+    "seaborn",
+    "python-dotenv",
+    "typer",
+    "jax",
 ]
 readme = "README.md"
-
-[project.optional-dependencies]
-tests = [
-    "pytest"
-]
-docs = [
-    "mkdocs-material",
-    "mkdocs"
-]
 
 [project.scripts]
 {{ cookiecutter.__cli_name }} = "{{ cookiecutter.__module_name }}.cli:app"
@@ -95,26 +95,13 @@ omit = [
 
 [tool.pixi.project]
 channels = ["conda-forge"]
-platforms = ["osx-arm64", "linux-64", "win-64"]
+platforms = ["osx-arm64", "linux-64"]
 
 [tool.pixi.pypi-dependencies]
 {{ cookiecutter.__package_name }} = { path = ".", editable = true }
 
 # NOTE: Core dependencies (needed for running the program) go here.
-[tool.pixi.feature.core.dependencies]
-ipykernel = "*"
-ipython = "*"
-jupyter = "*"
-matplotlib = "*"
-numpy = "*"
-pandas = "*"
-pyprojroot = "*"
-scikit-learn = "*"
-scipy = "*"
-seaborn = "*"
-pymc = "*"
-python-dotenv = "*"
-typer = "*"
+[tool.pixi.dependencies]
 
 # NOTE: Testing dependencies (not needed for running program) go here.
 [tool.pixi.feature.tests.dependencies]
@@ -128,27 +115,21 @@ mkdocs = "*"
 mkdocs-material = "*"
 mknotebooks = "*"
 
-# NOTE: Developer tools (for code checks and quality) go here.
-[tool.pixi.feature.devtools.dependencies]
-black = "*"
-flake8 = "*"
-interrogate = "*"
-pre-commit = "*"
-ruff = "*"
-isort = "*"
+[tool.pixi.feature.notebook.dependencies]
+ipykernel = "*"
+ipython = "*"
+jupyter = "*"
 pixi-kernel = "*"
 
-[tool.pixi.feature.devtools.pypi-dependencies]
+[tool.pixi.feature.devtools.dependencies]
 pre-commit = "*"
-pydoclint = "*"
 
-# [tool.pixi.feature.cuda]
-# platforms = ["linux-64"]
-# system-requirements = {cuda = "12"}
+# NOTE: CUDA feature is inspired by https://github.com/prefix-dev/pixi/issues/1051#issuecomment-2088820974
+[tool.pixi.feature.cuda]
+system-requirements = { cuda = "12" }
 
-# # NOTE: CUDA-specific dependencies go here.
-# [tool.pixi.feature.cuda.dependencies]
-# jaxlib = { version = "*", build = "*cuda12*" }
+[tool.pixi.feature.cuda.target.linux-64.dependencies]
+jaxlib = { version = "*", build = "*cuda12*" }
 
 [tool.pixi.feature.tests.tasks]
 test = "pytest"
@@ -166,7 +147,7 @@ setup = "pre-commit install --install-hooks && pre-commit autoupdate"
 update = "pre-commit autoupdate"
 
 [tool.pixi.environments]
-default = ["core", "tests", "devtools", "setup"]
-docs = ["docs"]
-tests = ["core", "tests", "setup"]
-# cuda = ["core", "tests", "devtools", "setup", "cuda"]
+default = { features = ["tests", "devtools", "notebook", "setup"] }
+docs = { features = ["docs"] }
+tests = { features = ["tests", "setup"] }
+cuda = { features = ["tests", "devtools", "notebook", "setup", "cuda"] }
