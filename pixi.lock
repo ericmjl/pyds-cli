@@ -4958,9 +4958,9 @@ packages:
   requires_python: '>=3.8'
 - kind: pypi
   name: pyds-cli
-  version: 0.6.5
+  version: 0.6.6
   path: .
-  sha256: 46f7a9705c65882be1d6cdbb50d6b56a36024d83d73149d22d766b189b476103
+  sha256: 9f4618f538d8bca42602fcf24f88869fb2e1c7df97d99bcd49041090602a972d
   requires_dist:
   - typer>=0.3.8
   - pyyaml>=6.0
