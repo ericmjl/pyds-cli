@@ -8,8 +8,11 @@ on:
 
 jobs:
   pixi-tests:
-    runs-on: ubuntu-latest
-    name: Run test suite within pixi environment
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    name: Run test suite within pixi environment (${{ matrix.os }})
 
     # https://github.com/marketplace/actions/setup-miniconda#use-a-default-shell
     defaults:
