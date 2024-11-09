@@ -10,7 +10,7 @@ import typer
 from cookiecutter.main import cookiecutter
 from pyprojroot import here
 from rich.console import Console
-from sh import git, juv, ls, pixi
+from sh import git, juv, ls
 
 from pyds.utils.paths import SOURCE_DIR
 
@@ -153,11 +153,6 @@ def init(
         if ".env" not in gitignore_content:
             with gitignore_path.open("a") as f:
                 f.write("\n.env\n")
-
-    # Create pixi environment for project-level dependencies
-    msg = "[bold blue]Creating pixi environment (this might take a few moments!)..."
-    with console.status(msg):
-        pixi("install")
 
     # Configure Git
     msg = "[bold blue]Configuring git..."
