@@ -54,7 +54,13 @@ def create_notebook_metadata(packages: List[str], python_version: str) -> str:
 
 @app.command()
 def create(
-    name: str = typer.Argument(..., help="Name of the notebook to create"),
+    name: str = typer.Argument(
+        ...,
+        help=(
+            "Name of the notebook to create. "
+            "Will be created in the notebooks directory."
+        ),
+    ),
     packages: Optional[List[str]] = typer.Option(
         None, "--package", "-p", help="Additional packages to include"
     ),
