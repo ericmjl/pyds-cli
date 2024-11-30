@@ -143,7 +143,7 @@ build-docs = "mkdocs build"
 serve-docs = "mkdocs serve"
 
 [tool.pixi.feature.setup.tasks]
-setup = "pre-commit install --install-hooks && pre-commit autoupdate"
+setup = "pre-commit autoupdate && pre-commit install --install-hooks"
 update = "pre-commit autoupdate"
 
 [tool.pixi.environments]
