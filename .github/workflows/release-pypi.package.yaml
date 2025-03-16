@@ -71,19 +71,21 @@ jobs:
       - name: Ensure tag creation
         run: git tag | grep ${{ env.version_number }}
 
+      - name: Install the latest version of uv
+        uses: astral-sh/setup-uv@v5
+
       - name: Write release notes
         env:
-          MISTRAL_API_KEY: ${{ secrets.MISTRAL_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          pip install -U llamabot
+          uv tool install llamabot[cli]
           llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
           llamabot git write-release-notes
 
 
       - name: Commit release notes
         run: |
-          python -m pip install pre-commit
+          uv tool install pre-commit
           pre-commit install
           pre-commit run --all-files || pre-commit run --all-files
           git add .
@@ -91,8 +93,7 @@ jobs:
 
       - name: Build package
         run: |
-          python -m pip install build wheel
-          python -m build -w -s
+          uv build --sdist --wheel
 
       - name: Publish package
         uses: pypa/gh-action-pypi-publish@release/v1
