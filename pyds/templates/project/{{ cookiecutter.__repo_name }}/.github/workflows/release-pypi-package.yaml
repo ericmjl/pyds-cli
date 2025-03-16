@@ -45,17 +45,17 @@ jobs:
 
       - name: Dry run bumpversion
         run: |
-          bumpversion --dry-run ${{ github.event.inputs.version_name }} --allow-dirty --verbose
+          bumpversion --dry-run {{ '${{ github.event.inputs.version_name }}' }} --allow-dirty --verbose
 
       # This is lifted directly from the bump2version docs.
       # Version number will be saved in `env` section of each consecutive stage
       - name: Store new version number
-        run: echo "version_number=`bumpversion --dry-run --list ${{ github.event.inputs.version_name }} | grep new_version | sed -r s,"^.*=",,`" >> $GITHUB_ENV
+        run: echo "version_number=`bumpversion --dry-run --list {{ '${{ github.event.inputs.version_name }}' }} | grep new_version | sed -r s,"^.*=",,`" >> $GITHUB_ENV
 
       - name: Display new version number
         run: |
-          echo "version_name: ${{ github.event.inputs.version_name }}"
-          echo "version_number: v${{ env.version_number }}"
+          echo "version_name: {{ '${{ github.event.inputs.version_name }}' }}"
+          echo "version_number: v{{ '${{ env.version_number }}' }}"
 
       - name: Ensure repo status is clean
         run: git status
@@ -66,20 +66,20 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Run bumpversion
-        run: bumpversion ${{ github.event.inputs.version_name }} --verbose
+        run: bumpversion {{ '${{ github.event.inputs.version_name }}' }} --verbose
 
       - name: Ensure tag creation
-        run: git tag | grep ${{ env.version_number }}
+        run: git tag | grep {{ '${{ env.version_number }}' }}
 
       - name: Install the latest version of uv
         uses: astral-sh/setup-uv@v5
 
       - name: Write release notes
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: {{ '${{ secrets.OPENAI_API_KEY }}' }}
         run: |
           uv tool install llamabot[cli]
-          llamabot configure default-model --model-name="${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
+          llamabot configure default-model --model-name="{{ '${{ secrets.DEFAULT_LANGUAGE_MODEL }}' }}"
           llamabot git write-release-notes
 
 
@@ -89,7 +89,7 @@ jobs:
           pre-commit install
           pre-commit run --all-files || pre-commit run --all-files
           git add .
-          git commit -m "Add release notes for ${{ env.version_number }}"
+          git commit -m "Add release notes for {{ '${{ env.version_number }}' }}"
 
       - name: Build package
         run: |
@@ -99,7 +99,7 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+          password: {{ '${{ secrets.PYPI_API_TOKEN }}' }}
 
 
       # Ensure that GH Actions is allowed to write to repo.
@@ -113,9 +113,9 @@ jobs:
       - name: Create release in GitHub repo
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: "docs/releases/v${{ env.version_number }}.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ env.version_number}}
+          bodyFile: "docs/releases/v{{ '${{ env.version_number }}' }}.md"
+          token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
+          tag: v{{ '${{ env.version_number}}' }}
 
       - name: Ensure complete
         run: echo "Your package has been published to PyPI!"
