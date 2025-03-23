@@ -19,7 +19,7 @@ jobs:
       - uses: prefix-dev/setup-pixi@v0.8.1
         with:
           cache: true
-          environments: testing
+          environments: tests
 
       - name: Run tests
         run: |
