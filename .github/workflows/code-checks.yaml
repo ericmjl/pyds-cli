@@ -17,4 +17,4 @@ jobs:
           cache: true
           cache-write: ${{ github.event_name == 'push' && github.ref_name == 'main' }}
 
-      - uses: pre-commit/action@v2.0.0
+      - uses: pre-commit/action@v3.0.1
