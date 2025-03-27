@@ -23,7 +23,7 @@ env:
 jobs:
   deploy-package:
     runs-on: ubuntu-latest
-    name: ${{ github.event_name == 'pull_request' && '(Dry Run) ' || '' }}Publish Python Package to PyPI
+    name: {{ '${{ github.event_name == "pull_request" && "(Dry Run) " || "" }}' }}Publish Python Package to PyPI
     permissions:
       id-token: write
       contents: write
@@ -51,26 +51,26 @@ jobs:
         with:
           pixi-version: latest
           cache: true
-          cache-write: ${{ github.event_name == 'push' }}
+          cache-write: {{ '${{ github.event_name == "push" }}' }}
 
       - name: Set up Python
         run: |
           uv tool install bump2version
 
       - name: Set version name
-        run: echo "VERSION_NAME=${{ github.event.inputs.version_name || env.DEFAULT_VERSION_NAME }}" >> $GITHUB_ENV
+        run: echo "VERSION_NAME={{ '${{ github.event.inputs.version_name || env.DEFAULT_VERSION_NAME }}' }}" >> $GITHUB_ENV
 
       - name: Dry run bump2version
         run: |
-          bump2version --dry-run ${{ env.VERSION_NAME }} --allow-dirty --verbose
+          bump2version --dry-run {{ '${{ env.VERSION_NAME }}' }} --allow-dirty --verbose
 
       - name: Store new version number
-        run: echo "version_number=`bump2version --dry-run --list ${{ env.VERSION_NAME }} | grep new_version | sed -r s,"^.*=",,`" >> $GITHUB_ENV
+        run: echo "version_number=`bump2version --dry-run --list {{ '${{ env.VERSION_NAME }}' }} | grep new_version | sed -r s,\"^.*=\",,`" >> $GITHUB_ENV
 
       - name: Display new version number
         run: |
-          echo "version_name: ${{ env.VERSION_NAME }}"
-          echo "version_number: v${{ env.version_number }}"
+          echo "version_name: {{ '${{ env.VERSION_NAME }}' }}"
+          echo "version_number: v{{ '${{ env.version_number }}' }}"
 
       - name: Ensure repo status is clean
         run: git status
@@ -81,49 +81,49 @@ jobs:
           git config user.email github-actions@github.com
 
       - name: Run bump2version
-        run: bump2version ${{ env.VERSION_NAME }} --verbose
+        run: bump2version {{ '${{ env.VERSION_NAME }}' }} --verbose
 
       - name: Ensure tag creation
-        run: git tag | grep ${{ env.version_number }}
+        run: git tag | grep {{ '${{ env.version_number }}' }}
 
       - name: Write release notes
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: {{ '${{ secrets.OPENAI_API_KEY }}' }}
         run: |
           uv tool install llamabot[cli] --python 3.12 --python-preference only-managed --force
-          llamabot configure default-model --model-name "${{ secrets.DEFAULT_LANGUAGE_MODEL }}"
+          llamabot configure default-model --model-name="{{ '${{ secrets.DEFAULT_LANGUAGE_MODEL }}' }}"
           llamabot git write-release-notes
 
       - name: Commit release notes
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         run: |
           uv tool install pre-commit
           pre-commit run --all-files || pre-commit run --all-files
           git add .
-          git commit -m "Add release notes for ${{ env.version_number }}"
+          git commit -m "Add release notes for {{ '${{ env.version_number }}' }}"
 
       - name: Build package
         run: |
           uv build --sdist --wheel
 
       - name: Publish package
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         uses: pypa/gh-action-pypi-publish@release/v1
 
       - name: Push changes with tags
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         run: |
           git push && git push --tags
 
       - name: Create release in GitHub repo
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         uses: ncipollo/release-action@v1
         with:
-          bodyFile: "docs/releases/v${{ env.version_number }}.md"
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: v${{ env.version_number }}
+          bodyFile: "docs/releases/v{{ '${{ env.version_number }}' }}.md"
+          token: {{ '${{ secrets.GITHUB_TOKEN }}' }}
+          tag: v{{ '${{ env.version_number }}' }}
 
       - name: Ensure complete
-        if: github.event_name != 'pull_request'
+        if: {{ '${{ github.event_name != "pull_request" }}' }}
         run: echo "Auto-release complete!"
