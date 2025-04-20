@@ -9,16 +9,9 @@ Helping you manage your data science projects _sanely_.
 
 ## Requirements
 
-- [Anaconda]/[Miniconda]/[Miniforge]/[Mambaforge] (Mambaforge recommended!)
+- `pixi` on your PATH
 - `git` on your PATH
-
-[Anaconda]: https://www.anaconda.com
-
-[Miniconda]: https://docs.conda.io/en/latest/miniconda.html
-
-[Miniforge]: https://github.com/conda-forge/miniforge
-
-[Mambaforge]: https://github.com/conda-forge/miniforge#mambaforge
+- `uv` on your PATH
 
 ## Quickstart
 
