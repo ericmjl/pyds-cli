@@ -1,6 +1,7 @@
 """Project initialization and state management tools."""
 
 import typer
+from cookiecutter.main import cookiecutter
 from rich.console import Console
 
 from pyds.utils.paths import SOURCE_DIR
