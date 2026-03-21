@@ -20,11 +20,10 @@ repos:
         args:
           - "--config=pyproject.toml"
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    # Ruff version.
-    rev: v0.3.5
+    rev: v0.15.7
     hooks:
-      - id: ruff
-        args: [--fix, --exit-non-zero-on-fix, --exclude, nbconvert_config.py, --config, pyproject.toml]
+      - id: ruff-check
+        args: [--fix, --exit-non-zero-on-fix, --config, pyproject.toml]
       - id: ruff-format
         args: [--config, pyproject.toml]
   - repo: local
