@@ -83,7 +83,7 @@ dependencies = [
     "case-converter >=1.0.2",
     "jinja2-strcase >=0.0.2",
     "cookiecutter",
-    "sh",
+    "sh ==2.1",
     "pre-commit",
     "juv >=0.2.18",
     "tomli >=2.0.2,<3",
@@ -100,7 +100,7 @@ omit = [
     "tests/*",
 ]
 
-[tool.pixi.project]
+[tool.pixi.workspace]
 channels = ["conda-forge"]
 platforms = ["osx-arm64", "linux-64", "osx-64"]
 
