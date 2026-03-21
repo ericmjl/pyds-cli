@@ -15,9 +15,15 @@ Helping you manage your data science projects _sanely_.
 
 ## Quickstart
 
-We're in development! Install directly from `git` into your base Anaconda environment.
+Install from PyPI (package name **`pyds-cli`**; the CLI command is **`pyds`**):
 
-```python
+```bash
+pip install pyds-cli
+```
+
+Or install the latest revision from Git:
+
+```bash
 pip install git+https://github.com/ericmjl/pyds-cli
 ```
 

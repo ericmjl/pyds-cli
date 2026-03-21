@@ -19,7 +19,7 @@ Doing so makes expressing what we want to do much more natural.
 Example commands look like:
 
 ```bash
-pyds project initialize
+pyds project init
 pyds package publish
 pyds docs preview
 ```

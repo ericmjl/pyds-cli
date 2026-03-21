@@ -6,7 +6,7 @@ that supports great practices.
 PyDS lets you set all of that up with one interactive command:
 
 ```bash
-pyds project initialize
+pyds project init
 ```
 
 <script id="asciicast-quuvL2LCafmRfpFAbQLREwpke" src="https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke.js" async></script>

@@ -47,7 +47,7 @@ markdown_extensions:
 extra_css:
   - stylesheets/custom.css
 
-repo_name: "ericmjl/pyds"
+repo_name: "ericmjl/pyds-cli"
 repo_url: "https://github.com/ericmjl/pyds-cli"
 
 extra:

@@ -30,14 +30,19 @@ With it, my aim here is to bring _sanity_ to project initialization.
 
 ## Quickstart
 
-Ensure that you have the Anaconda distribution of Python installed,
-and that `conda` can be found using your `PATH` environment variable.
-
-Then, install from PyPI:
+Install from PyPI. The distribution is named **`pyds-cli`** (the console command is still **`pyds`**):
 
 ```bash
-pip install pyds
+pip install pyds-cli
 ```
+
+For the latest development version:
+
+```bash
+pip install git+https://github.com/ericmjl/pyds-cli
+```
+
+Project workflows expect **`pixi`**, **`git`**, and **`uv`** on your `PATH` (see the [repository README](https://github.com/ericmjl/pyds-cli#requirements) for details).
 
 For more information, take a look at [the CLI page](./cli) to see what commands exist!
 

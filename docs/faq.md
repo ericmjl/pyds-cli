@@ -1,5 +1,19 @@
 # Frequently Asked Questions
 
+## Installation
+
+### Why does `pip install pyds` fail?
+
+On PyPI the project is published as **`pyds-cli`**. After installing, run **`pyds`** on the command line.
+
+### Pixi reports "Too many open files" (EMFILE) on macOS
+
+When Cookiecutter finishes and the post-generation script runs **`pixi install`**, Pixi/rattler may hit the OS open-file limit (`ulimit -n`), especially under heavy cache use. Mitigations:
+
+- Raise the limit for your shell session, e.g. `ulimit -n 10240`, then retry.
+- Close other heavy processes; avoid running many parallel Pixi installs.
+- If problems persist, try clearing Pixi/rattler caches under `~/Library/Caches/rattler` (after backing up anything you care about), or open an issue with the [Pixi](https://github.com/prefix-dev/pixi) project including your Pixi version and full log.
+
 ## Source Code Library
 
 > can I access this package in any directory as long as I'm in my project env?
