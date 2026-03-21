@@ -4685,7 +4685,7 @@ packages:
 - pypi: ./
   name: pyds-cli
   version: 0.6.13
-  sha256: 339f64c79b9e78e29b5686bb4ac27f15da7b7ac10b48e0813ad616f73d53ec67
+  sha256: 556291441d0acd7fb50a454204659a37a26f8f5402ebdee3e04d0147dd009fb8
   requires_dist:
   - typer>=0.3.8
   - pyyaml>=6.0
@@ -4698,7 +4698,7 @@ packages:
   - case-converter>=1.0.2
   - jinja2-strcase>=0.0.2
   - cookiecutter
-  - sh
+  - sh==2.1
   - pre-commit
   - juv>=0.2.18
   - tomli>=2.0.2,<3
