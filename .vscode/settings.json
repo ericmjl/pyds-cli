@@ -1,12 +1,14 @@
 {
-    "python.formatting.blackPath": "black",
+    "[python]": {
+        "editor.defaultFormatter": "charliermarsh.ruff",
+        "editor.formatOnSave": true
+    },
     "python.testing.pytestArgs": [
         "tests"
     ],
     "python.testing.unittestEnabled": false,
     "python.testing.pytestEnabled": true,
     "peacock.color": "#ff3d00",
-    "python.formatting.provider": "black",
     "python.analysis.typeCheckingMode": "basic",
     "workbench.colorCustomizations": {
         "activityBar.activeBackground": "#ff6433",

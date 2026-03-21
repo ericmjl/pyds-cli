@@ -140,7 +140,7 @@ def init(
 
     # Create .env file with template content
     dotenv_path = Path(".env")
-    dotenv_template = f"""# Environment variables for {context['project_name']}
+    dotenv_template = f"""# Environment variables for {context["project_name"]}
 # NOTE: This file is _never_ committed into the git repository!
 #       It might contain secrets (e.g. API keys) that should never be exposed publicly.
 
