@@ -40,13 +40,23 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
     r = RandomWord()
     project_name = r.word()
 
+    # Prefer a sibling checkout of cookiecutter-python-project (two-repo workspace)
+    # so tests do not require network; CI uses the default GitHub URL.
+    workspace_parent = Path(__file__).resolve().parents[3]
+    sibling_template = workspace_parent / "cookiecutter-python-project"
+    if sibling_template.is_dir() and (sibling_template / "cookiecutter.json").is_file():
+        os.environ.setdefault(
+            "PYDS_COOKIECUTTER_PROJECT_TEMPLATE",
+            str(sibling_template),
+        )
+
     # Print current working directory and environment for debugging
     print(f"Current working directory: {os.getcwd()}")
     print(f"PIXI_PROJECT_MANIFEST: {os.environ.get('PIXI_PROJECT_MANIFEST')}")
 
     result = runner.invoke(
         main_app,
-        ["project", "init"],
+        ["project", "init", "--skip-hooks"],
         input=f"{project_name}\nTest Project\nericmjl\nEric Ma\ne@ma\n",
         catch_exceptions=False,  # Let exceptions bubble up for better error messages
     )
@@ -67,7 +77,9 @@ def initialized_project() -> Generator[Tuple[Path, Path], None, None]:
             f"Stderr: {result.stderr}"
         )
 
-    project_dir = tmp_path / project_name
+    # Cookiecutter output dir matches __repo_name (kebab-case of project_name).
+    repo_slug = project_name.lower().replace(" ", "-")
+    project_dir = tmp_path / repo_slug
 
     # Verify directory exists before changing into it
     if not project_dir.exists():
