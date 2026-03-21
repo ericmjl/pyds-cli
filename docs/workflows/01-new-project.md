@@ -9,6 +9,8 @@ PyDS lets you set all of that up with one interactive command:
 pyds project init
 ```
 
+This command runs [Cookiecutter](https://cookiecutter.readthedocs.io/) against the **[cookiecutter-python-project](https://github.com/ericmjl/cookiecutter-python-project)** template (cloned from GitHub the first time, then cached). To use a local checkout while developing the template, set `PYDS_COOKIECUTTER_PROJECT_TEMPLATE` to that directory, or pass `--template /path/to/cookiecutter-python-project`.
+
 <script id="asciicast-quuvL2LCafmRfpFAbQLREwpke" src="https://asciinema.org/a/quuvL2LCafmRfpFAbQLREwpke.js" async></script>
 
 Behind the scenes, we create a new Python project
