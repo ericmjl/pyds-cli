@@ -1,13 +1,16 @@
 """Utility functions for pyds."""
 
 import os
+import subprocess
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 import ruamel.yaml
 from pyprojroot import here
+from rich.console import Console
 from sh import which
 
+console = Console()
 ANACONDA = os.getenv("anaconda", os.getenv("CONDA_PREFIX"))
 
 
@@ -171,3 +174,67 @@ def discover_conda_executable() -> Path:
 
 
 PIXI_EXE = str(which("pixi")).strip()
+
+
+def is_gh_installed() -> bool:
+    """Check if the gh CLI is installed."""
+    try:
+        result = subprocess.run(
+            ["gh", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return False
+
+
+def is_gh_authenticated() -> bool:
+    """Check if the gh CLI is authenticated."""
+    try:
+        result = subprocess.run(
+            ["gh", "auth", "status"],
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+        return result.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        return False
+
+
+def create_github_repo(
+    repo_name: str, description: str, private: bool = False
+) -> Tuple[bool, Optional[str]]:
+    """Create a GitHub repository using the gh CLI.
+
+    :param repo_name: Name of the repository to create.
+    :param description: Description for the repository.
+    :param private: Whether to create a private repository.
+    :returns: Tuple of (success, message).
+    """
+    try:
+        visibility = "--private" if private else "--public"
+        result = subprocess.run(
+            [
+                "gh",
+                "repo",
+                "create",
+                repo_name,
+                "--description",
+                description,
+                visibility,
+                "--source",
+                ".",
+            ],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        if result.returncode == 0:
+            return True, None
+        else:
+            return False, result.stderr
+    except (subprocess.TimeoutExpired, FileNotFoundError) as e:
+        return False, str(e)

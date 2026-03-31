@@ -12,6 +12,13 @@ from pyprojroot import here
 from rich.console import Console
 from sh import git, juv, ls
 
+from pyds.utils import (
+    create_github_repo,
+    is_gh_authenticated,
+    is_gh_installed,
+    read_config,
+)
+
 from pyds.utils.paths import SOURCE_DIR
 
 console = Console()
@@ -169,16 +176,52 @@ def init(
         repo_name = context["__repo_name"]
         full_repo_name = f"{github_username}/{repo_name}"
         git_ssh_url = f"git@github.com:{full_repo_name}"
-        git("remote", "add", "origin", git_ssh_url)
-
-    console.print("[green]🎉Your analysis project has been created!")
-    console.print(
-        "[blue]Run 'pyds analysis add <package>' to add dependencies to your notebook"
-    )
-    console.print("[blue]Run 'pyds analysis run' to start working on your analysis")
 
     git("add", ".")
     git("commit", "-m", "Initial commit")
+
+    if is_gh_installed() and is_gh_authenticated():
+        description = f"{repo_name} - created with pyds-cli"
+        should_create = typer.confirm(
+            f"Create GitHub repository '{full_repo_name}' on GitHub?"
+        )
+        if should_create:
+            success, error = create_github_repo(full_repo_name, description)
+            if success:
+                console.print(f"[green]GitHub repository '{full_repo_name}' created!")
+                git("remote", "add", "origin", git_ssh_url)
+                console.print(f"[blue]Git remote 'origin' set to {git_ssh_url}")
+            else:
+                console.print(f"[red]Failed to create GitHub repository: {error}")
+                console.print(
+                    "[blue]You can create it manually at https://github.com/new"
+                )
+        else:
+            git("remote", "add", "origin", git_ssh_url)
+            console.print(f"[blue]Git remote 'origin' set to {git_ssh_url}")
+            console.print(
+                "[blue]You can create the GitHub repository manually at https://github.com/new"
+            )
+    else:
+        if not is_gh_installed():
+            console.print(
+                "[yellow]gh CLI is not installed. Skipping GitHub repo creation."
+            )
+            console.print(
+                "[blue]Install it from https://cli.github.com to enable GitHub repo creation."
+            )
+        elif not is_gh_authenticated():
+            console.print(
+                "[yellow]gh CLI is not authenticated. Skipping GitHub repo creation."
+            )
+            console.print("[blue]Run 'gh auth login' to authenticate.")
+        git("remote", "add", "origin", git_ssh_url)
+        console.print(f"[blue]Git remote 'origin' set to {git_ssh_url}")
+        console.print(
+            "[blue]You can create the GitHub repository manually at https://github.com/new"
+        )
+
+    console.print("[green]Your analysis project has been created!")
 
 
 @app.command()
