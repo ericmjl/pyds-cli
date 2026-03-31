@@ -16,9 +16,7 @@ from pyds.utils import (
     create_github_repo,
     is_gh_authenticated,
     is_gh_installed,
-    read_config,
 )
-
 from pyds.utils.paths import SOURCE_DIR
 
 console = Console()
