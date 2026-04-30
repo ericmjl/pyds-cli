@@ -4684,8 +4684,8 @@ packages:
   requires_python: '>=3.8'
 - pypi: ./
   name: pyds-cli
-  version: 0.6.14
-  sha256: df57aa6651fe7f6a6d2b870b500d8b27be270bda7bca671634b9ee460f2a9e0f
+  version: 0.6.15
+  sha256: b301724bcfeb38ee18bbe4fd41293267b093dd7c66f09de085b65a0547875456
   requires_dist:
   - typer>=0.3.8
   - pyyaml>=6.0
