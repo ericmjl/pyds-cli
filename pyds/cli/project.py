@@ -64,6 +64,12 @@ def init(
     )
     project_path = cookiecutter(template_ref, accept_hooks=not skip_hooks)
 
+    # The default template's post-generation hook now handles GitHub repository
+    # creation interactively. Avoid a duplicate prompt by only running pyds-cli's
+    # fallback GitHub flow when hooks are explicitly skipped.
+    if not skip_hooks:
+        return
+
     if no_github:
         return
 
