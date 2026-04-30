@@ -45,3 +45,21 @@ def test_project_init_skip_hooks() -> None:
         assert result.exit_code == 0
         mock_cookiecutter.assert_called_once()
         assert mock_cookiecutter.call_args[1]["accept_hooks"] is False
+
+
+def test_project_init_with_hooks_skips_pyds_github_prompt() -> None:
+    """With hooks enabled, pyds should not run its fallback GitHub flow."""
+    with (
+        patch.object(project_module, "cookiecutter") as mock_cookiecutter,
+        patch.object(project_module, "is_gh_installed") as mock_is_gh_installed,
+        patch.object(project_module.typer, "confirm") as mock_confirm,
+        patch.object(project_module, "create_github_repo") as mock_create_github_repo,
+    ):
+        runner = CliRunner()
+        result = runner.invoke(project_module.app, [])
+
+        assert result.exit_code == 0
+        mock_cookiecutter.assert_called_once()
+        mock_is_gh_installed.assert_not_called()
+        mock_confirm.assert_not_called()
+        mock_create_github_repo.assert_not_called()
