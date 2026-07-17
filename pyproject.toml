@@ -83,7 +83,7 @@ dependencies = [
     "case-converter >=1.0.2",
     "jinja2-strcase >=0.0.2",
     "cookiecutter",
-    "sh ==2.1",
+    "sh ==2.2.4",
     "pre-commit",
     "juv >=0.2.18",
     "tomli >=2.0.2,<3",
